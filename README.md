@@ -83,7 +83,7 @@ Use `npm run test:smoke:prod` to run the same 5-user multiplayer, sync, reconnec
 
 Deploy to Vercel only after Supabase, Liveblocks, and OpenAI variables are configured. This app does not run a WebSocket server; Liveblocks supplies the realtime transport.
 
-Latest production deployment: `https://collabboard-byh53utza-kelly-1224s-projects.vercel.app`, aliased to `https://collabboard-six-kappa.vercel.app`.
+Latest production deployment: `https://collabboard-3dcuets4r-kelly-1224s-projects.vercel.app`, aliased to `https://collabboard-six-kappa.vercel.app`.
 Latest production smoke artifact: `test-results/collabboard-smoke-prod-latest.json`.
 Latest expanded local smoke artifact: `test-results/collabboard-smoke-20260512213412.json`.
 Latest production visual similarity artifact: `test-results/reference-ui-similarity-prod-latest.json`.

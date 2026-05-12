@@ -42,17 +42,17 @@ Useful overrides:
 Latest production custom-engine run:
 
 - Public Vercel URL: `https://collabboard-six-kappa.vercel.app`
-- Deployment: `https://collabboard-byh53utza-kelly-1224s-projects.vercel.app`, aliased to
+- Deployment: `https://collabboard-3dcuets4r-kelly-1224s-projects.vercel.app`, aliased to
   `https://collabboard-six-kappa.vercel.app`.
 - Report: `test-results/collabboard-smoke-prod-latest.json`
-- Completed: `2026-05-12T22:10:31.108Z`
+- Completed: `2026-05-12T22:20:44.777Z`
 - Passed: 31 checks with no failures, including 5-user join, presence, cursor latency, sticky
   create/edit/move/recolor, simultaneous text-edit convergence, duplicate, copy/paste, rectangle
   resize/rotate, line, connector, frame create/edit, drag-select, deterministic sticky command,
   simultaneous deterministic AI commands, OpenAI-backed live command, SWOT latency, board-state
   command, object sync latency, refresh persistence, mobile layout, reconnect recovery, 500+
   object capacity, and FPS.
-- OpenAI-backed observed latency in that run was 2,724 ms; it was recorded as live upstream timing,
+- OpenAI-backed observed latency in that run was 3,577 ms; it was recorded as live upstream timing,
   not an app-controlled latency gate.
 - Latest production visual report: `test-results/reference-ui-similarity-prod-latest.json`; desktop
   crop 90.1623%, mobile phone crop 86.4051%, and 390px compact mobile crop 88.3655%.

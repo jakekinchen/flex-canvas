@@ -4,7 +4,7 @@
 
 - GitHub repo: `https://github.com/kellyclaudeai/flex-canvas`
 - Public app: `https://collabboard-six-kappa.vercel.app`
-- Latest production deployment: `https://collabboard-byh53utza-kelly-1224s-projects.vercel.app`
+- Latest production deployment: `https://collabboard-3dcuets4r-kelly-1224s-projects.vercel.app`
 - Production smoke report: `test-results/collabboard-smoke-prod-latest.json`
 - Expanded local smoke report: `test-results/collabboard-smoke-20260512213412.json`
 - Production visual similarity report: `test-results/reference-ui-similarity-prod-latest.json`

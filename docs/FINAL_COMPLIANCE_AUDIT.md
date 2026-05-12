@@ -15,14 +15,14 @@ Objective: verify every explicit CollabBoard requirement and deliverable against
 - Server-side AI application: `/api/ai-command` authenticates, authorizes, plans, validates, applies to Liveblocks Storage server-side, and logs to Supabase.
 - Required stack boundary: no custom WebSocket server, no Socket.io, no Supabase object-by-object canvas storage.
 - Public app: `https://collabboard-six-kappa.vercel.app`.
-- Latest deployment: `https://collabboard-byh53utza-kelly-1224s-projects.vercel.app`.
+- Latest deployment: `https://collabboard-3dcuets4r-kelly-1224s-projects.vercel.app`.
 - GitHub repository: `https://github.com/kellyclaudeai/flex-canvas`.
 - Demo video: `https://collabboard-six-kappa.vercel.app/demo/flex-canvas-demo-draft.mp4`, duration 4 minutes 30 seconds.
 - Pre-Search, AI development log, cost analysis, architecture, deployment, test plan, and submission docs exist under `docs/`.
 
 ## Verification Evidence
 
-- Production smoke: `test-results/collabboard-smoke-prod-latest.json`, completed `2026-05-12T22:10:31.108Z`, 31 passing checks.
+- Production smoke: `test-results/collabboard-smoke-prod-latest.json`, completed `2026-05-12T22:20:44.777Z`, 31 passing checks.
 - Local smoke: `test-results/flex-canvas-smoke-local.json`, completed `2026-05-12T22:08:42.168Z`, 31 passing checks.
 - Production visual similarity: `test-results/reference-ui-similarity-prod-latest.json`, passed desktop and mobile crops above the 85% threshold.
 - Local visual similarity: `test-results/reference-ui-similarity-local.json`, passed desktop and mobile crops above the 85% threshold.

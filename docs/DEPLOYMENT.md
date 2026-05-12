@@ -49,7 +49,7 @@ Current production URL:
 
 Latest production smoke:
 
-- Deployment: `https://collabboard-byh53utza-kelly-1224s-projects.vercel.app`
+- Deployment: `https://collabboard-3dcuets4r-kelly-1224s-projects.vercel.app`
 - Alias: `https://collabboard-six-kappa.vercel.app`
 - Command: `COLLABBOARD_CLEANUP_USERS=1 COLLABBOARD_REPORT=test-results/collabboard-smoke-prod-latest.json npm run test:smoke:prod`
 - Report: `test-results/collabboard-smoke-prod-latest.json`
@@ -58,7 +58,7 @@ Latest production smoke:
   copy/paste, rectangle resize/rotate, line, connector, frame create/edit, drag-select,
   deterministic AI, OpenAI-backed AI schema/server-mutation path, object sync latency,
   controlled AI latency, reconnect, 500+ object capacity, mobile layout, and FPS gates.
-- Note: OpenAI-backed observed latency was 2,724 ms in that run. It is recorded as live
+- Note: OpenAI-backed observed latency was 3,577 ms in that run. It is recorded as live
   hosted-model timing, not treated as an app-controlled latency gate.
 
 Latest production visual similarity:
