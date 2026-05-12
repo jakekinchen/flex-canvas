@@ -1,0 +1,65 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+/test-results/*
+!/test-results/
+!/test-results/collabboard-smoke-prod-latest.json
+!/test-results/flex-canvas-smoke-local.json
+!/test-results/collabboard-smoke-20260512213412.json
+!/test-results/reference-ui-similarity-prod-latest.json
+!/test-results/reference-ui-similarity-local.json
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+.local-secrets/
+supabase/.temp/
+CLAUDE.md
+new-plan.md
+spec.md
+G4 Week 1 - CollabBoard (2).pdf
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+!.env.example
+
+# vercel
+.vercel
+
+# local browser automation artifacts
+.playwright-cli/
+
+# generated media artifacts
+/output/*
+!/output/
+!/output/demo/
+/output/demo/*
+!/output/demo/flex-canvas-demo-draft.mp4
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts

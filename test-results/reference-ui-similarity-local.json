@@ -1,0 +1,47 @@
+{
+  "baseUrl": "http://localhost:3000",
+  "passed": true,
+  "reference": "image-flex-canvas.png",
+  "results": [
+    {
+      "name": "desktop app crop",
+      "actualCopy": "output/playwright/reference-ui-similarity-local-actual-crop-desktop.png",
+      "passed": true,
+      "referenceCopy": "output/playwright/reference-ui-similarity-local-reference-crop-desktop-app.png",
+      "screenshot": "output/playwright/reference-ui-similarity-local-reference-visual-desktop.png",
+      "similarity": 90.00598397072328,
+      "threshold": 85,
+      "viewport": {
+        "width": 1080,
+        "height": 1024
+      }
+    },
+    {
+      "name": "mobile phone crop",
+      "actualCopy": "output/playwright/reference-ui-similarity-local-actual-crop-mobile.png",
+      "passed": true,
+      "referenceCopy": "output/playwright/reference-ui-similarity-local-reference-crop-mobile.png",
+      "screenshot": "output/playwright/reference-ui-similarity-local-reference-visual-mobile.png",
+      "similarity": 88.80272303594289,
+      "threshold": 85,
+      "viewport": {
+        "width": 408,
+        "height": 930
+      }
+    },
+    {
+      "name": "mobile 390 compact crop",
+      "actualCopy": "output/playwright/reference-ui-similarity-local-actual-crop-mobile-390.png",
+      "passed": true,
+      "referenceCopy": "output/playwright/reference-ui-similarity-local-reference-crop-mobile-390.png",
+      "screenshot": "output/playwright/reference-ui-similarity-local-reference-visual-mobile-390.png",
+      "similarity": 85.36702177934406,
+      "threshold": 85,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    }
+  ],
+  "threshold": 85
+}

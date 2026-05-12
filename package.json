@@ -1,0 +1,42 @@
+{
+  "name": "flex-canvas",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test:visual": "node scripts/verify-reference-ui.mjs",
+    "test:visual:prod": "node scripts/verify-reference-ui.mjs --base-url https://collabboard-six-kappa.vercel.app",
+    "test:smoke": "node scripts/smoke-collabboard.mjs",
+    "test:smoke:prod": "node scripts/smoke-collabboard.mjs --base-url https://collabboard-six-kappa.vercel.app"
+  },
+  "dependencies": {
+    "@liveblocks/client": "^3.19.0",
+    "@liveblocks/node": "^3.19.0",
+    "@liveblocks/react": "^3.19.0",
+    "@supabase/ssr": "^0.10.3",
+    "@supabase/supabase-js": "^2.105.4",
+    "konva": "^10.3.0",
+    "lucide-react": "^1.14.0",
+    "next": "16.2.6",
+    "openai": "^6.37.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "react-konva": "^19.2.4",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.6",
+    "playwright": "^1.60.0",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

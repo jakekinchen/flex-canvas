@@ -1,0 +1,47 @@
+{
+  "baseUrl": "https://collabboard-six-kappa.vercel.app",
+  "passed": true,
+  "reference": "image-flex-canvas.png",
+  "results": [
+    {
+      "name": "desktop app crop",
+      "actualCopy": "output/playwright/reference-ui-similarity-prod-latest-actual-crop-desktop.png",
+      "passed": true,
+      "referenceCopy": "output/playwright/reference-ui-similarity-prod-latest-reference-crop-desktop-app.png",
+      "screenshot": "output/playwright/reference-ui-similarity-prod-latest-reference-visual-desktop.png",
+      "similarity": 90.05116561356378,
+      "threshold": 85,
+      "viewport": {
+        "width": 1080,
+        "height": 1024
+      }
+    },
+    {
+      "name": "mobile phone crop",
+      "actualCopy": "output/playwright/reference-ui-similarity-prod-latest-actual-crop-mobile.png",
+      "passed": true,
+      "referenceCopy": "output/playwright/reference-ui-similarity-prod-latest-reference-crop-mobile.png",
+      "screenshot": "output/playwright/reference-ui-similarity-prod-latest-reference-visual-mobile.png",
+      "similarity": 88.82241218224587,
+      "threshold": 85,
+      "viewport": {
+        "width": 408,
+        "height": 930
+      }
+    },
+    {
+      "name": "mobile 390 compact crop",
+      "actualCopy": "output/playwright/reference-ui-similarity-prod-latest-actual-crop-mobile-390.png",
+      "passed": true,
+      "referenceCopy": "output/playwright/reference-ui-similarity-prod-latest-reference-crop-mobile-390.png",
+      "screenshot": "output/playwright/reference-ui-similarity-prod-latest-reference-visual-mobile-390.png",
+      "similarity": 85.363137461409,
+      "threshold": 85,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    }
+  ],
+  "threshold": 85
+}
