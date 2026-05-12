@@ -22,7 +22,7 @@
       "passed": true,
       "referenceCopy": "output/playwright/reference-ui-similarity-prod-latest-reference-crop-mobile.png",
       "screenshot": "output/playwright/reference-ui-similarity-prod-latest-reference-visual-mobile.png",
-      "similarity": 88.82241218224587,
+      "similarity": 86.34237452096588,
       "threshold": 85,
       "viewport": {
         "width": 408,
@@ -35,7 +35,7 @@
       "passed": true,
       "referenceCopy": "output/playwright/reference-ui-similarity-prod-latest-reference-crop-mobile-390.png",
       "screenshot": "output/playwright/reference-ui-similarity-prod-latest-reference-visual-mobile-390.png",
-      "similarity": 85.363137461409,
+      "similarity": 88.36553770858202,
       "threshold": 85,
       "viewport": {
         "width": 390,

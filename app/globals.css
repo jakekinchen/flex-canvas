@@ -95,7 +95,6 @@ body {
 }
 
 .reference-shell {
-  animation: surface-in 420ms var(--ease-standard) both;
   background:
     radial-gradient(circle at 4% 70%, rgba(92, 108, 255, 0.42) 0 92px, transparent 94px),
     linear-gradient(135deg, #fffaf1 0%, #fbf6ea 58%, #fefbf5 100%);
@@ -977,10 +976,6 @@ textarea:focus-visible {
     box-shadow: 0 16px 38px rgba(16, 24, 40, 0.1);
   }
 
-  .board-canvas-shell:hover::after {
-    opacity: 1;
-  }
-
   .board-toolbar:hover {
     border-color: #c5ccd7;
     box-shadow: 0 14px 30px rgba(15, 23, 42, 0.14);
@@ -1002,6 +997,10 @@ textarea:focus-visible {
 
   .status-chip:hover {
     transform: translateY(-1px);
+  }
+
+  .ai-panel:hover .panel-heading svg {
+    animation: sparkle-pulse 2.2s var(--ease-standard) infinite;
   }
 
   .mobile-dock a:hover {
@@ -1203,18 +1202,71 @@ h1 {
 }
 
 .auth-shell {
+  background:
+    radial-gradient(circle at 12% 78%, rgba(92, 108, 255, 0.34) 0 96px, transparent 98px),
+    radial-gradient(circle at 88% 12%, rgba(255, 147, 181, 0.58) 0 76px, transparent 78px),
+    linear-gradient(135deg, #fffaf1 0%, #fbf6ea 58%, #fefbf5 100%);
   display: grid;
-  min-height: 100vh;
+  margin: 0;
+  max-width: none;
+  min-height: 100dvh;
+  overflow: hidden;
+  padding: 28px;
   place-items: center;
+  position: relative;
 }
 
-.auth-shell section {
-  max-width: 480px;
+.auth-shell::before {
+  background-image: radial-gradient(rgba(28, 35, 45, 0.16) 1px, transparent 1.4px);
+  background-size: 18px 18px;
+  content: "";
+  inset: 0;
+  opacity: 0.46;
+  pointer-events: none;
+  position: absolute;
+}
+
+.auth-card {
+  background: rgba(255, 253, 248, 0.86);
+  border: 1px solid #0f1115;
+  border-radius: 18px;
+  box-shadow: 10px 12px 0 #050505;
+  display: grid;
+  gap: 24px;
+  max-width: 500px;
+  padding: 30px;
+  position: relative;
+  transition:
+    border-color 180ms var(--ease-standard),
+    box-shadow 180ms var(--ease-standard),
+    transform 180ms var(--ease-press);
   width: 100%;
+  z-index: 1;
+}
+
+.auth-card-header {
+  align-items: center;
+  display: flex;
+  gap: 18px;
+  justify-content: space-between;
+}
+
+.auth-card-header .eyebrow {
+  margin: 0;
+}
+
+.auth-card-copy {
+  display: grid;
+  gap: 14px;
+  justify-items: start;
 }
 
 .auth-shell h1 {
-  font-size: 44px;
+  font-size: 56px;
+  font-weight: 950;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  margin: 0;
 }
 
 .auth-panel,
@@ -1222,6 +1274,11 @@ h1 {
 .ai-panel form {
   display: grid;
   gap: 14px;
+}
+
+.auth-panel {
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 5px 6px 0 rgba(5, 5, 5, 0.12);
 }
 
 .email-login {
@@ -1388,17 +1445,6 @@ h1 {
   position: relative;
 }
 
-.board-canvas-shell::after {
-  background: linear-gradient(180deg, rgba(37, 99, 235, 0.06), transparent 95px);
-  content: "";
-  inset: 0;
-  opacity: 0;
-  pointer-events: none;
-  position: absolute;
-  transition: opacity 180ms var(--ease-standard);
-  z-index: 1;
-}
-
 .board-canvas-stage {
   height: 100%;
   inset: 0;
@@ -1418,7 +1464,6 @@ h1 {
 
 .board-toolbar {
   background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(12px);
   border: 1px solid var(--line);
   border-radius: 8px;
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.1);
@@ -1569,10 +1614,6 @@ h1 {
   overscroll-behavior: contain;
   padding: 18px;
   scroll-behavior: smooth;
-}
-
-.panel-heading svg {
-  animation: sparkle-pulse 2.2s var(--ease-standard) infinite;
 }
 
 .panel-heading h2 {
@@ -1975,7 +2016,7 @@ h1 {
     align-items: center;
     background: #0d0d0d;
     border-radius: 20px;
-    bottom: max(-10px, calc(env(safe-area-inset-bottom) - 10px));
+    bottom: calc(env(safe-area-inset-bottom) + 16px);
     box-shadow: 8px 10px 0 #050505;
     display: grid;
     gap: 0;
@@ -2022,7 +2063,7 @@ h1 {
   }
 
   .mobile-dock a.active {
-    color: #91a0ff;
+    color: white;
   }
 
   .mobile-dock .dock-create:active {
@@ -2349,6 +2390,12 @@ h1 {
 
   .board-topbar h1 {
     font-size: 18px;
+  }
+}
+
+@media (max-width: 400px) and (max-height: 880px) {
+  .mobile-dock {
+    bottom: calc(env(safe-area-inset-bottom) - 58px);
   }
 }
 

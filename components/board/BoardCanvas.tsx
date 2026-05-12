@@ -95,6 +95,8 @@ export function BoardCanvas({ canEdit, onContextChange, user }: BoardCanvasProps
   const stageRef = useRef<Konva.Stage>(null);
   const selectionStartRef = useRef<BoardPoint | null>(null);
   const didDragSelectRef = useRef(false);
+  const pendingCursorRef = useRef<BoardPoint | null>(null);
+  const cursorPresenceFrameRef = useRef<number | null>(null);
   const objectsById = (useStorage((root) => root.objects) ?? emptyObjects) as Record<string, BoardObject>;
   const objects = useMemo(() => sortByZIndex(Object.values(objectsById)), [objectsById]);
   const mutations = useBoardMutations(user.id);
@@ -131,6 +133,27 @@ export function BoardCanvas({ canEdit, onContextChange, user }: BoardCanvasProps
       viewportBounds: getViewportBounds(viewport, size),
     });
   }, [onContextChange, selectedIds, size, updateMyPresence, viewport]);
+
+  useEffect(
+    () => () => {
+      if (cursorPresenceFrameRef.current !== null) {
+        window.cancelAnimationFrame(cursorPresenceFrameRef.current);
+      }
+    },
+    [],
+  );
+
+  const queueCursorPresence = useCallback(
+    (cursor: BoardPoint | null) => {
+      pendingCursorRef.current = cursor;
+      if (cursorPresenceFrameRef.current !== null) return;
+      cursorPresenceFrameRef.current = window.requestAnimationFrame(() => {
+        cursorPresenceFrameRef.current = null;
+        updateMyPresence({ cursor: pendingCursorRef.current });
+      });
+    },
+    [updateMyPresence],
+  );
 
   const updateObject = useCallback(
     (id: string, patch: BoardObjectPatch) => {
@@ -316,7 +339,7 @@ export function BoardCanvas({ canEdit, onContextChange, user }: BoardCanvasProps
     const pointer = stage?.getPointerPosition();
     if (!pointer) return;
     const worldPointer = screenToWorld(pointer, viewport);
-    updateMyPresence({ cursor: worldPointer });
+    queueCursorPresence(worldPointer);
 
     if (selectionStartRef.current) {
       const start = selectionStartRef.current;
@@ -372,7 +395,7 @@ export function BoardCanvas({ canEdit, onContextChange, user }: BoardCanvasProps
             }
           }}
           onMouseDown={handleMouseDown}
-          onMouseLeave={() => updateMyPresence({ cursor: null })}
+          onMouseLeave={() => queueCursorPresence(null)}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onTap={handleStageClick}

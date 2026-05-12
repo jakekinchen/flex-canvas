@@ -27,7 +27,12 @@ OPENAI_API_KEY=
 OPENAI_MODEL=gpt-5.5
 OPENAI_REASONING_EFFORT=medium
 NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_CUSTOM_CANVAS_ENGINE=true
 ```
+
+`NEXT_PUBLIC_CUSTOM_CANVAS_ENGINE=true` keeps the merged custom React Konva and Liveblocks
+Storage implementation active. The flag defaults on so local and production builds use the
+custom-engineered path unless it is explicitly disabled.
 
 ## Development
 
@@ -76,7 +81,7 @@ Use `npm run test:smoke:prod` to run the same 5-user multiplayer, sync, reconnec
 
 Deploy to Vercel only after Supabase, Liveblocks, and OpenAI variables are configured. This app does not run a WebSocket server; Liveblocks supplies the realtime transport.
 
-Latest production deployment: `https://collabboard-oclyqwb9f-kelly-1224s-projects.vercel.app`, aliased to `https://collabboard-six-kappa.vercel.app`.
+Latest production deployment: `https://collabboard-ntdh9j7nu-kelly-1224s-projects.vercel.app`, aliased to `https://collabboard-six-kappa.vercel.app`.
 Latest production smoke artifact: `test-results/collabboard-smoke-prod-latest.json`.
 Latest expanded local smoke artifact: `test-results/collabboard-smoke-20260512213412.json`.
 Latest production visual similarity artifact: `test-results/reference-ui-similarity-prod-latest.json`.

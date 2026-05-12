@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { LoginForm } from "@/components/auth/LoginForm";
+import { FlexCanvasLogo } from "@/components/home/FlexCanvasDashboard";
 import { getEnvStatus } from "@/lib/env";
 import { getAuthenticatedUser } from "@/lib/supabase/server";
 
@@ -29,9 +30,15 @@ export default async function LoginPage() {
 
   return (
     <main className="auth-shell">
-      <section>
-        <p className="eyebrow">Supabase Auth</p>
-        <h1>Join Flex Canvas</h1>
+      <section className="auth-card">
+        <header className="auth-card-header">
+          <FlexCanvasLogo />
+          <p className="eyebrow">Supabase Auth</p>
+        </header>
+        <div className="auth-card-copy">
+          <h1>Join Flex Canvas</h1>
+          <div className="blue-squiggle" aria-hidden="true" />
+        </div>
         <LoginForm />
       </section>
     </main>

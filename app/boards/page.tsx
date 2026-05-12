@@ -1,12 +1,26 @@
 import { redirect } from "next/navigation";
 import { FlexCanvasDashboard, type FlexRecentBoard } from "@/components/home/FlexCanvasDashboard";
 import { getEnvStatus } from "@/lib/env";
+import { getCustomCanvasEngineFlag } from "@/lib/featureFlags";
 import { ensureProfile, listBoardsForUser } from "@/lib/db/queries";
 import { getAuthenticatedUser } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
 export default async function BoardsPage() {
+  const customCanvasEngine = getCustomCanvasEngineFlag();
+  if (!customCanvasEngine.enabled) {
+    return (
+      <main className="dashboard-shell">
+        <section className="setup-warning">
+          <h1>Custom canvas engine disabled</h1>
+          <p>Set the feature flag to keep the merged React Konva and Liveblocks Storage implementation active.</p>
+          <code>{customCanvasEngine.name}=true</code>
+        </section>
+      </main>
+    );
+  }
+
   const env = getEnvStatus([
     "NEXT_PUBLIC_SUPABASE_URL",
     "NEXT_PUBLIC_SUPABASE_ANON_KEY",

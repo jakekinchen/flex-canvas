@@ -8,7 +8,7 @@
 - Supabase owns auth sessions, profiles, board metadata, board memberships, and AI command logs only.
 - OpenAI never receives API keys from the client; `/api/ai-command` calls the Responses API server-side.
 
-The previous tldraw SDK path was removed to demonstrate more custom engineering. This version owns the object schema directly instead of mapping SDK records.
+The previous tldraw SDK path was removed to demonstrate more custom engineering. This version owns the object schema directly instead of mapping SDK records. The merged custom engine is guarded by `NEXT_PUBLIC_CUSTOM_CANVAS_ENGINE`, which defaults to `true`; disabling it blocks board entry rather than reviving a second canvas implementation.
 
 ## Runtime Flow
 

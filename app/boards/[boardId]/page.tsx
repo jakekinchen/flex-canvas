@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { ProfileNameModal } from "@/components/auth/ProfileNameModal";
 import { CustomBoard } from "@/components/board/CustomBoard";
 import { getEnvStatus } from "@/lib/env";
+import { getCustomCanvasEngineFlag } from "@/lib/featureFlags";
 import { ensureProfile, getBoardAccess, getBoardById, getProfile } from "@/lib/db/queries";
 import { getAuthenticatedUser } from "@/lib/supabase/server";
 
@@ -9,6 +10,19 @@ export const dynamic = "force-dynamic";
 
 export default async function BoardPage({ params }: { params: Promise<{ boardId: string }> }) {
   const { boardId } = await params;
+  const customCanvasEngine = getCustomCanvasEngineFlag();
+  if (!customCanvasEngine.enabled) {
+    return (
+      <main className="dashboard-shell">
+        <section className="setup-warning">
+          <h1>Custom canvas engine disabled</h1>
+          <p>The merged React Konva and Liveblocks Storage implementation is controlled by this feature flag.</p>
+          <code>{customCanvasEngine.name}=true</code>
+        </section>
+      </main>
+    );
+  }
+
   const env = getEnvStatus();
   if (!env.ok) {
     return (

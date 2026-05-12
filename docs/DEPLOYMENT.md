@@ -28,9 +28,14 @@ OPENAI_API_KEY
 OPENAI_MODEL
 OPENAI_REASONING_EFFORT
 NEXT_PUBLIC_APP_URL
+NEXT_PUBLIC_CUSTOM_CANVAS_ENGINE
 ```
 
 Deploy only after `LIVEBLOCKS_SECRET_KEY` is available and Supabase migrations have been pushed.
+Keep `NEXT_PUBLIC_CUSTOM_CANVAS_ENGINE=true` for the merged custom React Konva and
+Liveblocks Storage implementation. The code defaults this flag on; explicit false,
+off, disabled, legacy, or tldraw values block board entry instead of maintaining a
+second canvas path.
 
 Current production URL:
 
@@ -39,7 +44,7 @@ Current production URL:
 
 Latest production smoke:
 
-- Deployment: `https://collabboard-oclyqwb9f-kelly-1224s-projects.vercel.app`
+- Deployment: `https://collabboard-ntdh9j7nu-kelly-1224s-projects.vercel.app`
 - Alias: `https://collabboard-six-kappa.vercel.app`
 - Command: `COLLABBOARD_CLEANUP_USERS=1 COLLABBOARD_REPORT=test-results/collabboard-smoke-prod-latest.json npm run test:smoke:prod`
 - Report: `test-results/collabboard-smoke-prod-latest.json`
@@ -48,14 +53,15 @@ Latest production smoke:
   copy/paste, rectangle resize/rotate, line, connector, frame create/edit, drag-select,
   deterministic AI, OpenAI-backed AI schema/server-mutation path, object sync latency,
   controlled AI latency, reconnect, 500+ object capacity, mobile layout, and FPS gates.
-- Note: OpenAI-backed observed latency was 3,405 ms in that run. It is recorded as live
+- Note: OpenAI-backed observed latency was 3,899 ms in that run. It is recorded as live
   hosted-model timing, not treated as an app-controlled latency gate.
 
 Latest production visual similarity:
 
 - Command: `npm run test:visual:prod -- --report test-results/reference-ui-similarity-prod-latest.json`
 - Report: `test-results/reference-ui-similarity-prod-latest.json`
-- Result: passed desktop, mobile, and 390px compact crops against the 85% threshold.
+- Result: passed desktop 90.0512%, mobile 86.3424%, and 390px compact 88.3655%
+  crops against the 85% threshold.
 
 Custom-engine deployment note:
 
