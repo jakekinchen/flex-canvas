@@ -39,5 +39,5 @@ Audited against the CollabBoard closeout objective on 2026-05-12.
 ## Optional/Deferred Submission Items
 
 - [x] GitHub repo URL: `https://github.com/kellyclaudeai/flex-canvas`.
-- [x] Social post draft: copy exists in `docs/SUBMISSION_CHECKLIST.md`.
+- [x] Social post draft: copy exists in `docs/SUBMISSION_CHECKLIST.md` and `docs/SOCIAL_POST_DRAFT.md`.
 - [ ] Social post publication: explicitly deferred by user; do not publish yet.

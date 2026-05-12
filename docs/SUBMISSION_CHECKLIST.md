@@ -25,6 +25,7 @@
 - Test plan: `docs/TEST_PLAN.md`
 - Final compliance audit: `docs/FINAL_COMPLIANCE_AUDIT.md`
 - Completion audit: `docs/COMPLETION_AUDIT.md`
+- Social post draft: `docs/SOCIAL_POST_DRAFT.md`
 
 ## Final Gates
 
@@ -69,3 +70,5 @@ Screenshots:
 - https://collabboard-six-kappa.vercel.app/demo/flex-canvas-home-desktop.png
 - https://collabboard-six-kappa.vercel.app/demo/flex-canvas-board-desktop.png
 - https://collabboard-six-kappa.vercel.app/demo/flex-canvas-home-mobile.png
+
+Standalone draft: `docs/SOCIAL_POST_DRAFT.md`

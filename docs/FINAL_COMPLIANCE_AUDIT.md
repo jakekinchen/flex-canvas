@@ -30,5 +30,5 @@ Objective: verify every explicit CollabBoard requirement and deliverable against
 
 ## Remaining Optional/Deferred Actions
 
-- Social post: draft exists in `docs/SUBMISSION_CHECKLIST.md`; do not publish it until explicitly approved.
+- Social post: draft exists in `docs/SUBMISSION_CHECKLIST.md` and `docs/SOCIAL_POST_DRAFT.md`; do not publish it until explicitly approved.
 - Optional polish: replace the generated demo-video draft with a freshly recorded screen demo if desired.
