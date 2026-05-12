@@ -17,6 +17,7 @@ Objective: verify every explicit CollabBoard requirement and deliverable against
 - Public app: `https://collabboard-six-kappa.vercel.app`.
 - Latest deployment: `https://collabboard-3dcuets4r-kelly-1224s-projects.vercel.app`.
 - GitHub repository: `https://github.com/kellyclaudeai/flex-canvas`.
+- GitHub transfer: requested to `jakekinchen`; pending recipient acceptance.
 - Demo video: `https://collabboard-six-kappa.vercel.app/demo/flex-canvas-demo-draft.mp4`, duration 4 minutes 30 seconds.
 - Pre-Search, AI development log, cost analysis, architecture, deployment, test plan, and submission docs exist under `docs/`.
 
@@ -30,5 +31,6 @@ Objective: verify every explicit CollabBoard requirement and deliverable against
 
 ## Remaining Optional/Deferred Actions
 
+- GitHub transfer acceptance: `jakekinchen` must accept the pending transfer before the repository moves to `https://github.com/jakekinchen/flex-canvas`.
 - Social post: draft exists in `docs/SUBMISSION_CHECKLIST.md` and `docs/SOCIAL_POST_DRAFT.md`; do not publish it until explicitly approved.
 - Optional polish: replace the generated demo-video draft with a freshly recorded screen demo if desired.

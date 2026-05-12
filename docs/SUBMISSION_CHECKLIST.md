@@ -3,6 +3,7 @@
 ## Required Links
 
 - GitHub repo: `https://github.com/kellyclaudeai/flex-canvas`
+- GitHub transfer status: requested to `jakekinchen`; pending recipient acceptance.
 - Public app: `https://collabboard-six-kappa.vercel.app`
 - Latest production deployment: `https://collabboard-3dcuets4r-kelly-1224s-projects.vercel.app`
 - Production smoke report: `test-results/collabboard-smoke-prod-latest.json`
@@ -40,6 +41,7 @@
 - [x] Generate a 3-5 minute local demo video draft.
 - [x] Publish the draft demo video at the deployed app URL.
 - [x] Create/push the GitHub repository and add the final URL above.
+- [x] Request GitHub repository transfer to `jakekinchen`.
 - [ ] Replace the draft demo with a freshly recorded polished screen demo if desired.
 - [x] Prepare the social post draft.
 - [ ] Publish the social post from the submitter's X or LinkedIn account only after explicit approval.

@@ -11,6 +11,7 @@ Audited against the CollabBoard closeout objective on 2026-05-12.
 - Local smoke report: `test-results/flex-canvas-smoke-local.json`
 - Demo video: `https://collabboard-six-kappa.vercel.app/demo/flex-canvas-demo-draft.mp4`
 - GitHub repository: `https://github.com/kellyclaudeai/flex-canvas`
+- GitHub transfer: requested to `jakekinchen`; pending recipient acceptance.
 - Public screenshots:
   - `https://collabboard-six-kappa.vercel.app/demo/flex-canvas-home-desktop.png`
   - `https://collabboard-six-kappa.vercel.app/demo/flex-canvas-board-desktop.png`
@@ -39,5 +40,6 @@ Audited against the CollabBoard closeout objective on 2026-05-12.
 ## Optional/Deferred Submission Items
 
 - [x] GitHub repo URL: `https://github.com/kellyclaudeai/flex-canvas`.
+- [x] GitHub transfer request sent to `jakekinchen`; GitHub still shows the repo under `kellyclaudeai` until recipient acceptance.
 - [x] Social post draft: copy exists in `docs/SUBMISSION_CHECKLIST.md` and `docs/SOCIAL_POST_DRAFT.md`.
 - [ ] Social post publication: explicitly deferred by user; do not publish yet.
