@@ -1376,6 +1376,20 @@ h1 {
   padding-top: 18px;
 }
 
+.auth-switcher {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.auth-switcher button {
+  background: transparent;
+  border: 1px solid #cfd6e2;
+  box-shadow: none;
+  color: #1f46db;
+  min-height: 42px;
+}
+
 .form-status {
   align-items: center;
   color: var(--muted);
@@ -2416,6 +2430,10 @@ h1 {
   .dashboard-header h1,
   .auth-shell h1 {
     font-size: 36px;
+  }
+
+  .auth-switcher {
+    grid-template-columns: 1fr;
   }
 
   .presence-list {
