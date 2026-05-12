@@ -2,9 +2,9 @@
 
 ## Required Links
 
-- GitHub repo: not configured in this local checkout; add the public repository URL before submission.
+- GitHub repo: not configured in this local checkout; create/push a GitHub repository and add the URL before submission.
 - Public app: `https://collabboard-six-kappa.vercel.app`
-- Latest production deployment: `https://collabboard-ntdh9j7nu-kelly-1224s-projects.vercel.app`
+- Latest production deployment: `https://collabboard-byh53utza-kelly-1224s-projects.vercel.app`
 - Production smoke report: `test-results/collabboard-smoke-prod-latest.json`
 - Expanded local smoke report: `test-results/collabboard-smoke-20260512213412.json`
 - Production visual similarity report: `test-results/reference-ui-similarity-prod-latest.json`
@@ -13,12 +13,18 @@
 - Demo video URL: `https://collabboard-six-kappa.vercel.app/demo/flex-canvas-demo-draft.mp4`
 - Demo video draft: `output/demo/flex-canvas-demo-draft.mp4`
 - Demo video notes: `docs/DEMO_VIDEO.md`
+- Public screenshot, home desktop: `https://collabboard-six-kappa.vercel.app/demo/flex-canvas-home-desktop.png`
+- Public screenshot, board desktop: `https://collabboard-six-kappa.vercel.app/demo/flex-canvas-board-desktop.png`
+- Public screenshot, home mobile: `https://collabboard-six-kappa.vercel.app/demo/flex-canvas-home-mobile.png`
+- Public screenshot, mobile proof crop: `https://collabboard-six-kappa.vercel.app/demo/flex-canvas-mobile-proof.png`
 - Setup guide: `README.md`
 - Architecture overview: `docs/ARCHITECTURE.md`
 - Pre-search notes: `docs/PRE_SEARCH.md`
 - AI development log: `docs/AI_DEVELOPMENT_LOG.md`
 - AI cost analysis: `docs/AI_COST_ANALYSIS.md`
 - Test plan: `docs/TEST_PLAN.md`
+- Final compliance audit: `docs/FINAL_COMPLIANCE_AUDIT.md`
+- Completion audit: `docs/COMPLETION_AUDIT.md`
 
 ## Final Gates
 
@@ -32,8 +38,9 @@
 - [x] Confirm at least 5 authenticated smoke users can join one board.
 - [x] Generate a 3-5 minute local demo video draft.
 - [x] Publish the draft demo video at the deployed app URL.
+- [ ] Create/push the GitHub repository and add the final URL above.
 - [ ] Replace the draft demo with a freshly recorded polished screen demo if desired.
-- [ ] Publish the social post.
+- [ ] Publish the social post from the submitter's X or LinkedIn account.
 
 ## Demo Video Script
 
@@ -51,4 +58,13 @@
 
 ## Social Post Draft
 
-Built Flex Canvas for @GauntletAI: a realtime collaborative whiteboard with Supabase Auth, Liveblocks custom Storage/presence, React Konva rendering, and server-side AI board operations. It supports multiplayer cursors, editable sticky notes, shapes, frames, connectors, selection actions, deterministic workshop templates, OpenAI-backed commands, and 500+ object smoke coverage.
+Built Flex Canvas for @GauntletAI: a realtime collaborative whiteboard with Supabase Auth, Liveblocks custom Storage/presence, React Konva rendering, and server-side AI board operations.
+
+Features: multiplayer cursors and presence, editable sticky notes, shapes, frames, lines, arrow connectors, drag-select, resize/rotate, recolor, duplicate/copy/paste, deterministic workshop templates, OpenAI-backed commands, reconnect recovery, and 500+ object smoke coverage.
+
+Demo: https://collabboard-six-kappa.vercel.app/demo/flex-canvas-demo-draft.mp4
+App: https://collabboard-six-kappa.vercel.app
+Screenshots:
+- https://collabboard-six-kappa.vercel.app/demo/flex-canvas-home-desktop.png
+- https://collabboard-six-kappa.vercel.app/demo/flex-canvas-board-desktop.png
+- https://collabboard-six-kappa.vercel.app/demo/flex-canvas-home-mobile.png

@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { FlexCanvasLogo } from "@/components/brand/FlexCanvasLogo";
 import { FlexCanvasDashboard, type FlexRecentBoard } from "@/components/home/FlexCanvasDashboard";
 import { getEnvStatus } from "@/lib/env";
 import { getCustomCanvasEngineFlag } from "@/lib/featureFlags";
@@ -13,6 +14,7 @@ export default async function BoardsPage() {
     return (
       <main className="dashboard-shell">
         <section className="setup-warning">
+          <FlexCanvasLogo />
           <h1>Custom canvas engine disabled</h1>
           <p>Set the feature flag to keep the merged React Konva and Liveblocks Storage implementation active.</p>
           <code>{customCanvasEngine.name}=true</code>
@@ -30,6 +32,7 @@ export default async function BoardsPage() {
     return (
       <main className="dashboard-shell">
         <section className="setup-warning">
+          <FlexCanvasLogo />
           <h1>Supabase setup required</h1>
           <code>{env.missing.join(", ")}</code>
         </section>

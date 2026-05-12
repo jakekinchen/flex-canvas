@@ -41,10 +41,15 @@ Current production URL:
 
 - `https://collabboard-six-kappa.vercel.app`
 - Public draft demo video: `https://collabboard-six-kappa.vercel.app/demo/flex-canvas-demo-draft.mp4`
+- Public screenshots:
+  - `https://collabboard-six-kappa.vercel.app/demo/flex-canvas-home-desktop.png`
+  - `https://collabboard-six-kappa.vercel.app/demo/flex-canvas-board-desktop.png`
+  - `https://collabboard-six-kappa.vercel.app/demo/flex-canvas-home-mobile.png`
+  - `https://collabboard-six-kappa.vercel.app/demo/flex-canvas-mobile-proof.png`
 
 Latest production smoke:
 
-- Deployment: `https://collabboard-ntdh9j7nu-kelly-1224s-projects.vercel.app`
+- Deployment: `https://collabboard-byh53utza-kelly-1224s-projects.vercel.app`
 - Alias: `https://collabboard-six-kappa.vercel.app`
 - Command: `COLLABBOARD_CLEANUP_USERS=1 COLLABBOARD_REPORT=test-results/collabboard-smoke-prod-latest.json npm run test:smoke:prod`
 - Report: `test-results/collabboard-smoke-prod-latest.json`
@@ -53,14 +58,14 @@ Latest production smoke:
   copy/paste, rectangle resize/rotate, line, connector, frame create/edit, drag-select,
   deterministic AI, OpenAI-backed AI schema/server-mutation path, object sync latency,
   controlled AI latency, reconnect, 500+ object capacity, mobile layout, and FPS gates.
-- Note: OpenAI-backed observed latency was 3,899 ms in that run. It is recorded as live
+- Note: OpenAI-backed observed latency was 2,724 ms in that run. It is recorded as live
   hosted-model timing, not treated as an app-controlled latency gate.
 
 Latest production visual similarity:
 
 - Command: `npm run test:visual:prod -- --report test-results/reference-ui-similarity-prod-latest.json`
 - Report: `test-results/reference-ui-similarity-prod-latest.json`
-- Result: passed desktop 90.0512%, mobile 86.3424%, and 390px compact 88.3655%
+- Result: passed desktop 90.1623%, mobile 86.4051%, and 390px compact 88.3655%
   crops against the 85% threshold.
 
 Custom-engine deployment note:

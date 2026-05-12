@@ -5,12 +5,11 @@ import {
   Copy,
   Grid2X2,
   Home,
-  LayoutTemplate,
   Menu,
   Plus,
-  Settings,
   Users,
 } from "lucide-react";
+import { FlexCanvasLogo } from "@/components/brand/FlexCanvasLogo";
 
 export type FlexRecentBoard = {
   collaborators?: number;
@@ -21,6 +20,7 @@ export type FlexRecentBoard = {
 };
 
 type FlexCanvasDashboardProps = {
+  activeView?: "home" | "boards";
   boards?: FlexRecentBoard[];
   canCreate?: boolean;
   setupWarning?: ReactNode;
@@ -33,14 +33,12 @@ const sampleBoards: FlexRecentBoard[] = [
 ];
 
 const navItems = [
-  { label: "Home", icon: Home, active: true },
-  { label: "Boards", icon: Grid2X2 },
-  { label: "Templates", icon: LayoutTemplate },
-  { label: "Community", icon: Users },
-  { label: "Settings", icon: Settings },
+  { id: "home", label: "Home", icon: Home, href: "/" },
+  { id: "boards", label: "Boards", icon: Grid2X2, href: "/boards" },
 ];
 
-export function FlexCanvasDashboard({ boards = [], canCreate = false, setupWarning }: FlexCanvasDashboardProps) {
+export function FlexCanvasDashboard({ activeView, boards = [], canCreate = false, setupWarning }: FlexCanvasDashboardProps) {
+  const currentView = activeView ?? (canCreate ? "boards" : "home");
   const visibleBoards = boards.length ? boards.slice(0, 3) : sampleBoards;
 
   return (
@@ -51,7 +49,7 @@ export function FlexCanvasDashboard({ boards = [], canCreate = false, setupWarni
           {navItems.map((item) => {
             const Icon = item.icon;
             return (
-              <Link className={item.active ? "active" : ""} href={item.label === "Boards" ? "/boards" : "#"} key={item.label}>
+              <Link className={item.id === currentView ? "active" : ""} href={item.href} key={item.label}>
                 <Icon size={18} />
                 {item.label}
               </Link>
@@ -147,41 +145,18 @@ export function FlexCanvasDashboard({ boards = [], canCreate = false, setupWarni
         </section>
 
         <nav className="mobile-dock" aria-label="Mobile navigation">
-          <Link className="active" href="/">
+          <Link className={currentView === "home" ? "active" : ""} href="/">
             <Home size={24} />
-          </Link>
-          <Link href="/boards">
-            <Grid2X2 size={24} />
           </Link>
           <Link className="dock-create" href={canCreate ? "/boards" : "/login"}>
             <Plus size={22} />
           </Link>
-          <Link href="#">
-            <Users size={24} />
-          </Link>
-          <Link href="#">
-            <Settings size={24} />
+          <Link className={currentView === "boards" ? "active" : ""} href="/boards">
+            <Grid2X2 size={24} />
           </Link>
         </nav>
       </section>
     </main>
-  );
-}
-
-export function FlexCanvasLogo() {
-  return (
-    <Link className="flex-canvas-logo" href="/" aria-label="Flex Canvas home">
-      <span className="brand-mark" aria-hidden="true">
-        <span className="brand-triangle" />
-        <span className="brand-dot" />
-        <span className="brand-square" />
-      </span>
-      <span>
-        Flex
-        <br />
-        Canvas
-      </span>
-    </Link>
   );
 }
 

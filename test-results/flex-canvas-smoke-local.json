@@ -1,6 +1,6 @@
 {
-  "runId": "20260512213507",
-  "baseUrl": "http://localhost:3000",
+  "runId": "20260512220803",
+  "baseUrl": "http://localhost:3020",
   "targets": {
     "users": 5,
     "aiLatencyTargetMs": 2000,
@@ -18,8 +18,8 @@
       "name": "owner board ready",
       "status": "pass",
       "details": {
-        "boardUrl": "http://localhost:3000/boards/1675bfbc-b135-4c1a-b305-21342824f1a3",
-        "latencyMs": 2682
+        "boardUrl": "http://localhost:3020/boards/17bae9e1-129a-491e-a226-ab2e5b529c38",
+        "latencyMs": 2725
       }
     },
     {
@@ -28,11 +28,11 @@
       "details": {
         "requestedUsers": 5,
         "readyLatenciesMs": [
-          2682,
-          1853,
-          1828,
-          1358,
-          1357
+          2725,
+          1814,
+          1307,
+          1313,
+          1316
         ]
       }
     },
@@ -48,7 +48,7 @@
       "name": "cursor propagation observed",
       "status": "pass",
       "details": {
-        "latencyMs": 12,
+        "latencyMs": 14,
         "targetMs": 50
       }
     },
@@ -56,7 +56,7 @@
       "name": "cursor latency target",
       "status": "pass",
       "details": {
-        "latencyMs": 12,
+        "latencyMs": 14,
         "targetMs": 50
       }
     },
@@ -64,7 +64,7 @@
       "name": "human-created sticky note synced",
       "status": "pass",
       "details": {
-        "objectId": "createStickyNote:6fe07df4-75ca-4a94-bda6-1eba76b0deb4",
+        "objectId": "createStickyNote:fc2c2999-fa1b-44e1-84f4-8e4aa12fb729",
         "sourceBefore": 0,
         "sourceAfter": 1,
         "receiverBefore": 0,
@@ -76,7 +76,7 @@
       "name": "human sticky text edit synced",
       "status": "pass",
       "details": {
-        "objectId": "createStickyNote:6fe07df4-75ca-4a94-bda6-1eba76b0deb4",
+        "objectId": "createStickyNote:fc2c2999-fa1b-44e1-84f4-8e4aa12fb729",
         "text": "Edited by owner",
         "synced": true
       }
@@ -85,14 +85,14 @@
       "name": "human object move synced",
       "status": "pass",
       "details": {
-        "objectId": "createStickyNote:6fe07df4-75ca-4a94-bda6-1eba76b0deb4",
+        "objectId": "createStickyNote:fc2c2999-fa1b-44e1-84f4-8e4aa12fb729",
         "before": {
-          "x": 460,
-          "y": 343
+          "x": 441,
+          "y": 324
         },
         "after": {
-          "x": 550,
-          "y": 391
+          "x": 531,
+          "y": 372
         },
         "synced": true
       }
@@ -101,7 +101,7 @@
       "name": "human color change synced",
       "status": "pass",
       "details": {
-        "objectId": "createStickyNote:6fe07df4-75ca-4a94-bda6-1eba76b0deb4",
+        "objectId": "createStickyNote:fc2c2999-fa1b-44e1-84f4-8e4aa12fb729",
         "expectedColor": "#86efac",
         "actualColor": "#86efac",
         "synced": true
@@ -111,9 +111,9 @@
       "name": "simultaneous text edit converged",
       "status": "pass",
       "details": {
-        "objectId": "createStickyNote:6fe07df4-75ca-4a94-bda6-1eba76b0deb4",
-        "finalA": "Collaborator conflict edit",
-        "finalB": "Collaborator conflict edit",
+        "objectId": "createStickyNote:fc2c2999-fa1b-44e1-84f4-8e4aa12fb729",
+        "finalA": "Owner conflict edit",
+        "finalB": "Owner conflict edit",
         "expected": [
           "Owner conflict edit",
           "Collaborator conflict edit"
@@ -125,7 +125,7 @@
       "name": "duplicate selection synced",
       "status": "pass",
       "details": {
-        "objectId": "createStickyNote:6fe07df4-75ca-4a94-bda6-1eba76b0deb4",
+        "objectId": "createStickyNote:fc2c2999-fa1b-44e1-84f4-8e4aa12fb729",
         "sourceBefore": 1,
         "sourceAfter": 2,
         "receiverBefore": 1,
@@ -149,7 +149,7 @@
       "status": "pass",
       "details": {
         "buttonName": "Rectangle",
-        "objectId": "createShape:b57da102-a7b1-4085-b2b4-ba503bee294e",
+        "objectId": "createShape:a1befde0-688a-4d39-80d2-6d13a0d1d20b",
         "sourceBefore": 3,
         "sourceAfter": 4,
         "receiverBefore": 3,
@@ -161,16 +161,16 @@
       "name": "resize and rotate transform synced",
       "status": "pass",
       "details": {
-        "objectId": "createShape:b57da102-a7b1-4085-b2b4-ba503bee294e",
+        "objectId": "createShape:a1befde0-688a-4d39-80d2-6d13a0d1d20b",
         "before": {
           "width": 220,
           "height": 140,
           "rotation": 0
         },
         "after": {
-          "width": 289.6531743599845,
+          "width": 289.6531743599844,
           "height": 184.32474731999037,
-          "rotation": 37.120615986038594
+          "rotation": 37.120615986038494
         },
         "resized": true,
         "rotated": true
@@ -181,7 +181,7 @@
       "status": "pass",
       "details": {
         "buttonName": "Line",
-        "objectId": "createShape:dfe6fefe-e6f4-41c4-a86e-91a6fc5377aa",
+        "objectId": "createShape:d543bef9-47cd-4732-919c-4f313839940a",
         "sourceBefore": 4,
         "sourceAfter": 5,
         "receiverBefore": 4,
@@ -194,7 +194,7 @@
       "status": "pass",
       "details": {
         "buttonName": "Arrow connector",
-        "objectId": "createConnector:a73a7b25-ff45-4143-a014-b382cb21e205",
+        "objectId": "createConnector:aba46e1c-39b9-41ac-ae56-61eb8a8f8bc6",
         "sourceBefore": 5,
         "sourceAfter": 6,
         "receiverBefore": 5,
@@ -206,7 +206,7 @@
       "name": "human-created frame synced",
       "status": "pass",
       "details": {
-        "objectId": "createFrame:874f6074-c31b-4daf-b5c0-6ed3efda92d8",
+        "objectId": "createFrame:12b77f85-fc9a-41b9-b369-da245daaf632",
         "sourceBefore": 6,
         "sourceAfter": 7,
         "receiverBefore": 6,
@@ -218,7 +218,7 @@
       "name": "human frame title edit synced",
       "status": "pass",
       "details": {
-        "objectId": "createFrame:874f6074-c31b-4daf-b5c0-6ed3efda92d8",
+        "objectId": "createFrame:12b77f85-fc9a-41b9-b369-da245daaf632",
         "text": "Edited smoke frame",
         "synced": true
       }
@@ -236,7 +236,7 @@
       "status": "pass",
       "details": {
         "command": "Add a yellow sticky note that says User Research",
-        "latencyMs": 552,
+        "latencyMs": 558,
         "mode": "deterministic",
         "sourceBefore": 7,
         "sourceAfter": 8,
@@ -257,13 +257,13 @@
         "afterB": 10,
         "first": {
           "command": "Add a yellow sticky note that says Parallel A",
-          "latencyMs": 1013,
+          "latencyMs": 1001,
           "mode": "deterministic",
           "status": "Fast preset\nCreated a yellow sticky note.\n1 ops"
         },
         "second": {
           "command": "Create a blue rectangle at position 100, 200",
-          "latencyMs": 809,
+          "latencyMs": 1303,
           "mode": "deterministic",
           "status": "Fast preset\nCreated a blue rectangle.\n1 ops"
         },
@@ -275,14 +275,14 @@
       "status": "pass",
       "details": {
         "command": "Create a purple circle at position 360, 160",
-        "latencyMs": 4142,
+        "latencyMs": 4391,
         "mode": "openai",
         "sourceBefore": 10,
         "sourceAfter": 11,
         "receiverBefore": 10,
         "receiverAfter": 11,
         "synced": true,
-        "status": "Live AI\nCreating a purple circle at (360, 160).\n1 ops",
+        "status": "Live AI\nCreated a purple circle at position 360, 160.\n1 ops",
         "expectedMode": "openai",
         "targetEnforced": false
       }
@@ -292,7 +292,7 @@
       "status": "pass",
       "details": {
         "command": "Create a SWOT analysis template",
-        "latencyMs": 890,
+        "latencyMs": 871,
         "mode": "deterministic",
         "status": "Fast preset\nCreated a SWOT analysis template.\n13 ops",
         "targetMs": 2000
@@ -303,7 +303,7 @@
       "status": "pass",
       "details": {
         "command": "Get board state",
-        "latencyMs": 797,
+        "latencyMs": 821,
         "mode": "deterministic",
         "status": "Fast preset\nCurrent board context: 1 connector, 2 frame, 8 shape, 9 sticky, 4 text.\n0 ops"
       }
@@ -312,16 +312,16 @@
       "name": "object sync latency measured",
       "status": "pass",
       "details": {
-        "latencyMs": 10,
-        "localShapeAt": 1778621736069,
-        "remoteShapeAt": 1778621736079
+        "latencyMs": 0,
+        "localShapeAt": 1778623711201,
+        "remoteShapeAt": 1778623711200
       }
     },
     {
       "name": "object sync latency target",
       "status": "pass",
       "details": {
-        "latencyMs": 10,
+        "latencyMs": 0,
         "targetMs": 100
       }
     },
@@ -337,44 +337,44 @@
       "status": "pass",
       "details": {
         "aiPanel": {
-          "bottom": 1489,
-          "height": 986,
-          "left": 0,
-          "right": 390,
-          "top": 503,
-          "width": 390
+          "bottom": 1539,
+          "height": 987,
+          "left": 12,
+          "right": 378,
+          "top": 552,
+          "width": 366
         },
         "canvas": {
-          "bottom": 503,
-          "height": 354,
-          "left": 0,
-          "right": 390,
-          "top": 149,
-          "width": 390
+          "bottom": 539,
+          "height": 352,
+          "left": 13,
+          "right": 377,
+          "top": 187,
+          "width": 364
         },
         "horizontalOverflowPx": 0,
         "runButtonVisible": true,
         "textarea": {
-          "bottom": 672,
+          "bottom": 721,
           "height": 115,
-          "left": 14,
-          "right": 376,
-          "top": 557,
-          "width": 362
+          "left": 27,
+          "right": 363,
+          "top": 606,
+          "width": 336
         },
         "textareaVisible": true,
         "toolbar": {
-          "bottom": 207,
+          "bottom": 245,
           "height": 48,
-          "left": 10,
-          "right": 380,
-          "top": 159,
-          "width": 370
+          "left": 23,
+          "right": 367,
+          "top": 197,
+          "width": 344
         },
         "toolbarWithinViewport": true,
         "topbar": {
-          "bottom": 149,
-          "height": 149,
+          "bottom": 174,
+          "height": 174,
           "left": 0,
           "right": 390,
           "top": 0,
@@ -399,7 +399,7 @@
       "details": {
         "storedShapes": 536,
         "target": 500,
-        "commandLatencyMs": 1431,
+        "commandLatencyMs": 1346,
         "commandMode": "deterministic"
       }
     },
@@ -407,10 +407,10 @@
       "name": "pan/zoom frame-rate target",
       "status": "pass",
       "details": {
-        "fps": 62.9,
+        "fps": 73,
         "targetFps": 60
       }
     }
   ],
-  "completedAt": "2026-05-12T21:35:46.783Z"
+  "completedAt": "2026-05-12T22:08:42.168Z"
 }

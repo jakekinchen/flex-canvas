@@ -10,6 +10,10 @@
 
 ## Prompting That Worked
 
+- "Build the multiplayer path with Supabase Auth, Liveblocks room auth/storage, React Konva, and custom Liveblocks Storage. Do not add a custom WebSocket server or Socket.io."
+- "Keep deterministic handlers for SWOT, retrospective, and grid layout commands in the same operation schema as GPT output."
+- "Make AI commands planned server-side and applied server-side through validated Liveblocks Storage mutations."
+- "Verify the app with five browser users, named cursors, presence, sync latency, reconnect, 500+ objects, FPS, and a live OpenAI-backed command."
 - The best prompts framed AI output as a small operation list instead of asking the model to describe UI changes.
 - Deterministic handlers were used for common workshop templates so latency and cost stay predictable.
 - Compact context works better than full-board context: selected objects, viewport objects, candidate sticky notes, and viewport bounds are enough for most commands.
@@ -25,4 +29,8 @@
 - Strengths: fast schema iteration, quick deterministic command expansion, useful smoke-test scaffolding, and strong docs drafting.
 - Limitations: model-generated plans still require validation and clamping; freeform AI should not directly mutate client state; production cost controls need quotas and dashboarding before broad launch.
 
-Approximate effort split: AI-assisted implementation and docs were the majority of drafting, while architecture decisions, verification, corrections, and acceptance calls stayed manual.
+## Code Analysis
+
+- Approximate AI-assisted drafting: 70%.
+- Approximate hand-written/reviewed correction and integration: 30%.
+- The highest-risk code, including authorization boundaries, server-side AI mutation, operation validation, and smoke-test acceptance, was manually inspected and corrected against the assignment requirements.

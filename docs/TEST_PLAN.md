@@ -42,38 +42,39 @@ Useful overrides:
 Latest production custom-engine run:
 
 - Public Vercel URL: `https://collabboard-six-kappa.vercel.app`
-- Deployment: `https://collabboard-ntdh9j7nu-kelly-1224s-projects.vercel.app`, aliased to
+- Deployment: `https://collabboard-byh53utza-kelly-1224s-projects.vercel.app`, aliased to
   `https://collabboard-six-kappa.vercel.app`.
 - Report: `test-results/collabboard-smoke-prod-latest.json`
-- Completed: `2026-05-12T22:00:38.098Z`
+- Completed: `2026-05-12T22:10:31.108Z`
 - Passed: 31 checks with no failures, including 5-user join, presence, cursor latency, sticky
   create/edit/move/recolor, simultaneous text-edit convergence, duplicate, copy/paste, rectangle
   resize/rotate, line, connector, frame create/edit, drag-select, deterministic sticky command,
   simultaneous deterministic AI commands, OpenAI-backed live command, SWOT latency, board-state
   command, object sync latency, refresh persistence, mobile layout, reconnect recovery, 500+
   object capacity, and FPS.
-- OpenAI-backed observed latency in that run was 3,899 ms; it was recorded as live upstream timing,
+- OpenAI-backed observed latency in that run was 2,724 ms; it was recorded as live upstream timing,
   not an app-controlled latency gate.
 - Latest production visual report: `test-results/reference-ui-similarity-prod-latest.json`; desktop
-  crop 90.0512%, mobile phone crop 86.3424%, and 390px compact mobile crop 88.3655%.
+  crop 90.1623%, mobile phone crop 86.4051%, and 390px compact mobile crop 88.3655%.
 
 Latest local visual similarity run:
 
-- Command: `npm run test:visual -- --base-url http://localhost:3000 --report test-results/reference-ui-similarity-local.json`
+- Command: `npm run test:visual -- --base-url http://localhost:3020 --report test-results/reference-ui-similarity-local.json`
 - Report: `test-results/reference-ui-similarity-local.json`
-- Passed: desktop crop 90.0060%, mobile phone crop 88.8027%, and 390px compact mobile crop 85.3670%
+- Passed: desktop crop 90.1623%, mobile phone crop 86.4038%, and 390px compact mobile crop 88.3655%
   against the 85% acceptance threshold.
 
 Latest full local smoke run:
 
-- Command: `npm run test:smoke -- --base-url http://localhost:3000 --report test-results/flex-canvas-smoke-local.json`
+- Command: `COLLABBOARD_CLEANUP_USERS=1 COLLABBOARD_REPORT=test-results/flex-canvas-smoke-local.json npm run test:smoke -- --base-url http://localhost:3020`
 - Report: `test-results/flex-canvas-smoke-local.json`
+- Completed: `2026-05-12T22:08:42.168Z`
 - Passed: 5-user join, presence, cursor latency, sticky create/edit/move/recolor, duplicate, copy/paste,
   simultaneous text-edit convergence, rectangle resize/rotate, line, connector, frame create/edit,
   drag-select, deterministic sticky command, simultaneous deterministic AI commands, OpenAI-backed live command,
   SWOT latency, board-state command, object sync latency, refresh persistence, mobile layout, reconnect recovery,
   500+ object capacity, and FPS.
-- OpenAI-backed observed latency was 4,142 ms; it was recorded as live upstream timing, not an app-controlled
+- OpenAI-backed observed latency was 4,391 ms; it was recorded as live upstream timing, not an app-controlled
   latency gate.
 
 ## Multiplayer Manual Gate

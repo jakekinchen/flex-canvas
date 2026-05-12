@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { LoginForm } from "@/components/auth/LoginForm";
-import { FlexCanvasLogo } from "@/components/home/FlexCanvasDashboard";
+import { FlexCanvasLogo } from "@/components/brand/FlexCanvasLogo";
 import { getEnvStatus } from "@/lib/env";
 import { getAuthenticatedUser } from "@/lib/supabase/server";
 
@@ -17,6 +17,7 @@ export default async function LoginPage() {
     return (
       <main className="auth-shell">
         <section className="setup-warning">
+          <FlexCanvasLogo />
           <h1>Supabase setup required</h1>
           <p>Configure these variables before using auth:</p>
           <code>{env.missing.join(", ")}</code>

@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { ProfileNameModal } from "@/components/auth/ProfileNameModal";
+import { FlexCanvasLogo } from "@/components/brand/FlexCanvasLogo";
 import { CustomBoard } from "@/components/board/CustomBoard";
 import { getEnvStatus } from "@/lib/env";
 import { getCustomCanvasEngineFlag } from "@/lib/featureFlags";
@@ -15,6 +16,7 @@ export default async function BoardPage({ params }: { params: Promise<{ boardId:
     return (
       <main className="dashboard-shell">
         <section className="setup-warning">
+          <FlexCanvasLogo />
           <h1>Custom canvas engine disabled</h1>
           <p>The merged React Konva and Liveblocks Storage implementation is controlled by this feature flag.</p>
           <code>{customCanvasEngine.name}=true</code>
@@ -28,6 +30,7 @@ export default async function BoardPage({ params }: { params: Promise<{ boardId:
     return (
       <main className="dashboard-shell">
         <section className="setup-warning">
+          <FlexCanvasLogo />
           <h1>Deployment environment incomplete</h1>
           <p>Live board access is blocked until all required variables are configured.</p>
           <code>{env.missing.join(", ")}</code>

@@ -1,12 +1,14 @@
 #!/usr/bin/env node
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outputDir = path.join(rootDir, "output/demo");
+const publicDemoDir = path.join(rootDir, "public/demo");
 mkdirSync(outputDir, { recursive: true });
+mkdirSync(publicDemoDir, { recursive: true });
 
 const magick = requireCommand("magick");
 const ffmpeg = requireCommand("ffmpeg");
@@ -41,9 +43,9 @@ Deterministic coverage includes sticky notes, rectangles, named frames, SWOT, re
 
 The conflict policy is simple and documented: last write wins.
 The expanded smoke proves simultaneous text edits converge across clients, and simultaneous deterministic AI commands from two users both sync into the same board.
-The latest focused local report passes twenty eight checks, including five user join, cursor latency, object sync latency, mobile layout, refresh persistence, and interaction frame rate.
+The latest production smoke report passes thirty one checks, including five user join, cursor latency, object sync latency, mobile layout, refresh persistence, reconnect recovery, five hundred plus stored objects, and interaction frame rate.
 
-For final submission, the remaining external steps are to deploy this exact latest code, rerun the full production smoke without skips, upload this demo, and publish the social post with the public app link and screenshots.`;
+The deployed app is live, the demo video is published from the app itself, and the submission package includes setup docs, architecture notes, pre-search, AI development notes, cost analysis, production smoke evidence, and public screenshots for the social post.`;
 
 const slides = [
   {
@@ -81,13 +83,13 @@ const slides = [
   {
     type: "image",
     image: screenshots.proof,
-    title: "Expanded Proof",
-    subtitle: "Focused local smoke passes five-user join, presence, cursors, object sync, conflict convergence, transforms, mobile layout, and FPS.",
+    title: "Production Proof",
+    subtitle: "Production smoke passes five-user join, presence, cursors, object sync, conflict convergence, transforms, mobile layout, reconnect, 500+ objects, and FPS.",
   },
   {
     type: "text",
-    title: "Submission Closeout",
-    subtitle: "Next external steps: deploy latest code, rerun full production smoke, upload this demo, and publish the @GauntletAI social post.",
+    title: "Submission Package",
+    subtitle: "The deployed app, public demo, screenshots, setup docs, architecture overview, AI log, cost analysis, and @GauntletAI social copy are ready.",
   },
 ];
 
@@ -105,6 +107,7 @@ const narrationPath = path.join(outputDir, "flex-canvas-demo-narration.txt");
 const audioPath = path.join(outputDir, "flex-canvas-demo-narration.aiff");
 const concatPath = path.join(outputDir, "slides.txt");
 const videoPath = path.join(outputDir, "flex-canvas-demo-draft.mp4");
+const publicVideoPath = path.join(publicDemoDir, "flex-canvas-demo-draft.mp4");
 writeFileSync(narrationPath, narration);
 run(say, ["-r", "145", "-o", audioPath, "-f", narrationPath]);
 writeFileSync(
@@ -135,8 +138,10 @@ run(ffmpeg, [
   "+faststart",
   videoPath,
 ]);
+copyFileSync(videoPath, publicVideoPath);
 
 console.log(videoPath);
+console.log(publicVideoPath);
 
 function makeTextSlide(title, subtitle, outputPath) {
   run(magick, [

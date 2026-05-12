@@ -1,5 +1,5 @@
 {
-  "baseUrl": "http://localhost:3000",
+  "baseUrl": "http://localhost:3020",
   "passed": true,
   "reference": "image-flex-canvas.png",
   "results": [
@@ -9,7 +9,7 @@
       "passed": true,
       "referenceCopy": "output/playwright/reference-ui-similarity-local-reference-crop-desktop-app.png",
       "screenshot": "output/playwright/reference-ui-similarity-local-reference-visual-desktop.png",
-      "similarity": 90.00598397072328,
+      "similarity": 90.16228658894256,
       "threshold": 85,
       "viewport": {
         "width": 1080,
@@ -22,7 +22,7 @@
       "passed": true,
       "referenceCopy": "output/playwright/reference-ui-similarity-local-reference-crop-mobile.png",
       "screenshot": "output/playwright/reference-ui-similarity-local-reference-visual-mobile.png",
-      "similarity": 88.80272303594289,
+      "similarity": 86.40384729336249,
       "threshold": 85,
       "viewport": {
         "width": 408,
@@ -35,7 +35,7 @@
       "passed": true,
       "referenceCopy": "output/playwright/reference-ui-similarity-local-reference-crop-mobile-390.png",
       "screenshot": "output/playwright/reference-ui-similarity-local-reference-visual-mobile-390.png",
-      "similarity": 85.36702177934406,
+      "similarity": 88.36553770858202,
       "threshold": 85,
       "viewport": {
         "width": 390,

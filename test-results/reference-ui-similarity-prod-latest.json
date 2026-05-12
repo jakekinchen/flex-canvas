@@ -9,7 +9,7 @@
       "passed": true,
       "referenceCopy": "output/playwright/reference-ui-similarity-prod-latest-reference-crop-desktop-app.png",
       "screenshot": "output/playwright/reference-ui-similarity-prod-latest-reference-visual-desktop.png",
-      "similarity": 90.05116561356378,
+      "similarity": 90.16228658894256,
       "threshold": 85,
       "viewport": {
         "width": 1080,
@@ -22,7 +22,7 @@
       "passed": true,
       "referenceCopy": "output/playwright/reference-ui-similarity-prod-latest-reference-crop-mobile.png",
       "screenshot": "output/playwright/reference-ui-similarity-prod-latest-reference-visual-mobile.png",
-      "similarity": 86.34237452096588,
+      "similarity": 86.40505581669031,
       "threshold": 85,
       "viewport": {
         "width": 408,

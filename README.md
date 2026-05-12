@@ -69,6 +69,8 @@ Use `npm run test:smoke:prod` to run the same 5-user multiplayer, sync, reconnec
 - AI cost analysis: `docs/AI_COST_ANALYSIS.md`
 - Demo video notes: `docs/DEMO_VIDEO.md`
 - Submission checklist and demo/social draft: `docs/SUBMISSION_CHECKLIST.md`
+- Final compliance audit: `docs/FINAL_COMPLIANCE_AUDIT.md`
+- Completion audit: `docs/COMPLETION_AUDIT.md`
 
 ## Write Ownership
 
@@ -81,7 +83,7 @@ Use `npm run test:smoke:prod` to run the same 5-user multiplayer, sync, reconnec
 
 Deploy to Vercel only after Supabase, Liveblocks, and OpenAI variables are configured. This app does not run a WebSocket server; Liveblocks supplies the realtime transport.
 
-Latest production deployment: `https://collabboard-ntdh9j7nu-kelly-1224s-projects.vercel.app`, aliased to `https://collabboard-six-kappa.vercel.app`.
+Latest production deployment: `https://collabboard-byh53utza-kelly-1224s-projects.vercel.app`, aliased to `https://collabboard-six-kappa.vercel.app`.
 Latest production smoke artifact: `test-results/collabboard-smoke-prod-latest.json`.
 Latest expanded local smoke artifact: `test-results/collabboard-smoke-20260512213412.json`.
 Latest production visual similarity artifact: `test-results/reference-ui-similarity-prod-latest.json`.
@@ -89,3 +91,6 @@ Latest local visual similarity artifact: `test-results/reference-ui-similarity-l
 Latest full local smoke artifact: `test-results/flex-canvas-smoke-local.json`.
 Draft local demo video artifact: `output/demo/flex-canvas-demo-draft.mp4`.
 Public draft demo video: `https://collabboard-six-kappa.vercel.app/demo/flex-canvas-demo-draft.mp4`.
+Public screenshots: `https://collabboard-six-kappa.vercel.app/demo/flex-canvas-home-desktop.png`,
+`https://collabboard-six-kappa.vercel.app/demo/flex-canvas-board-desktop.png`,
+and `https://collabboard-six-kappa.vercel.app/demo/flex-canvas-home-mobile.png`.

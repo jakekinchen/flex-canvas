@@ -1,6 +1,21 @@
 # AI Cost Analysis
 
-The app records `input_tokens`, `output_tokens`, execution mode, and estimated cost for OpenAI-backed commands when usage data is available. Deterministic commands are handled in-process and should be treated as effectively zero model cost.
+The app records `input_tokens`, `output_tokens`, operation counts, and estimated cost for OpenAI-backed commands when usage data is available. Deterministic commands are handled in-process and should be treated as effectively zero model cost.
+
+## Development and Testing Spend
+
+Supabase `ai_command_logs` aggregate as of `2026-05-12T21:35:43.373767+00:00`:
+
+- Total AI command log rows: `135`
+- Completed commands: `134`
+- Failed commands: `1`
+- OpenAI-backed API calls with token usage: `12`
+- Deterministic completed commands: `122`
+- Total input tokens: `12,859`
+- Total output tokens: `1,260`
+- Total estimated OpenAI API spend: `$0.102095`
+- Average OpenAI-backed command: `1,072` input tokens, `105` output tokens, `$0.008508`
+- Other AI-related runtime costs tracked in-app: `$0`; Vercel, Supabase, Liveblocks, and subscription-based development-agent costs are not metered in `ai_command_logs`.
 
 ## Current Estimator
 
@@ -15,7 +30,7 @@ Example calculation:
 - 500 output tokens = `$0.015`
 - Total = `$0.020`
 
-Development spend should be exported from Supabase `ai_command_logs` before final submission. Use:
+To refresh the aggregate before final submission, export from Supabase `ai_command_logs`:
 
 ```sql
 select

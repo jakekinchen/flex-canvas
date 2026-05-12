@@ -2,6 +2,7 @@
 
 import { ClientSideSuspense, LiveblocksProvider, RoomProvider, useSelf, useUpdateMyPresence } from "@liveblocks/react/suspense";
 import { useEffect, useMemo, useState } from "react";
+import { FlexCanvasLogo } from "@/components/brand/FlexCanvasLogo";
 import { AiCommandPanel } from "@/components/board/AiCommandPanel";
 import { BoardCanvas } from "@/components/board/BoardCanvas";
 import { PresenceList } from "@/components/board/PresenceList";
@@ -54,12 +55,17 @@ function BoardSurface({ boardId, roomId, boardName, canEdit }: CustomBoardProps)
   return (
     <div className="board-shell">
       <header className="board-topbar">
-        <div>
-          <p>Flex Canvas</p>
-          <h1>{boardName}</h1>
+        <div className="board-brand">
+          <FlexCanvasLogo className="board-brand-logo" />
+          <span className="board-title-stack">
+            <p>Live board</p>
+            <h1>{boardName}</h1>
+          </span>
         </div>
-        <PresenceList />
-        <ShareBoardButton />
+        <div className="board-topbar-actions">
+          <PresenceList />
+          <ShareBoardButton />
+        </div>
       </header>
       <main className="board-main">
         <BoardCanvas canEdit={canEdit} onContextChange={setBoardContext} user={user} />
