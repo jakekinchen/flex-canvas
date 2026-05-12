@@ -1,5 +1,5 @@
 {
-  "runId": "20260512221712",
+  "runId": "20260512221836",
   "baseUrl": "https://collabboard-six-kappa.vercel.app",
   "targets": {
     "users": 5,
@@ -18,8 +18,8 @@
       "name": "owner board ready",
       "status": "pass",
       "details": {
-        "boardUrl": "https://collabboard-six-kappa.vercel.app/boards/a4c8dd16-529b-4d31-a9f9-8746cfe9044b",
-        "latencyMs": 2273
+        "boardUrl": "https://collabboard-six-kappa.vercel.app/boards/39f7e341-6d3c-4b5a-a095-94bafd5bfa6a",
+        "latencyMs": 3256
       }
     },
     {
@@ -28,11 +28,11 @@
       "details": {
         "requestedUsers": 5,
         "readyLatenciesMs": [
-          2273,
-          1057,
-          1096,
-          1086,
-          1070
+          3256,
+          1804,
+          1028,
+          1034,
+          1058
         ]
       }
     },
@@ -48,7 +48,7 @@
       "name": "cursor propagation observed",
       "status": "pass",
       "details": {
-        "latencyMs": 19,
+        "latencyMs": 4,
         "targetMs": 50
       }
     },
@@ -56,7 +56,7 @@
       "name": "cursor latency target",
       "status": "pass",
       "details": {
-        "latencyMs": 19,
+        "latencyMs": 4,
         "targetMs": 50
       }
     },
@@ -64,7 +64,7 @@
       "name": "human-created sticky note synced",
       "status": "pass",
       "details": {
-        "objectId": "createStickyNote:53825d27-4c9a-4f8a-b0ae-58e712d50a13",
+        "objectId": "createStickyNote:cb27e5a2-602e-4f54-a16a-cc2377cccc6a",
         "sourceBefore": 0,
         "sourceAfter": 1,
         "receiverBefore": 0,
@@ -76,7 +76,7 @@
       "name": "human sticky text edit synced",
       "status": "pass",
       "details": {
-        "objectId": "createStickyNote:53825d27-4c9a-4f8a-b0ae-58e712d50a13",
+        "objectId": "createStickyNote:cb27e5a2-602e-4f54-a16a-cc2377cccc6a",
         "text": "Edited by owner",
         "synced": true
       }
@@ -85,7 +85,7 @@
       "name": "human object move synced",
       "status": "pass",
       "details": {
-        "objectId": "createStickyNote:53825d27-4c9a-4f8a-b0ae-58e712d50a13",
+        "objectId": "createStickyNote:cb27e5a2-602e-4f54-a16a-cc2377cccc6a",
         "before": {
           "x": 441,
           "y": 324
@@ -101,7 +101,7 @@
       "name": "human color change synced",
       "status": "pass",
       "details": {
-        "objectId": "createStickyNote:53825d27-4c9a-4f8a-b0ae-58e712d50a13",
+        "objectId": "createStickyNote:cb27e5a2-602e-4f54-a16a-cc2377cccc6a",
         "expectedColor": "#86efac",
         "actualColor": "#86efac",
         "synced": true
@@ -111,7 +111,7 @@
       "name": "simultaneous text edit converged",
       "status": "pass",
       "details": {
-        "objectId": "createStickyNote:53825d27-4c9a-4f8a-b0ae-58e712d50a13",
+        "objectId": "createStickyNote:cb27e5a2-602e-4f54-a16a-cc2377cccc6a",
         "finalA": "Owner conflict edit",
         "finalB": "Owner conflict edit",
         "expected": [
@@ -125,7 +125,7 @@
       "name": "duplicate selection synced",
       "status": "pass",
       "details": {
-        "objectId": "createStickyNote:53825d27-4c9a-4f8a-b0ae-58e712d50a13",
+        "objectId": "createStickyNote:cb27e5a2-602e-4f54-a16a-cc2377cccc6a",
         "sourceBefore": 1,
         "sourceAfter": 2,
         "receiverBefore": 1,
@@ -149,7 +149,7 @@
       "status": "pass",
       "details": {
         "buttonName": "Rectangle",
-        "objectId": "createShape:52e27154-672c-4528-a89a-c001d3c8d52c",
+        "objectId": "createShape:45da6bfa-5fbe-42ed-970e-a3570906d0c4",
         "sourceBefore": 3,
         "sourceAfter": 4,
         "receiverBefore": 3,
@@ -161,7 +161,7 @@
       "name": "resize and rotate transform synced",
       "status": "pass",
       "details": {
-        "objectId": "createShape:52e27154-672c-4528-a89a-c001d3c8d52c",
+        "objectId": "createShape:45da6bfa-5fbe-42ed-970e-a3570906d0c4",
         "before": {
           "width": 220,
           "height": 140,
@@ -181,7 +181,7 @@
       "status": "pass",
       "details": {
         "buttonName": "Line",
-        "objectId": "createShape:55349c42-6077-41ec-804f-e763202c7520",
+        "objectId": "createShape:0f2d35fc-9621-4e41-84a8-6c17b70585d3",
         "sourceBefore": 4,
         "sourceAfter": 5,
         "receiverBefore": 4,
@@ -194,7 +194,7 @@
       "status": "pass",
       "details": {
         "buttonName": "Arrow connector",
-        "objectId": "createConnector:6d8057bf-7e3e-4c31-ac2c-cc24b3327b5a",
+        "objectId": "createConnector:0e30403b-37d3-463c-85e0-3d7e0477e3ad",
         "sourceBefore": 5,
         "sourceAfter": 6,
         "receiverBefore": 5,
@@ -206,7 +206,7 @@
       "name": "human-created frame synced",
       "status": "pass",
       "details": {
-        "objectId": "createFrame:2403c8a5-d2cd-4439-ae7c-9eb697f13b5c",
+        "objectId": "createFrame:edca2b7c-2f79-4b5e-85e2-bb2f6855674c",
         "sourceBefore": 6,
         "sourceAfter": 7,
         "receiverBefore": 6,
@@ -218,7 +218,7 @@
       "name": "human frame title edit synced",
       "status": "pass",
       "details": {
-        "objectId": "createFrame:2403c8a5-d2cd-4439-ae7c-9eb697f13b5c",
+        "objectId": "createFrame:edca2b7c-2f79-4b5e-85e2-bb2f6855674c",
         "text": "Edited smoke frame",
         "synced": true
       }
@@ -236,7 +236,7 @@
       "status": "pass",
       "details": {
         "command": "Add a yellow sticky note that says User Research",
-        "latencyMs": 647,
+        "latencyMs": 754,
         "mode": "deterministic",
         "sourceBefore": 7,
         "sourceAfter": 8,
@@ -257,13 +257,13 @@
         "afterB": 10,
         "first": {
           "command": "Add a yellow sticky note that says Parallel A",
-          "latencyMs": 991,
+          "latencyMs": 984,
           "mode": "deterministic",
           "status": "Fast preset\nCreated a yellow sticky note.\n1 ops"
         },
         "second": {
           "command": "Create a blue rectangle at position 100, 200",
-          "latencyMs": 809,
+          "latencyMs": 802,
           "mode": "deterministic",
           "status": "Fast preset\nCreated a blue rectangle.\n1 ops"
         },
@@ -275,7 +275,7 @@
       "status": "pass",
       "details": {
         "command": "Create a purple circle at position 360, 160",
-        "latencyMs": 2638,
+        "latencyMs": 3335,
         "mode": "openai",
         "sourceBefore": 10,
         "sourceAfter": 11,
@@ -292,7 +292,7 @@
       "status": "pass",
       "details": {
         "command": "Create a SWOT analysis template",
-        "latencyMs": 888,
+        "latencyMs": 921,
         "mode": "deterministic",
         "status": "Fast preset\nCreated a SWOT analysis template.\n13 ops",
         "targetMs": 2000
@@ -303,7 +303,7 @@
       "status": "pass",
       "details": {
         "command": "Get board state",
-        "latencyMs": 814,
+        "latencyMs": 799,
         "mode": "deterministic",
         "status": "Fast preset\nCurrent board context: 1 connector, 2 frame, 8 shape, 9 sticky, 4 text.\n0 ops"
       }
@@ -313,8 +313,8 @@
       "status": "pass",
       "details": {
         "latencyMs": 0,
-        "localShapeAt": 1778624258771,
-        "remoteShapeAt": 1778624258771
+        "localShapeAt": 1778624347335,
+        "remoteShapeAt": 1778624347334
       }
     },
     {
@@ -386,6 +386,22 @@
       }
     },
     {
+      "name": "browser console error",
+      "status": "fail",
+      "details": {
+        "user": "Smoke 2",
+        "message": "WebSocket connection to 'wss://api.liveblocks.io/v8?roomId=board%3A5aa86edc-0d0f-4a9a-bc9e-39a0d8bfd59d&tok=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJrIjoiYWNjIiwicGlkIjoiNmEwMjQxOWZmYTJjYWE5MDNmMGMzZjUzIiwidWlkIjoiMzJmZjY5OGMtY2Q3ZS00NWM3LTgxNTYtMWI4YWNhYmQzNTNiIiwicGVybXMiOnsiYm9hcmQ6NWFhODZlZGMtMGQwZi00YTlhLWJjOWUtMzlhMGQ4YmZkNTlkIjpbInJvb206d3JpdGUiXX0sInVpIjp7Im5hbWUiOiJTbW9rZSAyIiwiY29sb3IiOiIjRUE1ODBDIiwiYXZhdGFyIjoiIn0sIm1jcHIiOjEwLCJ0aWQiOiJkZWZhdWx0Iiwib2lkIjoiZGVmYXVsdCIsImFpIjp0cnVlLCJpYXQiOjE3Nzg2MjQzNDksImV4cCI6MTc3ODYyNzk0OSwianRpIjoiQ1FfOFAtTXdQRHBGIn0.lmwqioAtFKZXeIg8bwDKN-YoDEGRNUM-Hi8wFhxtjBJGqI9dh248cdGwDfDvyE06qk5FhzORe5VxmSe-XidQzUEqjeh96-B-Z-fD5_qSN6P7M_GfhAmacMVNBzSaZ7ADBb7EqUE8r2sBcfdHAdh7YuImk-OI8UYyksIZYtoQ2NHUNejN_tgvMeVtPmcCbRtjQaINSMTTqGO5aMPg_Y2CmWPTMbItCop1HUp7U9JjlDWN378dfSpP_XHb0ROPhfmF_A7hHm4FjtXaU_BOGdRfuRobaodFvfBvcAVEyOQuOUxxIQLO31Ge_AXjQs5ugmy_7eiKkbMVY_GaYg0UwdQdqQ&version=3.19.0' failed: Error in connection establishment: net::ERR_INTERNET_DISCONNECTED"
+      }
+    },
+    {
+      "name": "browser console error",
+      "status": "fail",
+      "details": {
+        "user": "Smoke 2",
+        "message": "WebSocket connection to 'wss://api.liveblocks.io/v8?roomId=board%3A5aa86edc-0d0f-4a9a-bc9e-39a0d8bfd59d&tok=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJrIjoiYWNjIiwicGlkIjoiNmEwMjQxOWZmYTJjYWE5MDNmMGMzZjUzIiwidWlkIjoiMzJmZjY5OGMtY2Q3ZS00NWM3LTgxNTYtMWI4YWNhYmQzNTNiIiwicGVybXMiOnsiYm9hcmQ6NWFhODZlZGMtMGQwZi00YTlhLWJjOWUtMzlhMGQ4YmZkNTlkIjpbInJvb206d3JpdGUiXX0sInVpIjp7Im5hbWUiOiJTbW9rZSAyIiwiY29sb3IiOiIjRUE1ODBDIiwiYXZhdGFyIjoiIn0sIm1jcHIiOjEwLCJ0aWQiOiJkZWZhdWx0Iiwib2lkIjoiZGVmYXVsdCIsImFpIjp0cnVlLCJpYXQiOjE3Nzg2MjQzNDksImV4cCI6MTc3ODYyNzk0OSwianRpIjoiQ1FfOFAtTXdQRHBGIn0.lmwqioAtFKZXeIg8bwDKN-YoDEGRNUM-Hi8wFhxtjBJGqI9dh248cdGwDfDvyE06qk5FhzORe5VxmSe-XidQzUEqjeh96-B-Z-fD5_qSN6P7M_GfhAmacMVNBzSaZ7ADBb7EqUE8r2sBcfdHAdh7YuImk-OI8UYyksIZYtoQ2NHUNejN_tgvMeVtPmcCbRtjQaINSMTTqGO5aMPg_Y2CmWPTMbItCop1HUp7U9JjlDWN378dfSpP_XHb0ROPhfmF_A7hHm4FjtXaU_BOGdRfuRobaodFvfBvcAVEyOQuOUxxIQLO31Ge_AXjQs5ugmy_7eiKkbMVY_GaYg0UwdQdqQ&version=3.19.0' failed: Error in connection establishment: net::ERR_INTERNET_DISCONNECTED"
+      }
+    },
+    {
       "name": "disconnect/reconnect recovery",
       "status": "pass",
       "details": {
@@ -399,7 +415,7 @@
       "details": {
         "storedShapes": 536,
         "target": 500,
-        "commandLatencyMs": 829,
+        "commandLatencyMs": 1345,
         "commandMode": "deterministic"
       }
     },
@@ -407,10 +423,10 @@
       "name": "pan/zoom frame-rate target",
       "status": "pass",
       "details": {
-        "fps": 61.5,
+        "fps": 78.5,
         "targetFps": 60
       }
     }
   ],
-  "completedAt": "2026-05-12T22:17:50.131Z"
+  "completedAt": "2026-05-12T22:19:21.316Z"
 }

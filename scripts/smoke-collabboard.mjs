@@ -284,11 +284,16 @@ async function newSmokePage(activeBrowser, user, contextOptions = {}) {
   page.on("pageerror", (error) => fail("browser page error", { user: user.name, message: error.message }));
   page.on("console", (message) => {
     if (message.type() === "error") {
+      if (isExpectedOfflineConsoleError(message.text())) return;
       fail("browser console error", { user: user.name, message: message.text() });
     }
   });
   await login(page, user);
   return { context, page, user };
+}
+
+function isExpectedOfflineConsoleError(message) {
+  return message.includes("wss://api.liveblocks.io") && message.includes("net::ERR_INTERNET_DISCONNECTED");
 }
 
 async function runMobileLayoutProbe(activeBrowser, user, boardUrl) {

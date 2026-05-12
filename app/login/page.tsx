@@ -34,7 +34,6 @@ export default async function LoginPage() {
       <section className="auth-card">
         <header className="auth-card-header">
           <FlexCanvasLogo />
-          <p className="eyebrow">Supabase Auth</p>
         </header>
         <div className="auth-card-copy">
           <h1>Join Flex Canvas</h1>
