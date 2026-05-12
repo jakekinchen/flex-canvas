@@ -2,7 +2,7 @@
 
 ## Required Links
 
-- GitHub repo: not configured in this local checkout; create/push a GitHub repository and add the URL before submission.
+- GitHub repo: `https://github.com/kellyclaudeai/flex-canvas`
 - Public app: `https://collabboard-six-kappa.vercel.app`
 - Latest production deployment: `https://collabboard-byh53utza-kelly-1224s-projects.vercel.app`
 - Production smoke report: `test-results/collabboard-smoke-prod-latest.json`
@@ -38,9 +38,10 @@
 - [x] Confirm at least 5 authenticated smoke users can join one board.
 - [x] Generate a 3-5 minute local demo video draft.
 - [x] Publish the draft demo video at the deployed app URL.
-- [ ] Create/push the GitHub repository and add the final URL above.
+- [x] Create/push the GitHub repository and add the final URL above.
 - [ ] Replace the draft demo with a freshly recorded polished screen demo if desired.
-- [ ] Publish the social post from the submitter's X or LinkedIn account.
+- [x] Prepare the social post draft.
+- [ ] Publish the social post from the submitter's X or LinkedIn account only after explicit approval.
 
 ## Demo Video Script
 

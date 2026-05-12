@@ -16,6 +16,7 @@ Objective: verify every explicit CollabBoard requirement and deliverable against
 - Required stack boundary: no custom WebSocket server, no Socket.io, no Supabase object-by-object canvas storage.
 - Public app: `https://collabboard-six-kappa.vercel.app`.
 - Latest deployment: `https://collabboard-byh53utza-kelly-1224s-projects.vercel.app`.
+- GitHub repository: `https://github.com/kellyclaudeai/flex-canvas`.
 - Demo video: `https://collabboard-six-kappa.vercel.app/demo/flex-canvas-demo-draft.mp4`, duration 4 minutes 30 seconds.
 - Pre-Search, AI development log, cost analysis, architecture, deployment, test plan, and submission docs exist under `docs/`.
 
@@ -27,8 +28,7 @@ Objective: verify every explicit CollabBoard requirement and deliverable against
 - Local visual similarity: `test-results/reference-ui-similarity-local.json`, passed desktop and mobile crops above the 85% threshold.
 - AI cost aggregate: Supabase `ai_command_logs` show 135 command rows, 12 OpenAI-backed calls, 12,859 input tokens, 1,260 output tokens, and `$0.102095` estimated OpenAI spend.
 
-## Remaining External Submission Actions
+## Remaining Optional/Deferred Actions
 
-- GitHub repository: this local checkout has no remote configured. Create/push the repository and add the URL to `docs/SUBMISSION_CHECKLIST.md`.
-- Social post: draft exists in `docs/SUBMISSION_CHECKLIST.md`, but it still needs to be published from the submitter's X or LinkedIn account.
+- Social post: draft exists in `docs/SUBMISSION_CHECKLIST.md`; do not publish it until explicitly approved.
 - Optional polish: replace the generated demo-video draft with a freshly recorded screen demo if desired.

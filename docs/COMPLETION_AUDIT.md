@@ -10,6 +10,7 @@ Audited against the CollabBoard closeout objective on 2026-05-12.
 - Production visual report: `test-results/reference-ui-similarity-prod-latest.json`
 - Local smoke report: `test-results/flex-canvas-smoke-local.json`
 - Demo video: `https://collabboard-six-kappa.vercel.app/demo/flex-canvas-demo-draft.mp4`
+- GitHub repository: `https://github.com/kellyclaudeai/flex-canvas`
 - Public screenshots:
   - `https://collabboard-six-kappa.vercel.app/demo/flex-canvas-home-desktop.png`
   - `https://collabboard-six-kappa.vercel.app/demo/flex-canvas-board-desktop.png`
@@ -35,7 +36,8 @@ Audited against the CollabBoard closeout objective on 2026-05-12.
 - [x] Demo video, 3-5 minutes: `output/demo/flex-canvas-demo-draft.mp4`, public copy under `public/demo/`.
 - [x] Public README setup, architecture, deployed link, validation commands, and latest proof: `README.md`.
 
-## External Submission Items
+## Optional/Deferred Submission Items
 
-- [ ] GitHub repo URL: not configured in this local checkout because no Git remote exists.
-- [ ] Social post publication: draft copy exists in `docs/SUBMISSION_CHECKLIST.md`, but posting is an external action.
+- [x] GitHub repo URL: `https://github.com/kellyclaudeai/flex-canvas`.
+- [x] Social post draft: copy exists in `docs/SUBMISSION_CHECKLIST.md`.
+- [ ] Social post publication: explicitly deferred by user; do not publish yet.

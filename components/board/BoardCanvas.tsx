@@ -147,9 +147,12 @@ export function BoardCanvas({ canEdit, onContextChange, user }: BoardCanvasProps
     (cursor: BoardPoint | null) => {
       pendingCursorRef.current = cursor;
       if (cursorPresenceFrameRef.current !== null) return;
+      updateMyPresence({ cursor });
       cursorPresenceFrameRef.current = window.requestAnimationFrame(() => {
         cursorPresenceFrameRef.current = null;
-        updateMyPresence({ cursor: pendingCursorRef.current });
+        if (pendingCursorRef.current !== cursor) {
+          updateMyPresence({ cursor: pendingCursorRef.current });
+        }
       });
     },
     [updateMyPresence],
