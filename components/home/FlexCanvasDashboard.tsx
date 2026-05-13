@@ -2,7 +2,6 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import {
   ArrowRight,
-  Copy,
   Grid2X2,
   Home,
   Menu,
@@ -11,14 +10,7 @@ import {
 } from "lucide-react";
 import { SignOutButton } from "@/components/auth/SignOutButton";
 import { FlexCanvasLogo } from "@/components/brand/FlexCanvasLogo";
-
-export type FlexRecentBoard = {
-  collaborators?: number;
-  href?: string;
-  id: string;
-  name: string;
-  updatedLabel: string;
-};
+import type { FlexRecentBoard } from "@/lib/boards/presentation";
 
 type FlexCanvasDashboardProps = {
   activeView?: "home" | "boards";
@@ -33,9 +25,9 @@ type FlexCanvasDashboardProps = {
 };
 
 const sampleBoards: FlexRecentBoard[] = [
-  { id: "sample-q2", name: "Q2 Planning", updatedLabel: "Edited 2h ago", collaborators: 4 },
-  { id: "sample-user", name: "User Research", updatedLabel: "Edited 1d ago", collaborators: 3 },
-  { id: "sample-design", name: "Design Critique", updatedLabel: "Edited 3d ago", collaborators: 5 },
+  { id: "sample-q2", name: "Q2 Planning", updatedLabel: "Planning example", collaborators: 4 },
+  { id: "sample-user", name: "User Research", updatedLabel: "Research example", collaborators: 3 },
+  { id: "sample-design", name: "Design Critique", updatedLabel: "Critique example", collaborators: 5 },
 ];
 
 const navItems = [
@@ -45,16 +37,21 @@ const navItems = [
 
 export function FlexCanvasDashboard({ activeView = "home", account, boards = [], canCreate = false, setupWarning }: FlexCanvasDashboardProps) {
   const currentView = activeView;
-  const visibleBoards = boards.length ? boards.slice(0, 3) : sampleBoards;
-  const boardsHref = canCreate ? "/boards" : "/login?next=/boards";
-  const primaryHref = canCreate ? "/boards" : "/login?next=/boards";
-  const secondaryHref = currentView === "boards" ? "#recent" : boardsHref;
-  const secondaryLabel = currentView === "boards" ? "View boards" : "Open boards";
   const profile = account ?? {
     detail: "Sign in to save boards",
     isAuthenticated: false,
     name: "Signed out",
   };
+  const isBoardsView = currentView === "boards";
+  const showExamples = !profile.isAuthenticated && !isBoardsView;
+  const visibleBoards = boards.length ? boards.slice(0, isBoardsView ? boards.length : 3) : showExamples ? sampleBoards : [];
+  const boardsHref = canCreate ? "/boards" : "/login?next=/boards";
+  const primaryLabel = canCreate ? (isBoardsView ? "New board" : "Start board") : "Sign in to start";
+  const secondaryHref = isBoardsView ? "/" : profile.isAuthenticated ? "/boards" : "#boards";
+  const secondaryLabel = isBoardsView ? "Go home" : profile.isAuthenticated ? "Go to boards" : "View examples";
+  const sectionTitle = isBoardsView ? "Your boards" : profile.isAuthenticated ? "Recent boards" : "Example boards";
+  const emptyTitle = isBoardsView ? "No boards yet" : "No recent boards yet";
+  const emptyDetail = isBoardsView ? "New boards will appear here." : "Recent boards will appear here.";
 
   return (
     <main className="reference-shell">
@@ -113,13 +110,13 @@ export function FlexCanvasDashboard({ activeView = "home", account, boards = [],
 
         <section className="reference-hero-panel">
           <div className="reference-copy">
-            <p className="reference-kicker">{currentView === "boards" ? "Your workspace" : "Realtime whiteboard"}</p>
-            <h1>{currentView === "boards" ? "Boards" : "Flex Canvas"}</h1>
+            <p className="reference-kicker">{isBoardsView ? "Board library" : "Realtime whiteboard"}</p>
+            <h1>{isBoardsView ? "Your boards" : "Flex Canvas"}</h1>
             <div className="blue-squiggle" aria-hidden="true" />
             <p className="reference-description">
-              {currentView === "boards"
-                ? "Create a new collaborative canvas, reopen an existing board, or sign out when you want to return to the login screen."
-                : "Authenticated collaborative canvas with React Konva rendering, Liveblocks custom Storage, multiplayer presence, and server-applied AI board operations."}
+              {isBoardsView
+                ? "Saved collaborative boards and active canvas sessions."
+                : "A collaborative canvas for planning boards, workshops, and AI-assisted layouts."}
             </p>
             <div className="reference-actions">
               {canCreate ? (
@@ -127,20 +124,20 @@ export function FlexCanvasDashboard({ activeView = "home", account, boards = [],
                   <input className="reference-board-name" name="name" placeholder="Board name" defaultValue="Untitled board" />
                   <button className="reference-primary-action" type="submit" aria-label="Create board">
                     <Plus size={19} />
-                    Start board
+                    {primaryLabel}
                     <ArrowRight size={22} />
                   </button>
                 </form>
               ) : (
-                <Link className="reference-primary-action" href={primaryHref}>
+                <Link className="reference-primary-action" href="/login?next=/boards">
                   <Plus size={19} />
-                  Start board
+                  {primaryLabel}
                   <ArrowRight size={22} />
                 </Link>
               )}
               <Link className="reference-secondary-action" href={secondaryHref}>
                 {secondaryLabel}
-                <Copy size={18} />
+                {isBoardsView ? <Home size={18} /> : profile.isAuthenticated ? <Grid2X2 size={18} /> : <ArrowRight size={18} />}
               </Link>
             </div>
           </div>
@@ -149,27 +146,53 @@ export function FlexCanvasDashboard({ activeView = "home", account, boards = [],
 
         {setupWarning}
 
-        <section className="recent-boards-section" id="recent">
-          <h2>Recent boards</h2>
-          <div className="reference-board-grid">
-            {visibleBoards.map((board, index) => (
-              <RecentBoardCard board={board} index={index} key={board.id} />
-            ))}
-            {canCreate ? (
-              <form action="/boards/new" method="post" className="new-board-card">
-                <input name="name" type="hidden" value="Untitled board" />
-                <button type="submit" aria-label="Create board">
-                  <span aria-hidden="true">+</span>
-                  <small>New board</small>
-                </button>
-              </form>
-            ) : (
-              <Link className="new-board-card" href="/login?next=/boards">
-                <span aria-hidden="true">+</span>
-                <small>New board</small>
-              </Link>
-            )}
+        <section className="recent-boards-section" id="boards">
+          <div className="board-section-header">
+            <h2>{sectionTitle}</h2>
+            {profile.isAuthenticated ? <span>{boards.length} {boards.length === 1 ? "board" : "boards"}</span> : null}
           </div>
+          {visibleBoards.length ? (
+            <div className="reference-board-grid">
+              {visibleBoards.map((board, index) => (
+                <RecentBoardCard board={board} index={index} key={board.id} />
+              ))}
+              {canCreate ? (
+                <form action="/boards/new" method="post" className="new-board-card">
+                  <input name="name" type="hidden" value="Untitled board" />
+                  <button type="submit" aria-label="Create board">
+                    <span aria-hidden="true">+</span>
+                    <small>New board</small>
+                  </button>
+                </form>
+              ) : (
+                <Link className="new-board-card" href="/login?next=/boards">
+                  <span aria-hidden="true">+</span>
+                  <small>Sign in to create</small>
+                </Link>
+              )}
+            </div>
+          ) : (
+            <div className="boards-empty-state">
+              <strong>{emptyTitle}</strong>
+              <p>{emptyDetail}</p>
+              {canCreate ? (
+                <form action="/boards/new" method="post">
+                  <input name="name" type="hidden" value="Untitled board" />
+                  <button className="reference-primary-action" type="submit" aria-label="Create board">
+                    <Plus size={19} />
+                    New board
+                    <ArrowRight size={22} />
+                  </button>
+                </form>
+              ) : (
+                <Link className="reference-primary-action" href="/login?next=/boards">
+                  <Plus size={19} />
+                  Sign in to start
+                  <ArrowRight size={22} />
+                </Link>
+              )}
+            </div>
+          )}
         </section>
 
         <nav className="mobile-dock" aria-label="Mobile navigation">

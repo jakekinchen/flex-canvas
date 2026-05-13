@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { FlexCanvasLogo } from "@/components/brand/FlexCanvasLogo";
-import { FlexCanvasDashboard, type FlexRecentBoard } from "@/components/home/FlexCanvasDashboard";
+import { FlexCanvasDashboard } from "@/components/home/FlexCanvasDashboard";
+import { toFlexRecentBoards } from "@/lib/boards/presentation";
 import { getEnvStatus } from "@/lib/env";
 import { getCustomCanvasEngineFlag } from "@/lib/featureFlags";
 import { ensureProfile, listBoardsForUser } from "@/lib/db/queries";
@@ -46,14 +47,6 @@ export default async function BoardsPage() {
   const profile = await ensureProfile(user);
   const boards = await listBoardsForUser(user.id);
 
-  const recentBoards: FlexRecentBoard[] = boards.map((board, index) => ({
-    collaborators: 3 + (index % 3),
-    href: `/boards/${board.id}`,
-    id: board.id,
-    name: board.name,
-    updatedLabel: relativeUpdateLabel(board.updated_at),
-  }));
-
   return (
     <FlexCanvasDashboard
       activeView="boards"
@@ -62,18 +55,8 @@ export default async function BoardsPage() {
         isAuthenticated: true,
         name: profile.display_name,
       }}
-      boards={recentBoards}
+      boards={toFlexRecentBoards(boards)}
       canCreate
     />
   );
-}
-
-function relativeUpdateLabel(value: string) {
-  const deltaMs = Date.now() - new Date(value).getTime();
-  const minutes = Math.max(1, Math.round(deltaMs / 60000));
-  if (minutes < 60) return `Edited ${minutes}m ago`;
-  const hours = Math.round(minutes / 60);
-  if (hours < 24) return `Edited ${hours}h ago`;
-  const days = Math.round(hours / 24);
-  return `Edited ${days}d ago`;
 }

@@ -1,7 +1,8 @@
 import { FlexCanvasDashboard } from "@/components/home/FlexCanvasDashboard";
+import { toFlexRecentBoards } from "@/lib/boards/presentation";
 import { getEnvStatus } from "@/lib/env";
 import { getCustomCanvasEngineFlag } from "@/lib/featureFlags";
-import { ensureProfile } from "@/lib/db/queries";
+import { ensureProfile, listBoardsForUser } from "@/lib/db/queries";
 import { getAuthenticatedUser } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -11,6 +12,7 @@ export default async function Home() {
   const customCanvasEngine = getCustomCanvasEngineFlag();
   const user = env.ok && customCanvasEngine.enabled ? await getAuthenticatedUser().catch(() => null) : null;
   const profile = user ? await ensureProfile(user) : null;
+  const boards = user ? await listBoardsForUser(user.id) : [];
 
   return (
     <FlexCanvasDashboard
@@ -24,6 +26,7 @@ export default async function Home() {
             }
           : undefined
       }
+      boards={toFlexRecentBoards(boards)}
       canCreate={Boolean(user)}
       setupWarning={
         !customCanvasEngine.enabled ? (

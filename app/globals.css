@@ -254,7 +254,7 @@ body {
   border-radius: 8px;
   display: grid;
   gap: 8px;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr;
   min-width: 0;
   padding: 10px;
 }
@@ -289,6 +289,12 @@ body {
   transform: none;
 }
 
+.profile-card .profile-sign-in,
+.profile-card .profile-sign-out {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
 .profile-avatar {
   background:
     radial-gradient(circle at 55% 38%, #fff 0 9px, transparent 10px),
@@ -319,8 +325,12 @@ body {
 
 .reference-workspace {
   display: grid;
-  grid-template-rows: 602px minmax(0, 1fr);
+  grid-template-rows: minmax(470px, 60vh) auto;
+  min-height: 0;
   min-width: 0;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  scroll-behavior: smooth;
 }
 
 .mobile-app-topbar {
@@ -331,7 +341,7 @@ body {
   border-bottom: 1px solid rgba(15, 17, 21, 0.22);
   display: grid;
   grid-template-columns: minmax(340px, 0.58fr) minmax(420px, 1fr);
-  min-height: 0;
+  min-height: 470px;
   overflow: hidden;
   position: relative;
 }
@@ -340,7 +350,7 @@ body {
   align-content: center;
   display: grid;
   justify-items: start;
-  padding: 58px 44px 64px 52px;
+  padding: 46px 44px 52px 52px;
   position: relative;
   z-index: 2;
 }
@@ -357,11 +367,11 @@ body {
 
 .reference-copy h1 {
   color: #090909;
-  font-size: 84px;
+  font-size: 70px;
   font-weight: 950;
   letter-spacing: -0.06em;
   line-height: 0.88;
-  margin-bottom: 28px;
+  margin-bottom: 22px;
 }
 
 .blue-squiggle,
@@ -385,7 +395,7 @@ body {
   font-family: var(--font-geist-mono), monospace;
   font-size: 15px;
   line-height: 1.55;
-  margin: 22px 0 28px;
+  margin: 18px 0 22px;
   max-width: 390px;
 }
 
@@ -589,7 +599,7 @@ body {
   background: rgba(255, 253, 248, 0.62);
   display: grid;
   gap: 18px;
-  padding: 28px 34px 38px;
+  padding: 24px 34px 42px;
   position: relative;
 }
 
@@ -603,7 +613,14 @@ body {
   width: 2px;
 }
 
-.recent-boards-section h2 {
+.board-section-header {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.board-section-header h2 {
   background: #101010;
   color: white;
   font-size: 16px;
@@ -612,10 +629,17 @@ body {
   padding: 8px 20px;
 }
 
+.board-section-header span {
+  color: #5e6673;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 12px;
+  font-weight: 800;
+}
+
 .reference-board-grid {
   display: grid;
   gap: 22px;
-  grid-template-columns: repeat(4, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(156px, 1fr));
 }
 
 .reference-board-card,
@@ -624,7 +648,7 @@ body {
   border: 1px solid rgba(15, 17, 21, 0.42);
   border-radius: 8px;
   color: #111;
-  min-height: 234px;
+  min-height: 194px;
   overflow: hidden;
   transition:
     background-color 180ms var(--ease-standard),
@@ -638,7 +662,7 @@ body {
     radial-gradient(rgba(28, 35, 45, 0.22) 1px, transparent 1.4px),
     #fffdf8;
   background-size: 18px 18px;
-  height: 154px;
+  height: 118px;
   overflow: hidden;
   position: relative;
   transition:
@@ -809,6 +833,39 @@ body {
 
 .new-board-card small {
   font-size: 13px;
+}
+
+.boards-empty-state {
+  align-items: start;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px dashed rgba(15, 17, 21, 0.42);
+  border-radius: 8px;
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+  min-height: 154px;
+  padding: 20px;
+}
+
+.boards-empty-state strong {
+  font-size: 18px;
+}
+
+.boards-empty-state p {
+  color: #5e6673;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 13px;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.boards-empty-state form {
+  margin-top: 4px;
+  width: min(100%, 260px);
+}
+
+.boards-empty-state .reference-primary-action {
+  width: min(100%, 260px);
 }
 
 .mobile-dock {
@@ -2026,6 +2083,7 @@ h1 {
 
   .reference-workspace {
     display: block;
+    overflow-y: visible;
     padding-bottom: 104px;
   }
 
@@ -2203,6 +2261,11 @@ h1 {
 
   .recent-boards-section::before {
     display: none;
+  }
+
+  .board-section-header {
+    align-items: flex-start;
+    display: grid;
   }
 
   .reference-board-grid {
