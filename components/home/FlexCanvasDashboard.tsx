@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { SignOutButton } from "@/components/auth/SignOutButton";
 import { FlexCanvasLogo } from "@/components/brand/FlexCanvasLogo";
+import { exampleBoardTemplates, type ExampleBoardTemplate } from "@/lib/boards/examples";
 import type { FlexRecentBoard } from "@/lib/boards/presentation";
 
 type FlexCanvasDashboardProps = {
@@ -24,12 +25,6 @@ type FlexCanvasDashboardProps = {
   setupWarning?: ReactNode;
 };
 
-const sampleBoards: FlexRecentBoard[] = [
-  { id: "sample-q2", name: "Q2 Planning", updatedLabel: "Planning example", collaborators: 4 },
-  { id: "sample-user", name: "User Research", updatedLabel: "Research example", collaborators: 3 },
-  { id: "sample-design", name: "Design Critique", updatedLabel: "Critique example", collaborators: 5 },
-];
-
 const navItems = [
   { id: "home", label: "Home", icon: Home, href: "/" },
   { id: "boards", label: "Boards", icon: Grid2X2, href: "/boards" },
@@ -43,13 +38,13 @@ export function FlexCanvasDashboard({ activeView = "home", account, boards = [],
     name: "Signed out",
   };
   const isBoardsView = currentView === "boards";
-  const showExamples = !profile.isAuthenticated && !isBoardsView;
-  const visibleBoards = boards.length ? boards.slice(0, isBoardsView ? boards.length : 3) : showExamples ? sampleBoards : [];
+  const showStarterTemplates = !isBoardsView && boards.length === 0;
+  const visibleBoards = boards.length ? boards.slice(0, isBoardsView ? boards.length : 3) : [];
   const boardsHref = canCreate ? "/boards" : "/login?next=/boards";
   const primaryLabel = canCreate ? (isBoardsView ? "New board" : "Start board") : "Sign in to start";
   const secondaryHref = isBoardsView ? "/" : profile.isAuthenticated ? "/boards" : "#boards";
-  const secondaryLabel = isBoardsView ? "Go home" : profile.isAuthenticated ? "Go to boards" : "View examples";
-  const sectionTitle = isBoardsView ? "Your boards" : profile.isAuthenticated ? "Recent boards" : "Example boards";
+  const secondaryLabel = isBoardsView ? "Go home" : profile.isAuthenticated ? "Go to boards" : "View starter boards";
+  const sectionTitle = isBoardsView ? "Your boards" : visibleBoards.length ? "Recent boards" : "Starter boards";
   const emptyTitle = isBoardsView ? "No boards yet" : "No recent boards yet";
   const emptyDetail = isBoardsView ? "New boards will appear here." : "Recent boards will appear here.";
 
@@ -171,6 +166,12 @@ export function FlexCanvasDashboard({ activeView = "home", account, boards = [],
                 </Link>
               )}
             </div>
+          ) : showStarterTemplates ? (
+            <div className="reference-board-grid">
+              {exampleBoardTemplates.map((template) => (
+                <StarterBoardCard canCreate={canCreate} key={template.id} template={template} />
+              ))}
+            </div>
           ) : (
             <div className="boards-empty-state">
               <strong>{emptyTitle}</strong>
@@ -208,6 +209,40 @@ export function FlexCanvasDashboard({ activeView = "home", account, boards = [],
         </nav>
       </section>
     </main>
+  );
+}
+
+function StarterBoardCard({
+  canCreate,
+  template,
+}: {
+  canCreate: boolean;
+  template: ExampleBoardTemplate;
+}) {
+  const content = (
+    <>
+      <span aria-hidden="true">+</span>
+      <small>{template.name}</small>
+      <small>{canCreate ? "Create a real board from this starter" : "Sign in to create this starter"}</small>
+    </>
+  );
+
+  if (!canCreate) {
+    return (
+      <Link className="new-board-card" href="/login?next=/boards" title={template.description}>
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <form action="/boards/new" method="post" className="new-board-card" title={template.description}>
+      <input name="template" type="hidden" value={template.id} />
+      <input name="name" type="hidden" value={template.name} />
+      <button type="submit" aria-label={`Create ${template.name} board`}>
+        {content}
+      </button>
+    </form>
   );
 }
 
