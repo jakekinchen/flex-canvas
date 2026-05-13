@@ -102,9 +102,13 @@ export function FlexCanvasDashboard({ activeView = "home", account, boards = [],
             </span>
           </div>
           <FlexCanvasLogo />
-          <Link className="mobile-topbar-action" href={boardsHref} aria-label={canCreate ? "Open boards" : "Sign in to open boards"}>
-            <Menu size={26} />
-          </Link>
+          {profile.isAuthenticated ? (
+            <SignOutButton />
+          ) : (
+            <Link className="mobile-topbar-action" href={boardsHref} aria-label="Sign in to open boards">
+              <Menu size={26} />
+            </Link>
+          )}
         </header>
 
         <section className="reference-hero-panel">
