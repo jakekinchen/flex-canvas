@@ -136,6 +136,10 @@ export function LoginForm() {
   const isForgotPassword = mode === "forgot-password";
   const isResetPassword = mode === "reset-password";
   const isSignUp = mode === "sign-up";
+  const emailFieldId = isForgotPassword ? "password-reset-email" : isSignUp ? "sign-up-email" : "sign-in-email";
+  const emailAutoComplete = isForgotPassword ? "email" : "username";
+  const passwordFieldId = isSignUp ? "sign-up-password" : "sign-in-password";
+  const passwordAutoComplete = isSignUp ? "new-password" : "current-password";
 
   return (
     <div className="auth-panel">
@@ -146,6 +150,9 @@ export function LoginForm() {
               <label>
                 Display name
                 <input
+                  id="auth-display-name"
+                  name="name"
+                  type="text"
                   value={displayName}
                   onChange={(event) => setDisplayName(event.target.value)}
                   placeholder="Your board label"
@@ -158,20 +165,36 @@ export function LoginForm() {
               </button>
             </>
           ) : null}
-          <form onSubmit={isForgotPassword ? requestPasswordReset : loginWithEmail} className="email-login">
+          <form onSubmit={isForgotPassword ? requestPasswordReset : loginWithEmail} className="email-login" method="post">
             <label>
               Email
-              <input value={email} onChange={(event) => setEmail(event.target.value)} type="email" autoComplete="email" />
+              <input
+                id={emailFieldId}
+                name="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                type="email"
+                autoComplete={emailAutoComplete}
+                inputMode="email"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
+                required
+              />
             </label>
             {!isForgotPassword ? (
               <label>
                 Password
                 <input
+                  key={passwordFieldId}
+                  id={passwordFieldId}
+                  name="password"
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
                   type="password"
-                  autoComplete={isSignUp ? "new-password" : "current-password"}
+                  autoComplete={passwordAutoComplete}
                   minLength={6}
+                  required
                 />
               </label>
             ) : null}
@@ -189,15 +212,18 @@ export function LoginForm() {
           </div>
         </>
       ) : (
-        <form onSubmit={updateRecoveredPassword} className="email-login">
+        <form onSubmit={updateRecoveredPassword} className="email-login" method="post">
           <label>
             New password
             <input
+              id="recovered-new-password"
+              name="new-password"
               value={newPassword}
               onChange={(event) => setNewPassword(event.target.value)}
               type="password"
               autoComplete="new-password"
               minLength={6}
+              required
             />
           </label>
           <button type="submit" disabled={pending || newPassword.length < 6}>
