@@ -99,12 +99,12 @@ body {
     radial-gradient(circle at 4% 70%, rgba(92, 108, 255, 0.42) 0 92px, transparent 94px),
     linear-gradient(135deg, #fffaf1 0%, #fbf6ea 58%, #fefbf5 100%);
   border: 1px solid #0f1115;
-  border-radius: 24px;
-  box-shadow: 12px 16px 0 #050505;
+  border-radius: clamp(18px, 1.8vw, 24px);
+  box-shadow: clamp(7px, 1vw, 12px) clamp(9px, 1.25vw, 16px) 0 #050505;
   display: grid;
-  grid-template-columns: 190px minmax(0, 1fr);
-  height: calc(100dvh - 56px);
-  margin: 28px;
+  grid-template-columns: clamp(160px, 14vw, 190px) minmax(0, 1fr);
+  height: calc(100dvh - clamp(28px, 4vw, 56px));
+  margin: clamp(14px, 2vw, 28px);
   min-height: 0;
   overflow: hidden;
   position: relative;
@@ -115,12 +115,12 @@ body {
   display: grid;
   grid-template-rows: auto auto 1fr auto auto;
   min-height: 0;
-  padding: 54px 18px 38px;
+  padding: clamp(38px, 4vw, 54px) clamp(12px, 1.6vw, 18px) clamp(28px, 3vw, 38px);
   position: relative;
 }
 
 .reference-sidebar .flex-canvas-logo {
-  margin-left: 20px;
+  margin-left: clamp(8px, 1.5vw, 20px);
 }
 
 .flex-canvas-logo {
@@ -139,7 +139,7 @@ body {
   color: #101114;
   font-size: 25px;
   font-weight: 950;
-  letter-spacing: -0.03em;
+  letter-spacing: 0;
 }
 
 .brand-mark {
@@ -252,11 +252,20 @@ body {
   background: rgba(255, 255, 255, 0.58);
   border: 1px solid rgba(15, 17, 21, 0.35);
   border-radius: 8px;
+  box-sizing: border-box;
   display: grid;
   gap: 8px;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto minmax(0, 1fr);
+  justify-self: start;
   min-width: 0;
+  overflow: hidden;
   padding: 10px;
+  width: calc(100% - 24px);
+}
+
+.profile-card > span {
+  min-width: 0;
+  overflow: hidden;
 }
 
 .profile-sign-in,
@@ -292,7 +301,11 @@ body {
 .profile-card .profile-sign-in,
 .profile-card .profile-sign-out {
   grid-column: 1 / -1;
-  width: 100%;
+  justify-self: stretch;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: calc(100% - 4px);
 }
 
 .profile-avatar {
@@ -325,7 +338,7 @@ body {
 
 .reference-workspace {
   display: grid;
-  grid-template-rows: minmax(470px, 60vh) auto;
+  grid-template-rows: minmax(410px, 58vh) auto;
   min-height: 0;
   min-width: 0;
   overflow-y: auto;
@@ -340,8 +353,8 @@ body {
 .reference-hero-panel {
   border-bottom: 1px solid rgba(15, 17, 21, 0.22);
   display: grid;
-  grid-template-columns: minmax(340px, 0.58fr) minmax(420px, 1fr);
-  min-height: 470px;
+  grid-template-columns: minmax(300px, 0.56fr) minmax(360px, 1fr);
+  min-height: 410px;
   overflow: hidden;
   position: relative;
 }
@@ -350,7 +363,7 @@ body {
   align-content: center;
   display: grid;
   justify-items: start;
-  padding: 46px 44px 52px 52px;
+  padding: clamp(34px, 4vw, 46px) clamp(28px, 3.4vw, 44px) clamp(36px, 4vw, 52px) clamp(34px, 4vw, 52px);
   position: relative;
   z-index: 2;
 }
@@ -367,10 +380,10 @@ body {
 
 .reference-copy h1 {
   color: #090909;
-  font-size: 70px;
+  font-size: clamp(58px, 5.4vw, 70px);
   font-weight: 950;
-  letter-spacing: -0.06em;
-  line-height: 0.88;
+  letter-spacing: 0;
+  line-height: 0.94;
   margin-bottom: 22px;
 }
 
@@ -403,7 +416,7 @@ body {
 .reference-action-form {
   display: grid;
   gap: 10px;
-  width: min(100%, 304px);
+  width: min(100%, 320px);
 }
 
 .reference-board-name {
@@ -596,7 +609,7 @@ body {
 }
 
 .recent-boards-section {
-  background: rgba(255, 253, 248, 0.62);
+  background: #fffdf8;
   display: grid;
   gap: 18px;
   padding: 24px 34px 42px;
@@ -643,12 +656,13 @@ body {
 }
 
 .reference-board-card,
-.new-board-card {
+.new-board-card,
+.starter-board-card {
   background: rgba(255, 255, 255, 0.5);
   border: 1px solid rgba(15, 17, 21, 0.42);
   border-radius: 8px;
   color: #111;
-  min-height: 194px;
+  min-height: 182px;
   overflow: hidden;
   transition:
     background-color 180ms var(--ease-standard),
@@ -833,6 +847,68 @@ body {
 
 .new-board-card small {
   font-size: 13px;
+}
+
+.starter-board-card {
+  display: grid;
+  padding: 0;
+}
+
+.starter-board-card button {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  color: inherit;
+  height: 100%;
+  padding: 0;
+  text-align: left;
+  width: 100%;
+}
+
+.starter-board-card button:hover:not(:disabled) {
+  background: transparent;
+  box-shadow: none;
+  color: inherit;
+  transform: none;
+}
+
+.starter-card-body {
+  align-content: start;
+  display: grid;
+  gap: 10px;
+  height: 100%;
+  min-height: 0;
+  padding: 18px;
+}
+
+.starter-card-icon {
+  align-items: center;
+  border: 1px solid rgba(15, 17, 21, 0.5);
+  border-radius: 999px;
+  display: inline-flex;
+  height: 40px;
+  justify-content: center;
+  width: 40px;
+}
+
+.starter-card-body strong {
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+.starter-card-body small {
+  color: #5e6673;
+  font-size: 13px;
+  line-height: 1.38;
+}
+
+.starter-card-body em {
+  align-self: end;
+  color: #334bff;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 850;
+  margin-top: auto;
 }
 
 .boards-empty-state {
@@ -1440,7 +1516,7 @@ h1 {
 .auth-shell h1 {
   font-size: 56px;
   font-weight: 950;
-  letter-spacing: -0.04em;
+  letter-spacing: 0;
   line-height: 0.95;
   margin: 0;
 }
@@ -2066,6 +2142,216 @@ h1 {
   margin-bottom: 16px;
 }
 
+@media (min-width: 901px) and (max-width: 1180px) {
+  .reference-shell {
+    grid-template-columns: clamp(154px, 16vw, 178px) minmax(0, 1fr);
+    height: calc(100dvh - clamp(28px, 3.6vw, 44px));
+    margin: clamp(14px, 1.8vw, 22px);
+  }
+
+  .reference-sidebar {
+    padding: 40px 12px 28px;
+  }
+
+  .reference-sidebar .flex-canvas-logo > span:last-child {
+    font-size: 21px;
+  }
+
+  .profile-card {
+    gap: 7px;
+    grid-template-columns: 1fr;
+    justify-items: start;
+    padding: 8px;
+    width: calc(100% - 34px);
+  }
+
+  .profile-card small {
+    display: none;
+  }
+
+  .profile-avatar {
+    height: 34px;
+    width: 34px;
+  }
+
+  .profile-card .profile-sign-in,
+  .profile-card .profile-sign-out {
+    justify-self: start;
+    width: min(100%, 86px);
+  }
+
+  .reference-workspace {
+    grid-template-rows: minmax(388px, 54vh) auto;
+  }
+
+  .reference-hero-panel {
+    grid-template-columns: minmax(268px, 0.52fr) minmax(300px, 1fr);
+    min-height: 388px;
+  }
+
+  .reference-copy {
+    padding: 32px 26px 34px 34px;
+  }
+
+  .reference-kicker {
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
+
+  .reference-copy h1 {
+    font-size: clamp(48px, 5.6vw, 60px);
+    line-height: 0.98;
+    margin-bottom: 18px;
+  }
+
+  .reference-description {
+    font-size: 13px;
+    line-height: 1.48;
+    margin: 16px 0 20px;
+    max-width: 330px;
+  }
+
+  .reference-actions,
+  .reference-action-form {
+    width: min(100%, 286px);
+  }
+
+  .reference-primary-action,
+  .reference-secondary-action {
+    font-size: 14px;
+    min-height: 42px;
+  }
+
+  .canvas-grid {
+    inset: 20px 22px 22px;
+  }
+
+  .blue-disc {
+    height: 132px;
+    right: -78px;
+    top: 74px;
+    width: 132px;
+  }
+
+  .pink-corner {
+    bottom: -86px;
+    left: -72px;
+  }
+
+  .preview-note {
+    font-size: 12px;
+    min-height: 38px;
+    padding: 0 12px;
+  }
+
+  .note-yellow {
+    left: 42px;
+    top: 112px;
+  }
+
+  .note-pink {
+    left: auto;
+    min-height: 72px;
+    right: 34px;
+    top: 136px;
+    width: 104px;
+  }
+
+  .note-green {
+    left: 42px;
+    top: 280px;
+  }
+
+  .preview-frame {
+    font-size: 13px;
+    height: 150px;
+    left: 44%;
+    padding: 14px;
+    top: 208px;
+    width: 148px;
+  }
+
+  .preview-frame span {
+    font-size: 28px;
+  }
+
+  .cursor-arrow {
+    left: 148px;
+    top: 144px;
+  }
+
+  .bottom-squiggle {
+    bottom: 30px;
+    right: 28px;
+  }
+
+  .recent-boards-section {
+    gap: 14px;
+    padding: 18px 24px 30px;
+  }
+
+  .reference-board-grid {
+    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(136px, 1fr));
+  }
+
+  .reference-board-card,
+  .new-board-card,
+  .starter-board-card {
+    min-height: 164px;
+  }
+
+  .card-art {
+    height: 94px;
+  }
+
+  .new-board-card button {
+    gap: 24px;
+  }
+
+  .new-board-card span {
+    font-size: 44px;
+  }
+}
+
+@media (min-width: 901px) and (max-height: 820px) {
+  .reference-workspace {
+    grid-template-rows: minmax(360px, 52vh) auto;
+  }
+
+  .reference-hero-panel {
+    min-height: 360px;
+  }
+
+  .reference-copy {
+    padding-bottom: 30px;
+    padding-top: 30px;
+  }
+
+  .reference-copy h1 {
+    font-size: clamp(48px, 5vw, 60px);
+    margin-bottom: 16px;
+  }
+
+  .reference-description {
+    margin-bottom: 18px;
+  }
+
+  .recent-boards-section {
+    padding-bottom: 28px;
+  }
+
+  .reference-board-card,
+  .new-board-card,
+  .starter-board-card {
+    min-height: 160px;
+  }
+
+  .card-art {
+    height: 90px;
+  }
+}
+
 @media (max-width: 900px) {
   .reference-shell {
     border: 0;
@@ -2084,7 +2370,7 @@ h1 {
   .reference-workspace {
     display: block;
     overflow-y: visible;
-    padding-bottom: 104px;
+    padding-bottom: 0;
   }
 
   .mobile-app-topbar {
@@ -2092,62 +2378,9 @@ h1 {
     border-bottom: 1px solid rgba(15, 17, 21, 0.12);
     display: flex;
     justify-content: space-between;
-    min-height: 142px;
-    padding: 54px 28px 20px;
+    min-height: 86px;
+    padding: 24px max(28px, calc((100vw - 680px) / 2 + 28px)) 18px;
     position: relative;
-  }
-
-  .mobile-statusbar {
-    align-items: center;
-    color: #111;
-    display: flex;
-    font-size: 15px;
-    font-weight: 800;
-    justify-content: space-between;
-    left: 28px;
-    line-height: 1;
-    position: absolute;
-    right: 28px;
-    top: 20px;
-  }
-
-  .status-icons {
-    align-items: center;
-    display: inline-flex;
-    gap: 5px;
-  }
-
-  .status-icons span:first-child {
-    background: linear-gradient(to top, #111 0 35%, transparent 35% 100%);
-    height: 14px;
-    width: 20px;
-  }
-
-  .status-icons span:nth-child(2) {
-    border: 2px solid #111;
-    border-bottom: 0;
-    border-left-color: transparent;
-    border-radius: 999px 999px 0 0;
-    height: 11px;
-    width: 17px;
-  }
-
-  .status-icons span:last-child {
-    border: 2px solid #111;
-    border-radius: 3px;
-    height: 9px;
-    position: relative;
-    width: 24px;
-  }
-
-  .status-icons span:last-child::after {
-    background: #111;
-    content: "";
-    height: 5px;
-    position: absolute;
-    right: 2px;
-    top: 2px;
-    width: 16px;
   }
 
   .mobile-app-topbar button,
@@ -2177,12 +2410,14 @@ h1 {
 
   .reference-copy {
     align-content: start;
-    padding: 32px 28px 14px;
+    margin: 0 auto;
+    max-width: 680px;
+    padding: 30px 28px 14px;
   }
 
   .reference-copy h1 {
-    font-size: 58px;
-    line-height: 0.92;
+    font-size: clamp(48px, 7vw, 58px);
+    line-height: 0.98;
     margin-bottom: 18px;
   }
 
@@ -2195,12 +2430,14 @@ h1 {
 
   .reference-actions,
   .reference-action-form {
-    width: 100%;
+    width: min(100%, 420px);
   }
 
   .reference-canvas {
-    height: 440px;
-    min-height: 440px;
+    height: clamp(320px, 42vw, 380px);
+    margin: 0 auto;
+    max-width: 680px;
+    min-height: clamp(320px, 42vw, 380px);
   }
 
   .canvas-grid {
@@ -2212,38 +2449,38 @@ h1 {
   }
 
   .blue-disc {
-    height: 126px;
-    right: -78px;
-    top: 84px;
-    width: 126px;
+    height: 118px;
+    right: -64px;
+    top: 62px;
+    width: 118px;
   }
 
   .pink-corner {
-    bottom: -92px;
-    left: -74px;
+    bottom: -104px;
+    left: -88px;
   }
 
   .note-yellow {
     left: 60px;
-    top: 58px;
+    top: 44px;
   }
 
   .note-pink {
     left: auto;
     right: 58px;
-    top: 82px;
+    top: 64px;
   }
 
   .note-green {
     left: 44px;
-    top: 252px;
+    top: 220px;
   }
 
   .preview-frame {
-    height: 160px;
+    height: 140px;
     left: 42%;
-    top: 178px;
-    width: 158px;
+    top: 142px;
+    width: 146px;
   }
 
   .cursor-arrow {
@@ -2251,12 +2488,15 @@ h1 {
   }
 
   .bottom-squiggle {
-    bottom: 46px;
+    bottom: 26px;
     right: 30px;
   }
 
   .recent-boards-section {
-    padding: 24px 28px 120px;
+    margin: 0 auto;
+    max-width: none;
+    padding: 22px 28px 24px;
+    width: 100%;
   }
 
   .recent-boards-section::before {
@@ -2276,16 +2516,15 @@ h1 {
     align-items: center;
     background: #0d0d0d;
     border-radius: 20px;
-    bottom: calc(env(safe-area-inset-bottom) + 16px);
     box-shadow: 8px 10px 0 #050505;
     display: grid;
     gap: 0;
     grid-template-columns: repeat(3, 1fr);
-    left: 24px;
+    margin: 0 auto max(24px, env(safe-area-inset-bottom));
     min-height: 70px;
     padding: 0 10px;
-    position: fixed;
-    right: 24px;
+    position: static;
+    width: min(calc(100% - 56px), 520px);
     z-index: 25;
   }
 
@@ -2389,6 +2628,118 @@ h1 {
   }
 }
 
+@media (min-width: 701px) and (max-width: 900px) {
+  .reference-hero-panel {
+    border-bottom: 1px solid rgba(15, 17, 21, 0.18);
+    display: grid;
+    grid-template-columns: minmax(300px, 0.9fr) minmax(340px, 1fr);
+    margin: 0 auto;
+    max-width: 860px;
+    min-height: 360px;
+    overflow: hidden;
+  }
+
+  .reference-copy {
+    align-content: center;
+    max-width: none;
+    padding: 30px 24px 32px 28px;
+  }
+
+  .reference-copy h1 {
+    font-size: clamp(48px, 6.3vw, 54px);
+  }
+
+  .reference-description {
+    max-width: 320px;
+  }
+
+  .reference-actions,
+  .reference-action-form {
+    width: min(100%, 360px);
+  }
+
+  .reference-canvas {
+    height: auto;
+    margin: 0;
+    max-width: none;
+    min-height: 360px;
+  }
+
+  .note-yellow {
+    left: 42px;
+    top: 74px;
+  }
+
+  .note-pink {
+    right: 36px;
+    top: 94px;
+  }
+
+  .note-green {
+    left: 42px;
+    top: 246px;
+  }
+
+  .preview-frame {
+    height: 142px;
+    left: 43%;
+    top: 174px;
+    width: 140px;
+  }
+
+  .bottom-squiggle {
+    bottom: 24px;
+    right: 24px;
+  }
+
+  .recent-boards-section {
+    max-width: none;
+    padding: 20px 28px 26px;
+  }
+
+  .board-section-header {
+    align-items: center;
+    display: flex;
+  }
+
+  .reference-board-grid {
+    gap: 14px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .reference-board-card,
+  .new-board-card,
+  .starter-board-card {
+    min-height: 154px;
+  }
+
+  .card-art {
+    height: 80px;
+  }
+
+  .card-meta {
+    gap: 6px;
+    padding: 10px;
+  }
+
+  .new-board-card,
+  .starter-card-body {
+    padding: 14px;
+  }
+
+  .new-board-card button {
+    gap: 16px;
+  }
+
+  .new-board-card span {
+    font-size: 42px;
+  }
+
+  .mobile-dock {
+    margin-top: 2px;
+  }
+}
+
 @media (max-width: 680px) {
   .reference-kicker {
     font-size: 12px;
@@ -2396,7 +2747,7 @@ h1 {
   }
 
   .reference-copy h1 {
-    font-size: 49px;
+    font-size: 46px;
   }
 
   .reference-primary-action,
@@ -2405,8 +2756,8 @@ h1 {
   }
 
   .reference-canvas {
-    height: 408px;
-    min-height: 408px;
+    height: 312px;
+    min-height: 312px;
   }
 
   .preview-note {
@@ -2416,28 +2767,28 @@ h1 {
   }
 
   .note-yellow {
-    left: 60px;
-    top: 54px;
+    left: 42px;
+    top: 34px;
   }
 
   .note-pink {
     min-height: 72px;
-    right: 60px;
-    top: 76px;
+    right: 42px;
+    top: 56px;
     width: 104px;
   }
 
   .note-green {
-    left: 64px;
-    top: 234px;
+    left: 42px;
+    top: 198px;
   }
 
   .preview-frame {
     font-size: 13px;
-    height: 150px;
-    left: 41%;
-    top: 148px;
-    width: 146px;
+    height: 126px;
+    left: 40%;
+    top: 124px;
+    width: 132px;
   }
 
   .preview-frame span {
@@ -2445,7 +2796,36 @@ h1 {
   }
 
   .recent-boards-section {
-    display: none;
+    display: grid;
+    padding: 18px 24px 22px;
+  }
+
+  .reference-board-grid {
+    gap: 12px;
+    grid-template-columns: 1fr;
+  }
+
+  .reference-board-card,
+  .new-board-card,
+  .starter-board-card {
+    min-height: 128px;
+  }
+
+  .card-art {
+    height: 68px;
+  }
+
+  .new-board-card,
+  .starter-card-body {
+    padding: 16px;
+  }
+
+  .new-board-card button {
+    gap: 12px;
+  }
+
+  .new-board-card span {
+    font-size: 38px;
   }
 
   input,
@@ -2614,20 +2994,16 @@ h1 {
 
 @media (max-width: 420px) {
   .mobile-app-topbar {
-    padding: 54px 24px 18px;
-  }
-
-  .mobile-statusbar {
-    left: 24px;
-    right: 24px;
+    min-height: 78px;
+    padding: 22px 24px 16px;
   }
 
   .reference-copy {
-    padding: 30px 24px 12px;
+    padding: 28px 24px 12px;
   }
 
   .reference-copy h1 {
-    font-size: 47px;
+    font-size: 43px;
   }
 
   .reference-description {
@@ -2635,13 +3011,13 @@ h1 {
   }
 
   .reference-canvas {
-    height: 392px;
-    min-height: 392px;
+    height: 288px;
+    min-height: 288px;
   }
 
   .mobile-dock {
-    left: 20px;
-    right: 20px;
+    min-height: 64px;
+    width: min(calc(100% - 40px), 520px);
   }
 
   .home-hero h1 {
@@ -2658,12 +3034,6 @@ h1 {
 
   .board-topbar h1 {
     font-size: 18px;
-  }
-}
-
-@media (max-width: 400px) and (max-height: 880px) {
-  .mobile-dock {
-    bottom: calc(env(safe-area-inset-bottom) - 58px);
   }
 }
 

@@ -33,7 +33,7 @@ const navItems = [
 export function FlexCanvasDashboard({ activeView = "home", account, boards = [], canCreate = false, setupWarning }: FlexCanvasDashboardProps) {
   const currentView = activeView;
   const profile = account ?? {
-    detail: "Sign in to save boards",
+    detail: "Save boards",
     isAuthenticated: false,
     name: "Signed out",
   };
@@ -85,14 +85,6 @@ export function FlexCanvasDashboard({ activeView = "home", account, boards = [],
 
       <section className="reference-workspace">
         <header className="mobile-app-topbar">
-          <div className="mobile-statusbar" aria-hidden="true">
-            <span>9:41</span>
-            <span className="status-icons">
-              <span />
-              <span />
-              <span />
-            </span>
-          </div>
           <FlexCanvasLogo />
           {profile.isAuthenticated ? (
             <SignOutButton />
@@ -219,30 +211,37 @@ function StarterBoardCard({
   canCreate: boolean;
   template: ExampleBoardTemplate;
 }) {
-  const content = (
-    <>
-      <span aria-hidden="true">+</span>
-      <small>{template.name}</small>
-      <small>{canCreate ? "Create a real board from this starter" : "Sign in to create this starter"}</small>
-    </>
-  );
+  const content = <StarterBoardCardContent canCreate={canCreate} template={template} />;
 
   if (!canCreate) {
     return (
-      <Link className="new-board-card" href="/login?next=/boards" title={template.description}>
+      <Link className="starter-board-card" href="/login?next=/boards" title={template.description}>
         {content}
       </Link>
     );
   }
 
   return (
-    <form action="/boards/new" method="post" className="new-board-card" title={template.description}>
+    <form action="/boards/new" method="post" className="starter-board-card" title={template.description}>
       <input name="template" type="hidden" value={template.id} />
       <input name="name" type="hidden" value={template.name} />
       <button type="submit" aria-label={`Create ${template.name} board`}>
         {content}
       </button>
     </form>
+  );
+}
+
+function StarterBoardCardContent({ canCreate, template }: { canCreate: boolean; template: ExampleBoardTemplate }) {
+  return (
+    <span className="starter-card-body">
+      <span className="starter-card-icon" aria-hidden="true">
+        <Plus size={24} />
+      </span>
+      <strong>{template.name}</strong>
+      <small>{template.description}</small>
+      <em>{canCreate ? "Create starter" : "Sign in to create"}</em>
+    </span>
   );
 }
 
