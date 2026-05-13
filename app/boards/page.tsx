@@ -43,7 +43,7 @@ export default async function BoardsPage() {
   const user = await getAuthenticatedUser();
   if (!user) redirect("/login?next=/boards");
 
-  await ensureProfile(user);
+  const profile = await ensureProfile(user);
   const boards = await listBoardsForUser(user.id);
 
   const recentBoards: FlexRecentBoard[] = boards.map((board, index) => ({
@@ -54,7 +54,18 @@ export default async function BoardsPage() {
     updatedLabel: relativeUpdateLabel(board.updated_at),
   }));
 
-  return <FlexCanvasDashboard boards={recentBoards} canCreate />;
+  return (
+    <FlexCanvasDashboard
+      activeView="boards"
+      account={{
+        detail: user.email ?? "Anonymous guest",
+        isAuthenticated: true,
+        name: profile.display_name,
+      }}
+      boards={recentBoards}
+      canCreate
+    />
+  );
 }
 
 function relativeUpdateLabel(value: string) {

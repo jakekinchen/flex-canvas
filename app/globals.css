@@ -259,6 +259,36 @@ body {
   padding: 10px;
 }
 
+.profile-sign-in,
+.profile-sign-out {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(15, 17, 21, 0.35);
+  border-radius: 5px;
+  box-shadow: none;
+  color: #111;
+  display: inline-flex;
+  font-size: 11px;
+  font-weight: 800;
+  gap: 6px;
+  justify-content: center;
+  line-height: 1;
+  min-height: 30px;
+  padding: 0 8px;
+  white-space: nowrap;
+}
+
+.profile-sign-out {
+  cursor: pointer;
+}
+
+.profile-sign-out:hover:not(:disabled) {
+  background: white;
+  box-shadow: none;
+  color: #111;
+  transform: none;
+}
+
 .profile-avatar {
   background:
     radial-gradient(circle at 55% 38%, #fff 0 9px, transparent 10px),
@@ -2062,14 +2092,19 @@ h1 {
     width: 16px;
   }
 
-  .mobile-app-topbar button {
+  .mobile-app-topbar button,
+  .mobile-topbar-action {
+    align-items: center;
     background: transparent;
     color: #111;
+    display: inline-flex;
+    justify-content: center;
     min-height: 44px;
     padding: 0;
   }
 
-  .mobile-app-topbar button:hover:not(:disabled) {
+  .mobile-app-topbar button:hover:not(:disabled),
+  .mobile-topbar-action:hover {
     background: transparent;
     box-shadow: none;
     transform: none;

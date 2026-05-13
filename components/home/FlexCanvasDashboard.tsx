@@ -9,6 +9,7 @@ import {
   Plus,
   Users,
 } from "lucide-react";
+import { SignOutButton } from "@/components/auth/SignOutButton";
 import { FlexCanvasLogo } from "@/components/brand/FlexCanvasLogo";
 
 export type FlexRecentBoard = {
@@ -21,6 +22,11 @@ export type FlexRecentBoard = {
 
 type FlexCanvasDashboardProps = {
   activeView?: "home" | "boards";
+  account?: {
+    detail: string;
+    isAuthenticated: boolean;
+    name: string;
+  };
   boards?: FlexRecentBoard[];
   canCreate?: boolean;
   setupWarning?: ReactNode;
@@ -37,9 +43,18 @@ const navItems = [
   { id: "boards", label: "Boards", icon: Grid2X2, href: "/boards" },
 ];
 
-export function FlexCanvasDashboard({ activeView, boards = [], canCreate = false, setupWarning }: FlexCanvasDashboardProps) {
-  const currentView = activeView ?? (canCreate ? "boards" : "home");
+export function FlexCanvasDashboard({ activeView = "home", account, boards = [], canCreate = false, setupWarning }: FlexCanvasDashboardProps) {
+  const currentView = activeView;
   const visibleBoards = boards.length ? boards.slice(0, 3) : sampleBoards;
+  const boardsHref = canCreate ? "/boards" : "/login?next=/boards";
+  const primaryHref = canCreate ? "/boards" : "/login?next=/boards";
+  const secondaryHref = currentView === "boards" ? "#recent" : boardsHref;
+  const secondaryLabel = currentView === "boards" ? "View boards" : "Open boards";
+  const profile = account ?? {
+    detail: "Sign in to save boards",
+    isAuthenticated: false,
+    name: "Signed out",
+  };
 
   return (
     <main className="reference-shell">
@@ -48,8 +63,10 @@ export function FlexCanvasDashboard({ activeView, boards = [], canCreate = false
         <nav className="reference-nav">
           {navItems.map((item) => {
             const Icon = item.icon;
+            const href = item.id === "boards" ? boardsHref : item.href;
+            const isActive = item.id === currentView;
             return (
-              <Link className={item.id === currentView ? "active" : ""} href={item.href} key={item.label}>
+              <Link aria-current={isActive ? "page" : undefined} className={isActive ? "active" : ""} href={href} key={item.label}>
                 <Icon size={18} />
                 {item.label}
               </Link>
@@ -61,10 +78,16 @@ export function FlexCanvasDashboard({ activeView, boards = [], canCreate = false
         <div className="profile-card">
           <span className="profile-avatar" />
           <span>
-            <strong>Jordan Lee</strong>
-            <small>jordan@flux.dev</small>
+            <strong>{profile.name}</strong>
+            <small>{profile.detail}</small>
           </span>
-          <span aria-hidden="true">⌄</span>
+          {profile.isAuthenticated ? (
+            <SignOutButton />
+          ) : (
+            <Link className="profile-sign-in" href="/login?next=/boards">
+              Sign in
+            </Link>
+          )}
         </div>
       </aside>
 
@@ -79,19 +102,20 @@ export function FlexCanvasDashboard({ activeView, boards = [], canCreate = false
             </span>
           </div>
           <FlexCanvasLogo />
-          <button type="button" aria-label="Open menu">
+          <Link className="mobile-topbar-action" href={boardsHref} aria-label={canCreate ? "Open boards" : "Sign in to open boards"}>
             <Menu size={26} />
-          </button>
+          </Link>
         </header>
 
         <section className="reference-hero-panel">
           <div className="reference-copy">
-            <p className="reference-kicker">Realtime whiteboard</p>
-            <h1>Flex Canvas</h1>
+            <p className="reference-kicker">{currentView === "boards" ? "Your workspace" : "Realtime whiteboard"}</p>
+            <h1>{currentView === "boards" ? "Boards" : "Flex Canvas"}</h1>
             <div className="blue-squiggle" aria-hidden="true" />
             <p className="reference-description">
-              Authenticated collaborative canvas with React Konva rendering, Liveblocks custom Storage,
-              multiplayer presence, and server-applied AI board operations.
+              {currentView === "boards"
+                ? "Create a new collaborative canvas, reopen an existing board, or sign out when you want to return to the login screen."
+                : "Authenticated collaborative canvas with React Konva rendering, Liveblocks custom Storage, multiplayer presence, and server-applied AI board operations."}
             </p>
             <div className="reference-actions">
               {canCreate ? (
@@ -104,14 +128,14 @@ export function FlexCanvasDashboard({ activeView, boards = [], canCreate = false
                   </button>
                 </form>
               ) : (
-                <Link className="reference-primary-action" href="/login">
+                <Link className="reference-primary-action" href={primaryHref}>
                   <Plus size={19} />
                   Start board
                   <ArrowRight size={22} />
                 </Link>
               )}
-              <Link className="reference-secondary-action" href="/boards">
-                Open boards
+              <Link className="reference-secondary-action" href={secondaryHref}>
+                {secondaryLabel}
                 <Copy size={18} />
               </Link>
             </div>
@@ -136,7 +160,7 @@ export function FlexCanvasDashboard({ activeView, boards = [], canCreate = false
                 </button>
               </form>
             ) : (
-              <Link className="new-board-card" href="/login">
+              <Link className="new-board-card" href="/login?next=/boards">
                 <span aria-hidden="true">+</span>
                 <small>New board</small>
               </Link>
@@ -148,10 +172,10 @@ export function FlexCanvasDashboard({ activeView, boards = [], canCreate = false
           <Link className={currentView === "home" ? "active" : ""} href="/">
             <Home size={24} />
           </Link>
-          <Link className="dock-create" href={canCreate ? "/boards" : "/login"}>
+          <Link className="dock-create" href={canCreate ? "/boards" : "/login?next=/boards"}>
             <Plus size={22} />
           </Link>
-          <Link className={currentView === "boards" ? "active" : ""} href="/boards">
+          <Link className={currentView === "boards" ? "active" : ""} href={boardsHref}>
             <Grid2X2 size={24} />
           </Link>
         </nav>

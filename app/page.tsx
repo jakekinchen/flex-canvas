@@ -1,7 +1,7 @@
-import { redirect } from "next/navigation";
 import { FlexCanvasDashboard } from "@/components/home/FlexCanvasDashboard";
 import { getEnvStatus } from "@/lib/env";
 import { getCustomCanvasEngineFlag } from "@/lib/featureFlags";
+import { ensureProfile } from "@/lib/db/queries";
 import { getAuthenticatedUser } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -10,13 +10,21 @@ export default async function Home() {
   const env = getEnvStatus();
   const customCanvasEngine = getCustomCanvasEngineFlag();
   const user = env.ok && customCanvasEngine.enabled ? await getAuthenticatedUser().catch(() => null) : null;
-
-  if (user) {
-    redirect("/boards");
-  }
+  const profile = user ? await ensureProfile(user) : null;
 
   return (
     <FlexCanvasDashboard
+      activeView="home"
+      account={
+        profile
+          ? {
+              detail: user?.email ?? "Anonymous guest",
+              isAuthenticated: true,
+              name: profile.display_name,
+            }
+          : undefined
+      }
+      canCreate={Boolean(user)}
       setupWarning={
         !customCanvasEngine.enabled ? (
         <section className="setup-warning">
