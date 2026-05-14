@@ -7,7 +7,6 @@
 - Public app: `https://collabboard-six-kappa.vercel.app`
 - Production alias: `https://collabboard-six-kappa.vercel.app`
 - Production smoke report: `test-results/collabboard-smoke-prod-latest.json`
-- Expanded local smoke report: `test-results/collabboard-smoke-20260512213412.json`
 - Production visual similarity report: `test-results/reference-ui-similarity-prod-latest.json`
 - Local visual similarity report: `test-results/reference-ui-similarity-local.json`
 - Full local smoke report: `test-results/flex-canvas-smoke-local.json`
@@ -55,8 +54,8 @@
 5. Move, recolor, duplicate, copy, and paste an object.
 6. Create a rectangle, line, arrow connector, text object, and frame.
 7. Drag-select multiple objects and resize/rotate one selected object.
-8. Run deterministic AI commands: SWOT, retrospective, user journey, grid, and selected color change.
-9. Run one OpenAI-backed command.
+8. Run suggested AI prompts: SWOT, retrospective, user journey, grid, and selected color change.
+9. Run one freeform OpenAI-backed command.
 10. Refresh the second browser to show persistence.
 11. Mention architecture boundaries: Supabase auth/metadata, Liveblocks Storage/presence, React Konva rendering, server-side AI mutation.
 
@@ -64,7 +63,7 @@
 
 Built Flex Canvas for @GauntletAI: a realtime collaborative whiteboard with Supabase Auth, Liveblocks custom Storage/presence, React Konva rendering, and server-side AI board operations.
 
-Features: multiplayer cursors and presence, editable sticky notes, shapes, frames, lines, arrow connectors, drag-select, resize/rotate, recolor, duplicate/copy/paste, deterministic workshop templates, OpenAI-backed commands, reconnect recovery, and 500+ object smoke coverage.
+Features: multiplayer cursors and presence, editable sticky notes, shapes, frames, lines, arrow connectors, drag-select, resize/rotate, recolor, duplicate/copy/paste, OpenAI-backed workshop prompts, reconnect recovery, and 500+ object smoke coverage.
 
 Demo: https://collabboard-six-kappa.vercel.app/demo/flex-canvas-demo-draft.mp4
 App: https://collabboard-six-kappa.vercel.app

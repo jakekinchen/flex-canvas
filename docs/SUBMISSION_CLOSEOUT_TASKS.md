@@ -11,7 +11,7 @@ The PDF lists early submission as Friday, May 15, 2026 at 11:59 PM. Its final-de
 - [x] MVP gate: infinite board, pan/zoom, sticky notes, shape creation, object create/move/edit, realtime sync, cursors, presence, auth, and public deployment.
 - [x] Core board features: sticky notes, shapes, lines, connectors, text, frames, transforms, selection, delete, duplicate, copy, and paste.
 - [x] Realtime collaboration: 5-user smoke, cursor latency, object sync latency, refresh persistence, reconnect recovery, and 500+ object capacity are covered by existing reports.
-- [x] AI board agent: deterministic and OpenAI-backed operations cover creation, manipulation, layout, complex templates, shared state, and simultaneous commands.
+- [x] AI board agent: OpenAI-backed operations cover creation, manipulation, layout, complex templates, shared state, and simultaneous commands.
 - [x] Required technical docs: README, architecture, pre-search, test plan, AI development log, AI cost analysis, completion audit, and final compliance audit exist.
 - [x] Public app and GitHub repo links exist in the submission checklist.
 - [ ] Final demo video: current draft exists, but a polished 3-5 minute recording should be produced before final submission.
@@ -38,8 +38,8 @@ Target length: 3 to 5 minutes.
 - [ ] Show the frame acting as a background organizer, not covering notes.
 - [ ] Move, recolor, duplicate, copy, and paste objects.
 - [ ] Drag-select multiple objects and resize/rotate one object.
-- [ ] Run deterministic AI commands: SWOT, retrospective, user journey, sticky grid, even spacing, and frame-fit resize.
-- [ ] Run one OpenAI-backed freeform command.
+- [ ] Run suggested AI prompts: SWOT, retrospective, user journey, sticky grid, even spacing, and frame-fit resize.
+- [ ] Run one freeform OpenAI-backed command.
 - [ ] Refresh a second browser to prove persistence.
 - [ ] Explain architecture boundaries: Supabase for auth and metadata, Liveblocks for realtime storage and presence, React Konva for rendering, server-side AI mutation for board operations.
 
@@ -64,9 +64,7 @@ flowchart LR
   AiPanel --> AiRoute["/api/ai-command"]
   AiRoute --> SupabaseAuth
   AiRoute --> SupabaseDb
-  AiRoute --> Deterministic["Deterministic handlers<br/>SWOT, retro, grids, frame-fit"]
   AiRoute --> OpenAI["OpenAI Responses API<br/>structured operation plan"]
-  Deterministic --> Operations["Validated BoardOperation schema"]
   OpenAI --> Operations
   Operations --> ServerMutation["Server-side Liveblocks mutation"]
   ServerMutation --> Storage

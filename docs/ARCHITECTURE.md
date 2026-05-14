@@ -20,7 +20,7 @@ The previous tldraw SDK path was removed to demonstrate more custom engineering.
 6. `BoardCanvas` renders objects through React Konva and mutates Liveblocks Storage for human actions.
 7. Cursor and selection state are written to Liveblocks Presence only.
 8. AI commands post command text plus viewport/selection context to `/api/ai-command`.
-9. The server reads compact board state from Liveblocks Storage, runs deterministic handlers or OpenAI, validates operations, applies them server-side to Liveblocks Storage, logs the command to Supabase, and returns a summary.
+9. The server reads compact board state from Liveblocks Storage, calls OpenAI for a structured operation plan, validates operations, applies them server-side to Liveblocks Storage, logs the command to Supabase, and returns a summary.
 
 ## Board Schema
 

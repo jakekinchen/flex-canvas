@@ -54,7 +54,7 @@ Light usage assumes 40 OpenAI-backed commands per user per month. Heavy workshop
 
 ## Cost Controls Before Production Scale
 
-- Prefer deterministic handlers for common templates and layout commands.
+- Keep common templates as compact suggested prompts and enforce quotas for AI-heavy usage.
 - Cap prompt context to selected, viewport, and candidate objects.
 - Add per-user and per-board monthly quotas.
 - Add a usage dashboard from `ai_command_logs`.

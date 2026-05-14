@@ -1587,12 +1587,6 @@ h1 {
   color: #075985;
 }
 
-.status-chip.deterministic {
-  background: #ecfdf5;
-  border-color: #bbf7d0;
-  color: #166534;
-}
-
 .operation-count {
   color: var(--muted);
   font-size: 12px;
@@ -2030,12 +2024,8 @@ h1 {
   width: 7px;
 }
 
-.command-list button[data-command-mode="openai"]::after {
+.command-list button::after {
   background: #0284c7;
-}
-
-.command-list button[data-command-mode="deterministic"]::after {
-  background: #16a34a;
 }
 
 .command-list button:hover:not(:disabled) {

@@ -38,11 +38,11 @@ The local smoke verifies sticky note creation, text editing, object movement, co
 
 AI commands are deliberately server-owned.
 The client sends the command plus compact board context to the API route.
-The server checks Supabase authentication and board access, reads compact Liveblocks Storage state, runs deterministic handlers first, falls back to OpenAI for freeform commands, validates every operation, applies the mutation to Liveblocks Storage, and logs usage back to Supabase.
-Deterministic coverage includes sticky notes, rectangles, named frames, SWOT, retrospectives, sticky grids, selected color changes, moving pink notes, grid layout, resize frame to contents, even spacing, user journey maps, and board state summaries.
+The server checks Supabase authentication and board access, reads compact Liveblocks Storage state, asks OpenAI for a structured operation plan, validates every operation, applies the mutation to Liveblocks Storage, and logs usage back to Supabase.
+Suggested prompt coverage includes sticky notes, rectangles, named frames, SWOT, retrospectives, sticky grids, selected color changes, moving pink notes, grid layout, resize frame to contents, even spacing, user journey maps, and board state summaries.
 
 The conflict policy is simple and documented: last write wins.
-The expanded smoke proves simultaneous text edits converge across clients, and simultaneous deterministic AI commands from two users both sync into the same board.
+The expanded smoke proves simultaneous text edits converge across clients, and simultaneous OpenAI-backed commands from two users both sync into the same board.
 The latest production smoke report passes thirty one checks, including five user join, cursor latency, object sync latency, mobile layout, refresh persistence, reconnect recovery, five hundred plus stored objects, and interaction frame rate.
 
 The deployed app is live, the demo video is published from the app itself, and the submission package includes setup docs, architecture notes, pre-search, AI development notes, cost analysis, production smoke evidence, and public screenshots for the social post.`;
@@ -77,7 +77,7 @@ const slides = [
   },
   {
     type: "text",
-    title: "Deterministic Command Coverage",
+    title: "Suggested Prompt Coverage",
     subtitle: "SWOT, retrospective, sticky grids, user journey maps, frame-fit resize, even spacing, color changes, pink-note moves, and board-state summaries.",
   },
   {

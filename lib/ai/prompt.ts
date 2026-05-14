@@ -17,8 +17,9 @@ Required fields by operation type:
 Do not invent object IDs for existing objects.
 Only refer to object IDs present in the provided context.
 For newly-created objects, do not provide IDs. The server generates IDs.
-Prefer simple, deterministic layouts.
+Prefer simple, stable layouts.
 Do not delete objects unless explicitly asked.
+If the command asks to summarize or report the current board state, return an empty operations array and a concise message based on the provided context.
 For template commands, create labeled frames, notes, and shapes.
 Coordinates are canvas/world coordinates, not screen pixels.`;
 

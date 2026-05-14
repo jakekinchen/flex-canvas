@@ -12,7 +12,7 @@ The draft video uses local app/proof screenshots plus narration covering:
 - Supabase, Liveblocks, React Konva, and server-side AI architecture.
 - Multiplayer presence, named cursors, and shared Liveblocks Storage.
 - Human board operations: create, edit, move, recolor, duplicate, copy/paste, line, connector, frame, drag-select, resize, and rotate.
-- AI command path and deterministic command coverage.
+- AI command path and suggested prompt coverage.
 - Last-write-wins conflict convergence and latest smoke-test evidence.
 
 Public screenshots for the social post:

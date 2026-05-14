@@ -2,7 +2,7 @@
 
 Built Flex Canvas for @GauntletAI: a realtime collaborative whiteboard with Supabase Auth, Liveblocks custom Storage/presence, React Konva rendering, and server-side AI board operations.
 
-Features: multiplayer cursors and presence, editable sticky notes, shapes, frames, lines, arrow connectors, drag-select, resize/rotate, recolor, duplicate/copy/paste, deterministic workshop templates, OpenAI-backed commands, reconnect recovery, and 500+ object smoke coverage.
+Features: multiplayer cursors and presence, editable sticky notes, shapes, frames, lines, arrow connectors, drag-select, resize/rotate, recolor, duplicate/copy/paste, OpenAI-backed workshop prompts, reconnect recovery, and 500+ object smoke coverage.
 
 Demo: https://collabboard-six-kappa.vercel.app/demo/flex-canvas-demo-draft.mp4
 

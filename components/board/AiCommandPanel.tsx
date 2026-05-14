@@ -4,7 +4,7 @@ import { Sparkles } from "lucide-react";
 import { FormEvent, useState } from "react";
 import type { BoardContextInput } from "@/lib/board/types";
 
-type CommandMode = "deterministic" | "openai";
+type CommandMode = "openai";
 
 type CommandStatus = {
   message: string;
@@ -12,15 +12,13 @@ type CommandStatus = {
   operationCount?: number;
 };
 
-const commandGroups: Array<{ label: string; mode: CommandMode; commands: string[] }> = [
+const commandGroups: Array<{ label: string; commands: string[] }> = [
   {
     label: "Live AI",
-    mode: "openai",
     commands: ["Create a purple circle at position 360, 160"],
   },
   {
-    label: "Fast presets",
-    mode: "deterministic",
+    label: "Suggested prompts",
     commands: [
       "Add a yellow sticky note that says User Research",
       "Create a blue rectangle at position 100, 200",
@@ -115,7 +113,6 @@ export function AiCommandPanel({
                 <button
                   aria-pressed={command === demoCommand}
                   className={command === demoCommand ? "active" : undefined}
-                  data-command-mode={group.mode}
                   key={demoCommand}
                   type="button"
                   onClick={() => {
@@ -135,7 +132,7 @@ export function AiCommandPanel({
       {status ? (
         <p className="form-status" data-ai-mode={status.mode}>
           {status.mode ? (
-            <span className={`status-chip ${status.mode}`}>{status.mode === "openai" ? "Live AI" : "Fast preset"}</span>
+            <span className={`status-chip ${status.mode}`}>Live AI</span>
           ) : null}
           {status.message}
           {typeof status.operationCount === "number" ? <span className="operation-count">{status.operationCount} ops</span> : null}

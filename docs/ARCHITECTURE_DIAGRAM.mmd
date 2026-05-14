@@ -23,7 +23,6 @@ flowchart TB
   end
 
   subgraph Planning["AI planning"]
-    Deterministic["Deterministic handlers<br/>SWOT, retro, grids, frame-fit"]
     OpenAI["OpenAI Responses API<br/>structured operation plan"]
     Operations["Validated BoardOperation schema"]
   end
@@ -38,9 +37,7 @@ flowchart TB
   AiPanel --> AiRoute
   AiRoute --> SupabaseAuth
   AiRoute --> SupabaseDb
-  AiRoute --> Deterministic
   AiRoute --> OpenAI
-  Deterministic --> Operations
   OpenAI --> Operations
   Operations --> ServerMutation["Server-side Liveblocks mutation"]
   ServerMutation --> Storage

@@ -56,9 +56,9 @@ Latest production smoke:
 - Result: passed 31 checks, including 5-user multiplayer, presence, cursor latency,
   sticky create/edit/move/recolor, simultaneous text-edit convergence, duplicate,
   copy/paste, rectangle resize/rotate, line, connector, frame create/edit, drag-select,
-  deterministic AI, OpenAI-backed AI schema/server-mutation path, object sync latency,
-  controlled AI latency, reconnect, 500+ object capacity, mobile layout, and FPS gates.
-- Note: OpenAI-backed observed latency was 3,577 ms in that run. It is recorded as live
+  OpenAI-backed AI schema/server-mutation path, object sync latency,
+  board-state summary, reconnect, 500+ object capacity, mobile layout, and FPS gates.
+- Note: the OpenAI-backed SWOT template completed in 22,011 ms in that run. It is recorded as live
   hosted-model timing, not treated as an app-controlled latency gate.
 
 Latest production visual similarity:

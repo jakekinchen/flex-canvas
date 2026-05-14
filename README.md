@@ -90,7 +90,6 @@ Deploy to Vercel only after Supabase, Liveblocks, and OpenAI variables are confi
 
 Production alias: `https://collabboard-six-kappa.vercel.app`. Direct Vercel deployment URLs are deployment-specific.
 Latest production smoke artifact: `test-results/collabboard-smoke-prod-latest.json`.
-Latest expanded local smoke artifact: `test-results/collabboard-smoke-20260512213412.json`.
 Latest production visual similarity artifact: `test-results/reference-ui-similarity-prod-latest.json`.
 Latest local visual similarity artifact: `test-results/reference-ui-similarity-local.json`.
 Latest full local smoke artifact: `test-results/flex-canvas-smoke-local.json`.

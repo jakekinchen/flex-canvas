@@ -13,7 +13,7 @@
 
 - Keep fixed infrastructure small: Vercel, Supabase, Liveblocks, and OpenAI only.
 - Trade money for time on managed collaboration infrastructure because conflict handling and reconnect behavior are high-risk in a one-week sprint.
-- Use deterministic AI handlers for common board templates to reduce model calls and latency.
+- Keep AI output compact and validated so common board templates stay bounded in cost and latency.
 
 3. Time to ship
 
@@ -69,9 +69,9 @@
 
 - Supabase: auth and metadata.
 - Liveblocks: room auth, presence, and custom Storage.
-- OpenAI: fallback AI planner using structured operation output.
+- OpenAI: AI planner using structured operation output.
 - Vercel: app hosting.
-- Risk: vendor pricing and quotas; mitigation is deterministic command coverage and command logging.
+- Risk: vendor pricing and quotas; mitigation is compact context, quotas, and command logging.
 
 ## Phase 3: Post-Stack Refinement
 
@@ -87,7 +87,7 @@
 - `app/` contains pages and route handlers.
 - `components/board/` contains the React Konva board, toolbar, presence, and AI panel.
 - `lib/board/` contains object types, geometry, validation, viewport math, and Liveblocks mutations.
-- `lib/ai/` contains deterministic handlers, prompt construction, schemas, and cost estimates.
+- `lib/ai/` contains prompt construction, schemas, and cost estimates.
 - `lib/db/`, `lib/supabase/`, and `lib/liveblocks/` own service boundaries.
 
 14. Naming conventions and code style

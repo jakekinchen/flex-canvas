@@ -2,7 +2,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { Liveblocks } from "@liveblocks/node";
+import { Liveblocks, LiveMap, LiveObject } from "@liveblocks/node";
 import { createClient } from "@supabase/supabase-js";
 import { chromium } from "playwright";
 
@@ -147,20 +147,26 @@ try {
   const dragSelectProbe = await dragSelectObjects(owner.page, 2);
   check("drag-to-select selected multiple objects", dragSelectProbe.selectedCount >= 2, dragSelectProbe);
 
-  const demoAiProbe = await runAiCommandExpectShape(
-    owner.page,
-    pages[1].page,
-    "Add a yellow sticky note that says User Research",
-  );
-  check("Fast preset AI command created a synced shape", demoAiProbe.synced && demoAiProbe.mode === "deterministic", {
-    ...demoAiProbe,
-    expectedMode: "deterministic",
-  });
-
-  const simultaneousAiProbe = await simultaneousAiCommands(owner.page, pages[1].page);
-  check("simultaneous deterministic AI commands synced", simultaneousAiProbe.synced, simultaneousAiProbe);
-
   if (!skipOpenAi) {
+    const demoAiProbe = await runAiCommandExpectShape(
+      owner.page,
+      pages[1].page,
+      "Add a yellow sticky note that says User Research",
+    );
+    check("suggested prompt AI command created a synced shape", demoAiProbe.synced && demoAiProbe.mode === "openai", {
+      ...demoAiProbe,
+      expectedMode: "openai",
+    });
+
+    const simultaneousAiProbe = await simultaneousAiCommands(owner.page, pages[1].page);
+    check(
+      "simultaneous OpenAI commands synced",
+      simultaneousAiProbe.synced &&
+        simultaneousAiProbe.first.mode === "openai" &&
+        simultaneousAiProbe.second.mode === "openai",
+      simultaneousAiProbe,
+    );
+
     const openAiProbe = await runAiCommandExpectShape(
       owner.page,
       pages[1].page,
@@ -171,55 +177,63 @@ try {
       expectedMode: "openai",
       targetEnforced: false,
     });
-  }
-
-  const swotShapeIncrease = 13;
-  const swotSourceBefore = await shapeCount(owner.page);
-  const swotReceiverBefore = await shapeCount(pages[1].page);
-  await installShapeObserver(owner.page, swotSourceBefore + 1);
-  await installShapeObserver(pages[1].page, swotReceiverBefore + 1);
-  const controlledAiRun = await runAiCommand(
-    owner.page,
-    "Create a SWOT analysis template",
-    "Created a SWOT analysis template.",
-    "deterministic",
-  );
-  await pages[1].page.waitForFunction(
-    (args) => document.querySelectorAll(args.selector).length >= args.target,
-    { selector: objectSelector, target: swotReceiverBefore + swotShapeIncrease },
-    {
-      timeout: 10000,
-    },
-  );
-  const localShapeAt = await owner.page.evaluate(() => window.__collabSmokeShapeAt);
-  const remoteShapeAt = await pages[1].page.evaluate(() => window.__collabSmokeShapeAt);
-  const objectSyncLatencyMs =
-    typeof localShapeAt === "number" && typeof remoteShapeAt === "number"
-      ? Math.max(0, remoteShapeAt - localShapeAt)
-      : null;
-  check("Controlled AI command latency target", controlledAiRun.latencyMs <= aiLatencyTargetMs, {
-    ...controlledAiRun,
-    targetMs: aiLatencyTargetMs,
-  });
-  const boardStateProbe = await runAiCommand(owner.page, "Get board state", "Current board context", "deterministic");
-  check("board state command returned context without mutations", boardStateProbe.mode === "deterministic", boardStateProbe);
-  check("object sync latency measured", objectSyncLatencyMs !== null, {
-    latencyMs: objectSyncLatencyMs,
-    localShapeAt,
-    remoteShapeAt,
-  });
-  if (objectSyncLatencyMs !== null) {
-    check("object sync latency target", objectSyncLatencyMs <= objectSyncTargetMs, {
-      latencyMs: objectSyncLatencyMs,
-      targetMs: objectSyncTargetMs,
+    const aiSourceBefore = await shapeCount(owner.page);
+    const aiReceiverBefore = await shapeCount(pages[1].page);
+    await installShapeObserver(owner.page, aiSourceBefore + 1);
+    await installShapeObserver(pages[1].page, aiReceiverBefore + 1);
+    const controlledAiRun = await runAiCommand(owner.page, "Create a SWOT analysis template", null, "openai");
+    await pages[1].page.waitForFunction(
+      (args) => document.querySelectorAll(args.selector).length > args.count,
+      { selector: objectSelector, count: aiReceiverBefore },
+      {
+        timeout: 30000,
+      },
+    );
+    const localShapeAt = await owner.page.evaluate(() => window.__collabSmokeShapeAt);
+    const remoteShapeAt = await pages[1].page.evaluate(() => window.__collabSmokeShapeAt);
+    const objectSyncLatencyMs =
+      typeof localShapeAt === "number" && typeof remoteShapeAt === "number"
+        ? Math.max(0, remoteShapeAt - localShapeAt)
+        : null;
+    check("OpenAI AI command completed", controlledAiRun.mode === "openai", {
+      ...controlledAiRun,
+      targetMs: aiLatencyTargetMs,
+      targetEnforced: false,
     });
+    const boardStateBefore = await shapeCount(owner.page);
+    const boardStateProbe = await runAiCommand(
+      owner.page,
+      "Summarize the current board state without changing the board",
+      null,
+      "openai",
+    );
+    const boardStateAfter = await shapeCount(owner.page);
+    check("board state command returned context without mutations", boardStateAfter === boardStateBefore, {
+      ...boardStateProbe,
+      before: boardStateBefore,
+      after: boardStateAfter,
+    });
+    check("object sync latency measured", objectSyncLatencyMs !== null, {
+      latencyMs: objectSyncLatencyMs,
+      localShapeAt,
+      remoteShapeAt,
+    });
+    if (objectSyncLatencyMs !== null) {
+      check("object sync latency target", objectSyncLatencyMs <= objectSyncTargetMs, {
+        latencyMs: objectSyncLatencyMs,
+        targetMs: objectSyncTargetMs,
+      });
+    }
+  } else {
+    pass("OpenAI AI checks skipped", { skipOpenAi });
   }
 
+  const refreshMinimum = await shapeCount(pages[1].page);
   await pages[1].page.reload({ waitUntil: "domcontentloaded" });
   await waitForBoardReady(pages[1].page, smokeUsers[1].name);
   await pages[1].page.waitForFunction(
     (args) => document.querySelectorAll(args.selector).length >= args.target,
-    { selector: objectSelector, target: swotReceiverBefore + swotShapeIncrease },
+    { selector: objectSelector, target: refreshMinimum },
     {
       timeout: 15000,
     },
@@ -236,22 +250,13 @@ try {
   }
 
   if (!skipCapacity) {
-    const rows = Math.max(1, Math.floor(Math.sqrt(capacityObjects)));
-    const cols = Math.ceil(capacityObjects / rows);
-    const command = `Create a ${rows}x${cols} grid of sticky notes`;
-    const capacityRun = await runAiCommand(
-      owner.page,
-      command,
-      `Created a ${rows}x${cols} sticky note grid.`,
-      "deterministic",
-    );
+    const capacityRun = await seedCapacityObjects(boardId, capacityObjects, smokeUsers[0].id ?? smokeUsers[0].name);
     await waitForStoredShapeCount(boardId, capacityObjects, 60000);
     const storedShapes = await storedShapeCount(boardId);
     check("500+ object capacity in Liveblocks storage", storedShapes >= capacityObjects, {
       storedShapes,
       target: capacityObjects,
-      commandLatencyMs: capacityRun.latencyMs,
-      commandMode: capacityRun.mode,
+      seedLatencyMs: capacityRun.latencyMs,
     });
   }
 
@@ -425,7 +430,15 @@ async function waitForPath(page, pattern, label) {
 async function runAiCommand(page, command, expectedStatus, expectedMode) {
   await page.locator(".ai-panel textarea").fill(command);
   const startedAt = Date.now();
+  const responsePromise = page.waitForResponse(
+    (response) => response.url().includes("/api/ai-command") && response.request().method() === "POST",
+    { timeout: 70000 },
+  );
   await page.getByRole("button", { name: "Run command" }).click();
+  const response = await responsePromise;
+  if (!response.ok()) {
+    throw new Error(`AI command failed with ${response.status()}: ${(await response.text()).slice(0, 500)}`);
+  }
   if (expectedStatus) {
     await page.getByText(expectedStatus).waitFor({ timeout: 60000 });
   }
@@ -458,6 +471,18 @@ async function createToolbarSticky(sourcePage, receiverPage) {
     receiverBefore,
     receiverAfter: await shapeCount(receiverPage),
     synced: Boolean(sourceObject?.id) && (await shapeCount(receiverPage)) > receiverBefore,
+  };
+}
+
+async function createToolbarStickyLocal(sourcePage, text) {
+  const before = await shapeCount(sourcePage);
+  await sourcePage.getByRole("button", { name: "Sticky note", exact: true }).click();
+  await sourcePage.locator(".object-editor-overlay").fill(text);
+  await sourcePage.keyboard.press("Enter");
+  await waitForObjectText(sourcePage, text, before);
+  return {
+    before,
+    after: await shapeCount(sourcePage),
   };
 }
 
@@ -719,7 +744,11 @@ async function openObjectEditor(page, objectId) {
   const object = await objectById(page, objectId);
   const box = await page.locator(canvasSelector).boundingBox();
   if (!object || !box) return { objectId, opened: false, reason: "object or canvas missing" };
-  await page.mouse.dblclick(box.x + object.x + object.width / 2, box.y + object.y + object.height / 2);
+  const target =
+    object.type === "frame"
+      ? { x: box.x + object.x + Math.min(object.width / 2, 80), y: box.y + object.y + 16 }
+      : { x: box.x + object.x + object.width / 2, y: box.y + object.y + object.height / 2 };
+  await page.mouse.dblclick(target.x, target.y);
   await page.locator(".object-editor-overlay").waitFor({ state: "visible", timeout: 5000 });
   return { objectId, opened: true };
 }
@@ -769,7 +798,15 @@ async function runAiCommandExpectShape(sourcePage, receiverPage, command) {
   const receiverBefore = await shapeCount(receiverPage);
   await sourcePage.locator(".ai-panel textarea").fill(command);
   const startedAt = Date.now();
+  const responsePromise = sourcePage.waitForResponse(
+    (response) => response.url().includes("/api/ai-command") && response.request().method() === "POST",
+    { timeout: 70000 },
+  );
   await sourcePage.getByRole("button", { name: "Run command" }).click();
+  const response = await responsePromise;
+  if (!response.ok()) {
+    throw new Error(`AI command failed with ${response.status()}: ${(await response.text()).slice(0, 500)}`);
+  }
   await sourcePage.waitForFunction(
     (args) => document.querySelectorAll(args.selector).length > args.count,
     { selector: objectSelector, count: sourceBefore },
@@ -799,8 +836,8 @@ async function simultaneousAiCommands(pageA, pageB) {
   const beforeA = await shapeCount(pageA);
   const beforeB = await shapeCount(pageB);
   const [first, second] = await Promise.all([
-    runAiCommand(pageA, "Add a yellow sticky note that says Parallel A", "Created a yellow sticky note.", "deterministic"),
-    runAiCommand(pageB, "Create a blue rectangle at position 100, 200", "Created a blue rectangle.", "deterministic"),
+    runAiCommand(pageA, "Add a yellow sticky note that says Parallel A", null, "openai"),
+    runAiCommand(pageB, "Create a blue rectangle at position 100, 200", null, "openai"),
   ]);
   await pageA.waitForFunction(
     (args) => document.querySelectorAll(args.selector).length >= args.target,
@@ -1032,16 +1069,17 @@ async function measureCursorLatency(sourcePage, receiverPage, sourceName) {
 async function reconnectRecovery(sourcePage, receiverContext, receiverPage) {
   const before = await shapeCount(receiverPage);
   await receiverContext.setOffline(true);
-  await runAiCommand(sourcePage, "Create a 2x3 grid of sticky notes", "Created a 2x3 sticky note grid.", "deterministic");
+  const localCreate = await createToolbarStickyLocal(sourcePage, "Reconnect smoke sticky");
   await receiverPage.waitForTimeout(1000);
   await receiverContext.setOffline(false);
   await receiverPage.waitForFunction(
     (args) => document.querySelectorAll(args.selector).length >= args.target,
-    { selector: objectSelector, target: before + 6 },
+    { selector: objectSelector, target: before + 1 },
     { timeout: 30000 },
   );
   pass("disconnect/reconnect recovery", {
     before,
+    localCreate,
     after: await shapeCount(receiverPage),
   });
 }
@@ -1092,6 +1130,46 @@ async function storedShapeCount(boardId) {
   const objects = document?.objects && typeof document.objects === "object" ? document.objects : {};
   return Object.values(objects).filter((object) => object && typeof object === "object" && typeof object.id === "string")
     .length;
+}
+
+async function seedCapacityObjects(boardId, count, actorUserId) {
+  const roomId = await roomIdForBoard(boardId);
+  const liveblocks = new Liveblocks({ secret: requireEnv("LIVEBLOCKS_SECRET_KEY") });
+  const startedAt = Date.now();
+  await liveblocks.mutateStorage(roomId, async ({ root }) => {
+    let objects = root.get("objects");
+    if (!objects) {
+      objects = new LiveMap();
+      root.set("objects", objects);
+    }
+
+    const now = Date.now();
+    for (let index = 0; index < count; index += 1) {
+      const row = Math.floor(index / 25);
+      const col = index % 25;
+      const id = `capacity-${runId}-${index}`;
+      objects.set(
+        id,
+        new LiveObject({
+          id,
+          type: "sticky",
+          x: 80 + col * 210,
+          y: 120 + row * 170,
+          width: 180,
+          height: 130,
+          rotation: 0,
+          color: "#fde68a",
+          zIndex: 1000 + index,
+          createdAt: now,
+          updatedAt: now,
+          updatedBy: actorUserId,
+          text: `Capacity ${index + 1}`,
+        }),
+      );
+    }
+  });
+
+  return { latencyMs: Date.now() - startedAt };
 }
 
 async function waitForStoredShapeCount(boardId, minimum, timeoutMs) {

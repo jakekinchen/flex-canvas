@@ -11,7 +11,7 @@ Objective: verify every explicit CollabBoard requirement and deliverable against
 - Realtime sync, named cursors, and presence: Liveblocks Provider/Room, PresenceList, and RemoteCursors are active.
 - Auth: Supabase login, profile, board, membership, and Liveblocks room auth routes are implemented.
 - Persistence: board objects live in Liveblocks Storage and smoke tests verify refresh/reconnect persistence.
-- AI command breadth: deterministic commands cover sticky, rectangle, frame, pink-note move, frame-fit resize, selected green recolor, grid, pros/cons grid, even spacing, SWOT, user journey, retrospective, and board state. OpenAI fallback covers freeform structured operations.
+- AI command breadth: OpenAI-backed suggested prompts cover sticky, rectangle, frame, pink-note move, frame-fit resize, selected green recolor, grid, pros/cons grid, even spacing, SWOT, user journey, retrospective, and board state. Freeform structured operations use the same server-side path.
 - Server-side AI application: `/api/ai-command` authenticates, authorizes, plans, validates, applies to Liveblocks Storage server-side, and logs to Supabase.
 - Required stack boundary: no custom WebSocket server, no Socket.io, no Supabase object-by-object canvas storage.
 - Public app: `https://collabboard-six-kappa.vercel.app`.
@@ -23,8 +23,8 @@ Objective: verify every explicit CollabBoard requirement and deliverable against
 
 ## Verification Evidence
 
-- Production smoke: `test-results/collabboard-smoke-prod-latest.json`, completed `2026-05-12T22:20:44.777Z`, 31 passing checks.
-- Local smoke: `test-results/flex-canvas-smoke-local.json`, completed `2026-05-12T22:08:42.168Z`, 31 passing checks.
+- Production smoke: `test-results/collabboard-smoke-prod-latest.json`, completed `2026-05-14T21:29:51.721Z`, 31 passing checks.
+- Local smoke: `test-results/flex-canvas-smoke-local.json`, completed `2026-05-14T21:25:47.508Z`, 31 passing checks.
 - Production visual similarity: `test-results/reference-ui-similarity-prod-latest.json`, passed desktop and mobile crops above the 85% threshold.
 - Local visual similarity: `test-results/reference-ui-similarity-local.json`, passed desktop and mobile crops above the 85% threshold.
 - AI cost aggregate: Supabase `ai_command_logs` show 135 command rows, 12 OpenAI-backed calls, 12,859 input tokens, 1,260 output tokens, and `$0.102095` estimated OpenAI spend.

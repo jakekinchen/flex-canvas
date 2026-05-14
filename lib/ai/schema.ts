@@ -65,7 +65,7 @@ export const boardOperationSchema = z.discriminatedUnion("type", [
     text: z.string().min(1).max(500),
     x: z.number(),
     y: z.number(),
-    color: z.enum(["yellow", "pink", "blue", "green", "orange", "purple"]),
+    color: z.string().min(1).max(40),
     width: z.number().positive().optional(),
     height: z.number().positive().optional(),
   }),

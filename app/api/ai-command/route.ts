@@ -9,7 +9,6 @@ import {
 } from "@/lib/ai/schema";
 import { buildAiUserPrompt, aiSystemPrompt } from "@/lib/ai/prompt";
 import { estimateGpt55CostUsd } from "@/lib/ai/estimateCost";
-import { tryDeterministicCommand } from "@/lib/ai/deterministic";
 import { buildCompactBoardContextFromObjects } from "@/lib/board/defaults";
 import {
   completeAiCommandLog,
@@ -53,18 +52,6 @@ export async function POST(request: NextRequest) {
       context: buildCompactBoardContextFromObjects(Object.values(storage.objects), commandRequest.context),
     });
 
-    const deterministic = tryDeterministicCommand(aiRequest);
-    if (deterministic) {
-      const operations = await applyBoardOperationsServer(commandRequest.roomId, deterministic.operations, user.id);
-      await completeAiCommandLog(commandId, undefined, undefined, undefined, operations);
-      return NextResponse.json({
-        commandId,
-        mode: "deterministic",
-        message: deterministic.message,
-        operationCount: operations.length,
-      });
-    }
-
     const openai = new OpenAI({ apiKey: requireEnv("OPENAI_API_KEY") });
     const model = process.env.OPENAI_MODEL || "gpt-5.5";
     const effort = process.env.OPENAI_REASONING_EFFORT || "medium";
@@ -72,7 +59,7 @@ export async function POST(request: NextRequest) {
     const response = await openai.responses.parse({
       model,
       reasoning: { effort: effort as "low" | "medium" | "high" | "xhigh" },
-      max_output_tokens: 1200,
+      max_output_tokens: 4000,
       input: [
         { role: "system", content: aiSystemPrompt },
         { role: "user", content: buildAiUserPrompt(aiRequest) },

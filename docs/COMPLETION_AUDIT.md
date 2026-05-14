@@ -25,9 +25,9 @@ Audited against the CollabBoard closeout objective on 2026-05-12.
 - [x] Duplicate and copy/paste UI/keyboard handling: `components/board/BoardCanvas.tsx`, smoke checks `duplicate selection synced` and `copy/paste selection synced`.
 - [x] Drag-to-select: `components/board/BoardCanvas.tsx`, smoke check `drag-to-select selected multiple objects`.
 - [x] Resize/rotate UI proof: `components/board/SelectionTransformer.tsx`, smoke check `resize and rotate transform synced`.
-- [x] Deterministic AI handlers for frame-fit, user journey, and even spacing: `lib/ai/deterministic.ts`, `components/board/AiCommandPanel.tsx`.
-- [x] Simultaneous AI command proof: `scripts/smoke-collabboard.mjs`, smoke check `simultaneous deterministic AI commands synced`.
-- [x] Board-state retrieval equivalent: deterministic `Get board state` uses server-side compact Liveblocks state; smoke check `board state command returned context without mutations`.
+- [x] Suggested AI prompts for frame-fit, user journey, and even spacing: `components/board/AiCommandPanel.tsx`.
+- [x] Simultaneous AI command proof: `scripts/smoke-collabboard.mjs`, smoke check `simultaneous OpenAI commands synced`.
+- [x] Board-state retrieval equivalent: OpenAI receives compact Liveblocks state and the smoke checks `board state command returned context without mutations`.
 - [x] Pre-search Phase 1-3 checklist: `docs/PRE_SEARCH.md`.
 - [x] Corrected AI development log: `docs/AI_DEVELOPMENT_LOG.md`.
 - [x] AI cost projections for 100, 1K, 10K, 100K users: `docs/AI_COST_ANALYSIS.md`.

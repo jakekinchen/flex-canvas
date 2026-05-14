@@ -12,5 +12,5 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - React Konva owns canvas rendering and interaction.
 - Human create/move/edit/delete operations are client-owned Liveblocks Storage mutations for low latency.
 - AI commands are planned server-side and applied server-side through validated Liveblocks Storage mutations.
-- Keep deterministic handlers for SWOT, retrospective, and grid layout commands in the same operation schema as GPT output.
+- Route quick suggestion commands through the same server-side OpenAI operation schema as freeform commands.
 - Production deployment is blocked unless Supabase env vars, `LIVEBLOCKS_SECRET_KEY`, and `OPENAI_API_KEY` are configured.
