@@ -5,7 +5,7 @@
 - GitHub repo: `https://github.com/kellyclaudeai/flex-canvas`
 - GitHub transfer status: requested to `jakekinchen`; pending recipient acceptance.
 - Public app: `https://collabboard-six-kappa.vercel.app`
-- Latest production deployment: `https://collabboard-d82mrem4v-kelly-1224s-projects.vercel.app`
+- Production alias: `https://collabboard-six-kappa.vercel.app`
 - Production smoke report: `test-results/collabboard-smoke-prod-latest.json`
 - Expanded local smoke report: `test-results/collabboard-smoke-20260512213412.json`
 - Production visual similarity report: `test-results/reference-ui-similarity-prod-latest.json`

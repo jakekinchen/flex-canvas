@@ -5,7 +5,7 @@ Audited against the CollabBoard closeout objective on 2026-05-12.
 ## Evidence Summary
 
 - Public app: `https://collabboard-six-kappa.vercel.app`
-- Latest deployment: `https://collabboard-d82mrem4v-kelly-1224s-projects.vercel.app`
+- Production alias: `https://collabboard-six-kappa.vercel.app`
 - Production smoke report: `test-results/collabboard-smoke-prod-latest.json`
 - Production visual report: `test-results/reference-ui-similarity-prod-latest.json`
 - Local smoke report: `test-results/flex-canvas-smoke-local.json`

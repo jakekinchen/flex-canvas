@@ -49,7 +49,7 @@ Current production URL:
 
 Latest production smoke:
 
-- Deployment: `https://collabboard-d82mrem4v-kelly-1224s-projects.vercel.app`
+- Production alias: `https://collabboard-six-kappa.vercel.app`
 - Alias: `https://collabboard-six-kappa.vercel.app`
 - Command: `COLLABBOARD_CLEANUP_USERS=1 COLLABBOARD_REPORT=test-results/collabboard-smoke-prod-latest.json npm run test:smoke:prod`
 - Report: `test-results/collabboard-smoke-prod-latest.json`
