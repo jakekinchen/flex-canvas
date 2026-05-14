@@ -15,7 +15,7 @@ Objective: verify every explicit CollabBoard requirement and deliverable against
 - Server-side AI application: `/api/ai-command` authenticates, authorizes, plans, validates, applies to Liveblocks Storage server-side, and logs to Supabase.
 - Required stack boundary: no custom WebSocket server, no Socket.io, no Supabase object-by-object canvas storage.
 - Public app: `https://collabboard-six-kappa.vercel.app`.
-- Latest deployment: `https://collabboard-3dcuets4r-kelly-1224s-projects.vercel.app`.
+- Latest deployment: `https://collabboard-d82mrem4v-kelly-1224s-projects.vercel.app`.
 - GitHub repository: `https://github.com/kellyclaudeai/flex-canvas`.
 - GitHub transfer: requested to `jakekinchen`; pending recipient acceptance.
 - Demo video: `https://collabboard-six-kappa.vercel.app/demo/flex-canvas-demo-draft.mp4`, duration 4 minutes 30 seconds.

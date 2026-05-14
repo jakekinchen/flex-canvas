@@ -20,8 +20,8 @@ The PDF lists early submission as Friday, May 15, 2026 at 11:59 PM. Its final-de
 
 ## Remaining High-Priority Tasks
 
-- [ ] Commit and push the frame layering fix and this closeout doc.
-- [ ] Deploy the latest `main` to Vercel after the frame fix is pushed.
+- [x] Commit and push the frame layering fix and this closeout doc.
+- [x] Deploy the latest `main` to Vercel after the frame fix is pushed.
 - [ ] Run `npm run test:smoke:prod` against the final deployment.
 - [ ] Run `npm run test:visual:prod` against the final deployment.
 - [ ] Refresh `docs/SUBMISSION_CHECKLIST.md` with the final deployment URL, latest smoke report, latest visual report, and final video URL.

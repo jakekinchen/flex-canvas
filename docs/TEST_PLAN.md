@@ -42,7 +42,7 @@ Useful overrides:
 Latest production custom-engine run:
 
 - Public Vercel URL: `https://collabboard-six-kappa.vercel.app`
-- Deployment: `https://collabboard-3dcuets4r-kelly-1224s-projects.vercel.app`, aliased to
+- Deployment: `https://collabboard-d82mrem4v-kelly-1224s-projects.vercel.app`, aliased to
   `https://collabboard-six-kappa.vercel.app`.
 - Report: `test-results/collabboard-smoke-prod-latest.json`
 - Completed: `2026-05-12T22:20:44.777Z`
