@@ -45,5 +45,9 @@ export function isObjectInBounds(
 }
 
 export function sortByZIndex(objects: BoardObject[]) {
-  return [...objects].sort((a, b) => a.zIndex - b.zIndex || a.createdAt - b.createdAt);
+  return [...objects].sort((a, b) => {
+    const aLayer = a.type === "frame" ? 0 : 1;
+    const bLayer = b.type === "frame" ? 0 : 1;
+    return aLayer - bLayer || a.zIndex - b.zIndex || a.createdAt - b.createdAt;
+  });
 }

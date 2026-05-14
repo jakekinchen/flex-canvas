@@ -1,0 +1,48 @@
+flowchart TB
+  User["User browser"]
+
+  subgraph App["Next.js App Router on Vercel"]
+    Pages["Pages and server route handlers"]
+    LiveblocksAuth["/api/liveblocks-auth"]
+    AiRoute["/api/ai-command"]
+  end
+
+  subgraph Client["Client canvas"]
+    Board["React Konva board UI"]
+    AiPanel["AI command panel"]
+  end
+
+  subgraph Supabase["Supabase"]
+    SupabaseAuth["Auth sessions"]
+    SupabaseDb["Postgres metadata<br/>profiles, boards, memberships, AI logs"]
+  end
+
+  subgraph Liveblocks["Liveblocks"]
+    Presence["Presence<br/>cursors, names, selected IDs"]
+    Storage["Storage<br/>objects: LiveMap object map"]
+  end
+
+  subgraph Planning["AI planning"]
+    Deterministic["Deterministic handlers<br/>SWOT, retro, grids, frame-fit"]
+    OpenAI["OpenAI Responses API<br/>structured operation plan"]
+    Operations["Validated BoardOperation schema"]
+  end
+
+  User --> Pages
+  Pages --> Board
+  Pages --> SupabaseAuth
+  Pages --> SupabaseDb
+  Board <--> Presence
+  Board <--> Storage
+  Board --> AiPanel
+  AiPanel --> AiRoute
+  AiRoute --> SupabaseAuth
+  AiRoute --> SupabaseDb
+  AiRoute --> Deterministic
+  AiRoute --> OpenAI
+  Deterministic --> Operations
+  OpenAI --> Operations
+  Operations --> ServerMutation["Server-side Liveblocks mutation"]
+  ServerMutation --> Storage
+  LiveblocksAuth --> SupabaseAuth
+  LiveblocksAuth --> Storage

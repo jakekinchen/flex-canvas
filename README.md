@@ -62,13 +62,18 @@ Use `npm run test:smoke:prod` to run the same 5-user multiplayer, sync, reconnec
 
 ## Documentation
 
+![Flex Canvas architecture](public/demo/flex-canvas-architecture.svg)
+
 - Architecture: `docs/ARCHITECTURE.md`
+- Architecture diagram source: `docs/ARCHITECTURE_DIAGRAM.mmd`
+- Architecture diagram export: `public/demo/flex-canvas-architecture.svg`
 - Pre-search notes: `docs/PRE_SEARCH.md`
 - Test plan: `docs/TEST_PLAN.md`
 - AI development log: `docs/AI_DEVELOPMENT_LOG.md`
 - AI cost analysis: `docs/AI_COST_ANALYSIS.md`
 - Demo video notes: `docs/DEMO_VIDEO.md`
 - Submission checklist and demo/social draft: `docs/SUBMISSION_CHECKLIST.md`
+- Submission closeout tasks and Mermaid diagram draft: `docs/SUBMISSION_CLOSEOUT_TASKS.md`
 - Final compliance audit: `docs/FINAL_COMPLIANCE_AUDIT.md`
 - Completion audit: `docs/COMPLETION_AUDIT.md`
 
@@ -94,3 +99,4 @@ Public draft demo video: `https://collabboard-six-kappa.vercel.app/demo/flex-can
 Public screenshots: `https://collabboard-six-kappa.vercel.app/demo/flex-canvas-home-desktop.png`,
 `https://collabboard-six-kappa.vercel.app/demo/flex-canvas-board-desktop.png`,
 and `https://collabboard-six-kappa.vercel.app/demo/flex-canvas-home-mobile.png`.
+Public architecture diagram: `https://collabboard-six-kappa.vercel.app/demo/flex-canvas-architecture.svg`.

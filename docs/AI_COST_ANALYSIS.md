@@ -4,17 +4,17 @@ The app records `input_tokens`, `output_tokens`, operation counts, and estimated
 
 ## Development and Testing Spend
 
-Supabase `ai_command_logs` aggregate as of `2026-05-12T21:35:43.373767+00:00`:
+Supabase `ai_command_logs` aggregate as of `2026-05-14T15:15:34.515Z`:
 
-- Total AI command log rows: `135`
-- Completed commands: `134`
-- Failed commands: `1`
-- OpenAI-backed API calls with token usage: `12`
-- Deterministic completed commands: `122`
-- Total input tokens: `12,859`
-- Total output tokens: `1,260`
-- Total estimated OpenAI API spend: `$0.102095`
-- Average OpenAI-backed command: `1,072` input tokens, `105` output tokens, `$0.008508`
+- Total AI command log rows: `147`
+- Completed commands: `144`
+- Failed commands: `3`
+- OpenAI-backed API calls with token usage: `15`
+- Deterministic completed commands: `129`
+- Total input tokens: `15,175`
+- Total output tokens: `1,608`
+- Total estimated OpenAI API spend: `$0.124115`
+- Average OpenAI-backed command: `1,012` input tokens, `107` output tokens, `$0.008274`
 - Other AI-related runtime costs tracked in-app: `$0`; Vercel, Supabase, Liveblocks, and subscription-based development-agent costs are not metered in `ai_command_logs`.
 
 ## Current Estimator
