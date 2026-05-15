@@ -1,5 +1,7 @@
 # Completion Audit
 
+> 2026-05-15 update: this earlier completion audit has been superseded by stricter requirement testing. See `docs/REQUIREMENTS_REASSESSMENT.md` for the current open performance and AI reliability risks.
+
 Audited against the CollabBoard closeout objective on 2026-05-12.
 
 ## Evidence Summary

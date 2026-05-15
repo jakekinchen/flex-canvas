@@ -11,7 +11,7 @@ import { RemoteCursors } from "@/components/board/RemoteCursors";
 import { SelectionTransformer } from "@/components/board/SelectionTransformer";
 import type { BoardOperation } from "@/lib/ai/schema";
 import { createObjectId, objectFromOperation, nextZIndex } from "@/lib/board/defaults";
-import { sortByZIndex } from "@/lib/board/geometry";
+import { isObjectInBounds, sortByZIndex } from "@/lib/board/geometry";
 import { useBoardMutations } from "@/lib/board/operations";
 import type { BoardContextInput, BoardObject, BoardObjectPatch, BoardPoint } from "@/lib/board/types";
 import type { ViewportTransform } from "@/lib/board/viewport";
@@ -57,6 +57,15 @@ function intersects(box: { x: number; y: number; width: number; height: number }
     object.y + object.height >= box.y &&
     object.y <= box.y + box.height
   );
+}
+
+function inflateBounds(bounds: { x: number; y: number; width: number; height: number }, margin: number) {
+  return {
+    x: bounds.x - margin,
+    y: bounds.y - margin,
+    width: bounds.width + margin * 2,
+    height: bounds.height + margin * 2,
+  };
 }
 
 function cloneBoardObjects(
@@ -115,6 +124,12 @@ export function BoardCanvas({ canEdit, onContextChange, user }: BoardCanvasProps
     stageX: 0,
     stageY: 0,
   });
+  const viewportBounds = useMemo(() => getViewportBounds(viewport, size), [size, viewport]);
+  const renderBounds = useMemo(() => inflateBounds(viewportBounds, 420), [viewportBounds]);
+  const visibleObjects = useMemo(
+    () => objects.filter((object) => isObjectInBounds(object, renderBounds)),
+    [objects, renderBounds],
+  );
 
   useEffect(() => {
     const element = wrapperRef.current;
@@ -134,9 +149,9 @@ export function BoardCanvas({ canEdit, onContextChange, user }: BoardCanvasProps
     updateMyPresence({ selectedIds });
     onContextChange({
       selectedIds,
-      viewportBounds: getViewportBounds(viewport, size),
+      viewportBounds,
     });
-  }, [onContextChange, selectedIds, size, updateMyPresence, viewport]);
+  }, [onContextChange, selectedIds, updateMyPresence, viewportBounds]);
 
   useEffect(
     () => () => {
@@ -513,7 +528,7 @@ export function BoardCanvas({ canEdit, onContextChange, user }: BoardCanvasProps
         >
           <Layer>
             <Rect fill="#f8fafc" height={400000} listening={false} width={400000} x={-200000} y={-200000} />
-            {objects.map((object) => (
+            {visibleObjects.map((object) => (
               <BoardObjectRenderer
                 canEdit={canEdit}
                 key={object.id}

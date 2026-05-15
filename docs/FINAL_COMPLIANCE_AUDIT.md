@@ -1,5 +1,7 @@
 # Final Compliance Audit
 
+> 2026-05-15 update: a stricter reassessment found open performance and AI reliability gaps. See `docs/REQUIREMENTS_REASSESSMENT.md` before using this document as final submission evidence.
+
 Objective: verify every explicit CollabBoard requirement and deliverable against current repo, deployed app evidence, and generated artifacts.
 
 ## Implemented and Verified

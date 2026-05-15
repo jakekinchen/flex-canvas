@@ -23,6 +23,7 @@ const skipCapacity = booleanFor("skip-capacity", "COLLABBOARD_SKIP_CAPACITY", fa
 const skipMobile = booleanFor("skip-mobile", "COLLABBOARD_SKIP_MOBILE", false);
 const skipReconnect = booleanFor("skip-reconnect", "COLLABBOARD_SKIP_RECONNECT", false);
 const skipOpenAi = booleanFor("skip-openai", "COLLABBOARD_SKIP_OPENAI", false);
+const deepAi = booleanFor("deep-ai", "COLLABBOARD_DEEP_AI", false);
 const cleanupUsers = booleanFor("cleanup-users", "COLLABBOARD_CLEANUP_USERS", false);
 const headed = booleanFor("headed", "COLLABBOARD_HEADED", false);
 const browserExecutable = valueFor("browser-executable", "COLLABBOARD_BROWSER_EXECUTABLE", findChrome());
@@ -43,6 +44,7 @@ const results = {
     cursorSyncTargetMs,
     fpsTarget,
     capacityObjects: skipCapacity ? 0 : capacityObjects,
+    deepAi,
     mobileViewport: skipMobile ? null : { width: 390, height: 844 },
   },
   checks: [],
@@ -124,6 +126,11 @@ try {
 
   const humanStickyProbe = await createToolbarSticky(owner.page, pages[1].page);
   check("human-created sticky note synced", humanStickyProbe.synced, humanStickyProbe);
+  check(
+    "human-created sticky sync latency target",
+    typeof humanStickyProbe.remoteSyncLatencyMs === "number" && humanStickyProbe.remoteSyncLatencyMs <= objectSyncTargetMs,
+    { latencyMs: humanStickyProbe.remoteSyncLatencyMs, targetMs: objectSyncTargetMs, ...humanStickyProbe },
+  );
 
   const editProbe = await editStickyText(owner.page, pages[1].page, humanStickyProbe.objectId, "Edited by owner");
   check("human sticky text edit synced", editProbe.synced, editProbe);
@@ -162,7 +169,11 @@ try {
   check("human frame title edit synced", frameEditProbe.synced, frameEditProbe);
 
   const dragSelectProbe = await dragSelectObjects(owner.page, 2);
-  check("drag-to-select selected multiple objects", dragSelectProbe.selectedCount >= 2, dragSelectProbe);
+  check(
+    "drag-to-select selected multiple objects",
+    dragSelectProbe.selectedCount >= 2 && dragSelectProbe.mode === "drag",
+    dragSelectProbe,
+  );
 
   if (!skipOpenAi) {
     const demoAiProbe = await runAiCommandExpectShape(
@@ -174,6 +185,11 @@ try {
       ...demoAiProbe,
       expectedMode: "openai",
     });
+    check("single-step AI latency target", demoAiProbe.latencyMs <= aiLatencyTargetMs, {
+      latencyMs: demoAiProbe.latencyMs,
+      serverTimings: demoAiProbe.serverTimings,
+      targetMs: aiLatencyTargetMs,
+    });
 
     const simultaneousAiProbe = await simultaneousAiCommands(owner.page, pages[1].page);
     check(
@@ -182,6 +198,14 @@ try {
         simultaneousAiProbe.first.mode === "openai" &&
         simultaneousAiProbe.second.mode === "openai",
       simultaneousAiProbe,
+    );
+    const overlappingAiProbe = await overlappingAiCommands(owner.page, pages[1].page);
+    check(
+      "overlapping long and short OpenAI commands synced",
+      overlappingAiProbe.synced &&
+        overlappingAiProbe.first.mode === "openai" &&
+        overlappingAiProbe.second.mode === "openai",
+      overlappingAiProbe,
     );
 
     const openAiProbe = await runAiCommandExpectShape(
@@ -230,6 +254,10 @@ try {
       before: boardStateBefore,
       after: boardStateAfter,
     });
+    if (deepAi) {
+      const deepAiProbe = await runDeepAiRequirementProbe(owner.page, pages[1].page, humanStickyProbe.objectId, frameProbe.objectId);
+      check("deep AI breadth commands met expected effects", deepAiProbe.ok, deepAiProbe);
+    }
     check("object sync latency measured", objectSyncLatencyMs !== null, {
       latencyMs: objectSyncLatencyMs,
       localShapeAt,
@@ -274,6 +302,23 @@ try {
       storedShapes,
       target: capacityObjects,
       seedLatencyMs: capacityRun.latencyMs,
+    });
+    const clientRenderStartedAt = Date.now();
+    await owner.page.waitForFunction(
+      (args) => document.querySelectorAll(args.selector).length >= args.target,
+      { selector: objectSelector, target: capacityObjects },
+      { timeout: 60000 },
+    );
+    await pages[1].page.waitForFunction(
+      (args) => document.querySelectorAll(args.selector).length >= args.target,
+      { selector: objectSelector, target: capacityObjects },
+      { timeout: 60000 },
+    );
+    check("500+ object capacity rendered in clients", true, {
+      ownerShapes: await shapeCount(owner.page),
+      receiverShapes: await shapeCount(pages[1].page),
+      renderLatencyMs: Date.now() - clientRenderStartedAt,
+      target: capacityObjects,
     });
   }
 
@@ -456,8 +501,9 @@ async function runAiCommand(page, command, expectedStatus, expectedMode) {
   );
   await page.getByRole("button", { name: "Run command" }).click();
   const response = await responsePromise;
+  const responseBody = await response.json().catch(() => null);
   if (!response.ok()) {
-    throw new Error(`AI command failed with ${response.status()}: ${(await response.text()).slice(0, 500)}`);
+    throw new Error(`AI command failed with ${response.status()}: ${JSON.stringify(responseBody).slice(0, 500)}`);
   }
   if (expectedStatus) {
     await page.getByText(expectedStatus).waitFor({ timeout: 60000 });
@@ -469,27 +515,44 @@ async function runAiCommand(page, command, expectedStatus, expectedMode) {
   }
   return {
     command,
+    commandId: responseBody?.commandId ?? null,
     latencyMs,
     mode: await status.getAttribute("data-ai-mode").catch(() => null),
+    operationCount: responseBody?.operationCount ?? null,
+    serverTimings: responseBody?.timings ?? null,
     status: await status.innerText().catch(() => ""),
   };
 }
 
 async function createToolbarSticky(sourcePage, receiverPage) {
+  return createToolbarStickyWithText(sourcePage, receiverPage, "Human sticky");
+}
+
+async function createToolbarStickyWithText(sourcePage, receiverPage, text) {
   const sourceBefore = await shapeCount(sourcePage);
   const receiverBefore = await shapeCount(receiverPage);
+  await installCountObserver(sourcePage, "source-create", sourceBefore + 1);
+  await installCountObserver(receiverPage, "receiver-create", receiverBefore + 1);
+  const startedAt = Date.now();
   await sourcePage.getByRole("button", { name: "Sticky note", exact: true }).click();
-  await sourcePage.locator(".object-editor-overlay").fill("Human sticky");
+  await sourcePage.locator(".object-editor-overlay").fill(text);
   await sourcePage.keyboard.press("Enter");
-  await waitForObjectText(sourcePage, "Human sticky", sourceBefore);
-  const sourceObject = await objectByText(sourcePage, "Human sticky");
-  await waitForObjectText(receiverPage, "Human sticky", receiverBefore);
+  await waitForObjectText(sourcePage, text, sourceBefore);
+  const sourceObject = await objectByText(sourcePage, text);
+  await waitForObjectText(receiverPage, text, receiverBefore);
+  const sourceAt = await countObservedAt(sourcePage, "source-create");
+  const receiverAt = await countObservedAt(receiverPage, "receiver-create");
   return {
     objectId: sourceObject?.id,
     sourceBefore,
     sourceAfter: await shapeCount(sourcePage),
     receiverBefore,
     receiverAfter: await shapeCount(receiverPage),
+    actionToReceiverMs: typeof receiverAt === "number" ? Math.max(0, receiverAt - startedAt) : null,
+    localRenderAt: sourceAt,
+    remoteRenderAt: receiverAt,
+    remoteSyncLatencyMs:
+      typeof sourceAt === "number" && typeof receiverAt === "number" ? Math.max(0, receiverAt - sourceAt) : null,
     synced: Boolean(sourceObject?.id) && (await shapeCount(receiverPage)) > receiverBefore,
   };
 }
@@ -557,7 +620,11 @@ async function selectObjectById(page, objectId) {
   const object = await objectById(page, objectId);
   const box = await page.locator(canvasSelector).boundingBox();
   if (!object || !box) return { objectId, selected: false, reason: "object or canvas missing" };
-  await page.mouse.click(box.x + object.x + object.width / 2, box.y + object.y + object.height / 2);
+  const target =
+    object.type === "frame"
+      ? { x: box.x + object.x + Math.min(object.width / 2, 80), y: box.y + object.y + 16 }
+      : { x: box.x + object.x + object.width / 2, y: box.y + object.y + object.height / 2 };
+  await page.mouse.click(target.x, target.y);
   await page.waitForFunction(
     (args) => {
       const object = [...document.querySelectorAll(args.selector)].find(
@@ -824,8 +891,9 @@ async function runAiCommandExpectShape(sourcePage, receiverPage, command) {
   );
   await sourcePage.getByRole("button", { name: "Run command" }).click();
   const response = await responsePromise;
+  const responseBody = await response.json().catch(() => null);
   if (!response.ok()) {
-    throw new Error(`AI command failed with ${response.status()}: ${(await response.text()).slice(0, 500)}`);
+    throw new Error(`AI command failed with ${response.status()}: ${JSON.stringify(responseBody).slice(0, 500)}`);
   }
   await sourcePage.waitForFunction(
     (args) => document.querySelectorAll(args.selector).length > args.count,
@@ -841,8 +909,11 @@ async function runAiCommandExpectShape(sourcePage, receiverPage, command) {
   const status = sourcePage.locator(".form-status").last();
   return {
     command,
+    commandId: responseBody?.commandId ?? null,
     latencyMs,
     mode: await status.getAttribute("data-ai-mode").catch(() => null),
+    operationCount: responseBody?.operationCount ?? null,
+    serverTimings: responseBody?.timings ?? null,
     sourceBefore,
     sourceAfter: await shapeCount(sourcePage),
     receiverBefore,
@@ -888,6 +959,155 @@ async function simultaneousAiCommands(pageA, pageB) {
       Boolean(await objectByText(pageB, "Parallel A")) &&
       Boolean(await objectByText(pageB, "Parallel B")),
   };
+}
+
+async function overlappingAiCommands(pageA, pageB) {
+  const beforeA = await shapeCount(pageA);
+  const beforeB = await shapeCount(pageB);
+  const firstPromise = runAiCommand(pageA, "Create a user journey map with 5 stages", null, "openai");
+  await delay(1000);
+  const secondPromise = runAiCommand(pageB, "Add a blue sticky note that says Overlap B", null, "openai");
+  const [first, second] = await Promise.all([firstPromise, secondPromise]);
+  await waitForTextObject(pageA, "Overlap B", beforeA);
+  await waitForTextObject(pageB, "Overlap B", beforeB);
+  await pageA.waitForFunction(
+    (args) => document.querySelectorAll(args.selector).length >= args.target,
+    { selector: objectSelector, target: beforeA + 2 },
+    { timeout: 30000 },
+  );
+  await pageB.waitForFunction(
+    (args) => document.querySelectorAll(args.selector).length >= args.target,
+    { selector: objectSelector, target: beforeB + 2 },
+    { timeout: 30000 },
+  );
+  return {
+    beforeA,
+    beforeB,
+    afterA: await shapeCount(pageA),
+    afterB: await shapeCount(pageB),
+    first,
+    second,
+    synced:
+      (await shapeCount(pageA)) >= beforeA + 2 &&
+      (await shapeCount(pageB)) >= beforeB + 2 &&
+      Boolean(await objectByText(pageA, "Overlap B")) &&
+      Boolean(await objectByText(pageB, "Overlap B")),
+  };
+}
+
+async function runDeepAiRequirementProbe(sourcePage, receiverPage, stickyObjectId, frameObjectId) {
+  const probes = [];
+
+  async function record(name, run) {
+    try {
+      const details = await run();
+      probes.push({ name, status: details.ok ? "pass" : "fail", details });
+    } catch (error) {
+      probes.push({
+        name,
+        status: "fail",
+        details: { message: error instanceof Error ? error.message : String(error) },
+      });
+    }
+  }
+
+  await record("AI creates named frame", async () => {
+    const before = await shapeCount(sourcePage);
+    const run = await runAiCommand(sourcePage, "Add a frame called Sprint Planning", null, "openai");
+    await waitForObjectText(receiverPage, "Sprint Planning", before);
+    const frame = await objectByText(receiverPage, "Sprint Planning");
+    return { ok: frame?.type === "frame", frame, run };
+  });
+
+  await record("AI creates pros and cons 2x3 grid", async () => {
+    const before = await shapeCount(sourcePage);
+    const run = await runAiCommand(sourcePage, "Create a 2x3 grid of sticky notes for pros and cons", null, "openai");
+    await receiverPage.waitForFunction(
+      (args) => document.querySelectorAll(args.selector).length >= args.target,
+      { selector: objectSelector, target: before + 6 },
+      { timeout: 30000 },
+    );
+    return {
+      ok: (run.operationCount ?? 0) >= 6 && (await shapeCount(receiverPage)) >= before + 6,
+      after: await shapeCount(receiverPage),
+      before,
+      run,
+    };
+  });
+
+  await record("AI creates 5-stage user journey", async () => {
+    const before = await shapeCount(sourcePage);
+    const run = await runAiCommand(sourcePage, "Build a user journey map with 5 stages", null, "openai");
+    await receiverPage.waitForFunction(
+      (args) => document.querySelectorAll(args.selector).length >= args.target,
+      { selector: objectSelector, target: before + 5 },
+      { timeout: 30000 },
+    );
+    return {
+      ok: (run.operationCount ?? 0) >= 5 && (await shapeCount(receiverPage)) >= before + 5,
+      after: await shapeCount(receiverPage),
+      before,
+      run,
+    };
+  });
+
+  await record("AI changes selected sticky color", async () => {
+    const target = await createToolbarStickyWithText(sourcePage, receiverPage, "AI recolor target");
+    await selectObjectById(sourcePage, target.objectId);
+    await changeSelectedObjectColor(sourcePage, receiverPage, target.objectId, "pink", "#f9a8d4");
+    await selectObjectById(sourcePage, target.objectId);
+    const run = await runAiCommand(sourcePage, "Change the selected sticky note color to green", null, "openai");
+    await waitForObjectColor(receiverPage, target.objectId, "#86efac");
+    const updated = await objectById(receiverPage, target.objectId);
+    return { ok: updated?.color === "#86efac", objectId: target.objectId, run, updated };
+  });
+
+  await record("AI moves pink sticky notes right", async () => {
+    const target = await createToolbarStickyWithText(sourcePage, receiverPage, "AI pink move target");
+    await selectObjectById(sourcePage, target.objectId);
+    await changeSelectedObjectColor(sourcePage, receiverPage, target.objectId, "pink", "#f9a8d4");
+    const before = await objectById(sourcePage, target.objectId);
+    const run = await runAiCommand(sourcePage, "Move all the pink sticky notes to the right side", null, "openai");
+    await receiverPage.waitForFunction(
+      (args) => {
+        const object = [...document.querySelectorAll(args.selector)].find(
+          (element) => element.getAttribute("data-object-id") === args.objectId,
+        );
+        return Number(object?.getAttribute("data-object-x")) >= args.minX;
+      },
+      { selector: objectSelector, objectId: target.objectId, minX: (before?.x ?? 0) + 40 },
+      { timeout: 30000 },
+    );
+    const after = await objectById(receiverPage, target.objectId);
+    return { ok: Boolean(before && after && after.x >= before.x + 40), before, after, run };
+  });
+
+  await record("AI resizes selected frame", async () => {
+    await selectObjectById(sourcePage, frameObjectId);
+    const before = await objectById(sourcePage, frameObjectId);
+    const run = await runAiCommand(sourcePage, "Resize selected frame to fit contents", null, "openai");
+    await receiverPage.waitForFunction(
+      (args) => {
+        const object = [...document.querySelectorAll(args.selector)].find(
+          (element) => element.getAttribute("data-object-id") === args.objectId,
+        );
+        const width = Number(object?.getAttribute("data-object-width"));
+        const height = Number(object?.getAttribute("data-object-height"));
+        return Math.abs(width - args.width) >= 4 || Math.abs(height - args.height) >= 4;
+      },
+      { selector: objectSelector, objectId: frameObjectId, width: before?.width ?? 0, height: before?.height ?? 0 },
+      { timeout: 30000 },
+    );
+    const after = await objectById(receiverPage, frameObjectId);
+    return {
+      ok: Boolean(before && after && (Math.abs(after.width - before.width) >= 4 || Math.abs(after.height - before.height) >= 4)),
+      before,
+      after,
+      run,
+    };
+  });
+
+  return { ok: probes.every((probe) => probe.status === "pass"), probes };
 }
 
 async function dragSelectObjects(page, minimumSelected) {
@@ -966,6 +1186,49 @@ async function waitForObjectText(page, text, previousCount) {
     { selector: objectSelector, text, previousCount },
     { timeout: 10000 },
   );
+}
+
+async function waitForTextObject(page, text, previousCount) {
+  await waitForObjectText(page, text, previousCount);
+}
+
+async function waitForObjectColor(page, objectId, expectedColor) {
+  await page.waitForFunction(
+    (args) => {
+      const object = [...document.querySelectorAll(args.selector)].find(
+        (element) => element.getAttribute("data-object-id") === args.objectId,
+      );
+      return object?.getAttribute("data-object-color") === args.expectedColor;
+    },
+    { selector: objectSelector, objectId, expectedColor },
+    { timeout: 30000 },
+  );
+}
+
+async function installCountObserver(page, label, target) {
+  await page.evaluate(
+    (args) => {
+      window.__collabSmokeCountObservedAt = window.__collabSmokeCountObservedAt || {};
+      window.__collabSmokeCountObservedAt[args.label] = null;
+      const countObjects = () => document.querySelectorAll(args.selector).length;
+      if (countObjects() >= args.target) {
+        window.__collabSmokeCountObservedAt[args.label] = Date.now();
+        return;
+      }
+      const observer = new MutationObserver(() => {
+        if (countObjects() >= args.target) {
+          window.__collabSmokeCountObservedAt[args.label] = Date.now();
+          observer.disconnect();
+        }
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+    },
+    { label, selector: objectSelector, target },
+  );
+}
+
+async function countObservedAt(page, label) {
+  return page.evaluate((key) => window.__collabSmokeCountObservedAt?.[key] ?? null, label);
 }
 
 async function objectIds(page) {
