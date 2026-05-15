@@ -166,34 +166,32 @@ export function LoginForm() {
       <div className="auth-panel">
         {!isResetPassword ? (
           <>
-            {!isForgotPassword ? (
+            {isSignUp ? (
+              <label htmlFor="auth-display-name">
+                Display name
+                <input
+                  id="auth-display-name"
+                  name="display-name"
+                  type="text"
+                  value={displayName}
+                  onChange={(event) => setDisplayName(event.target.value)}
+                  placeholder="Your board label"
+                  maxLength={80}
+                  autoComplete="nickname"
+                />
+              </label>
+            ) : null}
+            {showGuestOption ? (
               <>
-                <label htmlFor="auth-display-name">
-                  Display name
-                  <input
-                    id="auth-display-name"
-                    name="display-name"
-                    type="text"
-                    value={displayName}
-                    onChange={(event) => setDisplayName(event.target.value)}
-                    placeholder="Your board label"
-                    maxLength={80}
-                    autoComplete="nickname"
-                  />
-                </label>
-                {showGuestOption ? (
-                  <>
-                    <button className="auth-secondary-action" type="button" onClick={continueAsGuest} disabled={pending}>
-                      Continue as guest
-                    </button>
-                    <div className="auth-divider">
-                      <span>or sign in with email</span>
-                    </div>
-                  </>
-                ) : null}
+                <button className="auth-secondary-action" type="button" onClick={continueAsGuest} disabled={pending}>
+                  Continue as guest
+                </button>
+                <div className="auth-divider">
+                  <span>or sign in with email</span>
+                </div>
               </>
             ) : null}
-            <form onSubmit={isForgotPassword ? requestPasswordReset : loginWithEmail} className="email-login" method="post">
+            <form autoComplete="on" onSubmit={isForgotPassword ? requestPasswordReset : loginWithEmail} className="email-login" method="post">
               <label htmlFor={emailFieldId}>
                 Email
               </label>

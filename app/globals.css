@@ -72,6 +72,17 @@ body {
   }
 }
 
+@keyframes cursor-click-pulse {
+  from {
+    opacity: 0.45;
+    transform: scale(0.45);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}
+
 @keyframes preview-float {
   0%,
   100% {
@@ -2074,7 +2085,7 @@ h1 {
   overflow: hidden;
   pointer-events: none;
   position: absolute;
-  z-index: 4;
+  z-index: 9;
 }
 
 .board-cursor {
@@ -2094,7 +2105,33 @@ h1 {
   filter: drop-shadow(0 3px 6px rgba(15, 23, 42, 0.22));
   height: 24px;
   transform: translate(-2px, -1px);
+  transition: transform 120ms var(--ease-standard);
   width: 20px;
+}
+
+.board-cursor.cursor-pressing::after {
+  animation: cursor-click-pulse 280ms var(--ease-standard) both;
+  border: 2px solid currentColor;
+  border-radius: 999px;
+  content: "";
+  height: 18px;
+  left: -8px;
+  opacity: 0;
+  position: absolute;
+  top: -8px;
+  width: 18px;
+}
+
+.board-cursor.cursor-pressing .board-cursor-pointer {
+  transform: translate(-2px, -1px) scale(0.84);
+}
+
+.board-cursor.cursor-dragging .board-cursor-pointer {
+  transform: translate(-3px, -2px) scale(0.9) rotate(-8deg);
+}
+
+.board-cursor.cursor-dragging .board-cursor-label {
+  transform: translateY(2px);
 }
 
 .board-cursor-label {
@@ -2116,6 +2153,7 @@ h1 {
   position: absolute;
   text-overflow: ellipsis;
   top: 14px;
+  transition: transform 120ms var(--ease-standard);
   white-space: nowrap;
 }
 

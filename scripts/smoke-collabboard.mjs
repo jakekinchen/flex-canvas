@@ -117,6 +117,10 @@ try {
   }
   const cursorTrackingProbe = await measureCursorTracking(owner.page, pages[1].page, smokeUsers[0].name);
   check("cursor screen position tracks source canvas point", cursorTrackingProbe.aligned, cursorTrackingProbe);
+  const cursorToolbarProbe = await measureCursorToolbarVisibility(owner.page, pages[1].page, smokeUsers[0].name);
+  check("cursor remains visible over canvas toolbar", cursorToolbarProbe.ok, cursorToolbarProbe);
+  const cursorStateProbe = await measureCursorInteractionState(owner.page, pages[1].page, smokeUsers[0].name);
+  check("cursor press and drag state sync", cursorStateProbe.ok, cursorStateProbe);
 
   const humanStickyProbe = await createToolbarSticky(owner.page, pages[1].page);
   check("human-created sticky note synced", humanStickyProbe.synced, humanStickyProbe);
@@ -387,7 +391,10 @@ async function login(page, user) {
   await page.waitForLoadState("networkidle").catch(() => null);
   if (!new URL(page.url()).pathname.startsWith("/login")) return;
 
-  await page.getByPlaceholder("Your board label").fill(user.name);
+  const displayNameInput = page.locator("#auth-display-name");
+  if (await displayNameInput.isVisible().catch(() => false)) {
+    await displayNameInput.fill(user.name);
+  }
   if (user.email) {
     await page.locator('input[type="email"]').fill(user.email);
     await page.locator('input[type="password"]').fill(user.password);
@@ -1113,6 +1120,108 @@ async function measureCursorTracking(sourcePage, receiverPage, sourceName) {
     deltaX: Math.abs(measured.screenX - target.x),
     deltaY: Math.abs(measured.screenY - target.y),
     aligned: Math.abs(measured.screenX - target.x) <= 6 && Math.abs(measured.screenY - target.y) <= 6,
+  };
+}
+
+async function measureCursorToolbarVisibility(sourcePage, receiverPage, sourceName) {
+  const sourceCanvas = await sourcePage.locator(".board-canvas-stage").boundingBox();
+  const sourceToolbar = await sourcePage.locator(".board-toolbar").boundingBox();
+  if (!sourceCanvas || !sourceToolbar) return { ok: false, reason: "canvas or toolbar missing" };
+
+  const target = {
+    x: Math.round(sourceToolbar.x - sourceCanvas.x + Math.min(28, sourceToolbar.width / 2)),
+    y: Math.round(sourceToolbar.y - sourceCanvas.y + Math.min(24, sourceToolbar.height / 2)),
+  };
+  await sourcePage.bringToFront();
+  await sourcePage.mouse.move(sourceCanvas.x + target.x, sourceCanvas.y + target.y);
+  await receiverPage.waitForFunction(
+    (args) => {
+      const cursor = [...document.querySelectorAll(".board-cursor")].find(
+        (element) => element.getAttribute("data-cursor-name") === args.name,
+      );
+      if (!cursor) return false;
+      const x = Number(cursor.getAttribute("data-cursor-screen-x"));
+      const y = Number(cursor.getAttribute("data-cursor-screen-y"));
+      return Math.abs(x - args.target.x) <= args.tolerance && Math.abs(y - args.target.y) <= args.tolerance;
+    },
+    { name: sourceName, target, tolerance: 8 },
+    { timeout: 5000 },
+  );
+
+  const measured = await receiverPage.evaluate((name) => {
+    const cursor = [...document.querySelectorAll(".board-cursor")].find(
+      (element) => element.getAttribute("data-cursor-name") === name,
+    );
+    const cursorLayer = document.querySelector(".board-cursor-layer");
+    const toolbar = document.querySelector(".board-toolbar");
+    const zIndexFor = (element) => {
+      const value = element ? getComputedStyle(element).zIndex : "0";
+      const numeric = Number(value);
+      return Number.isFinite(numeric) ? numeric : 0;
+    };
+    return {
+      cursorLayerZIndex: zIndexFor(cursorLayer),
+      screenX: Number(cursor?.getAttribute("data-cursor-screen-x")),
+      screenY: Number(cursor?.getAttribute("data-cursor-screen-y")),
+      toolbarZIndex: zIndexFor(toolbar),
+    };
+  }, sourceName);
+
+  const tracksOverToolbar = Math.abs(measured.screenX - target.x) <= 8 && Math.abs(measured.screenY - target.y) <= 8;
+  const overlaysToolbar = measured.cursorLayerZIndex > measured.toolbarZIndex;
+
+  return {
+    target,
+    ...measured,
+    overlaysToolbar,
+    tracksOverToolbar,
+    ok: tracksOverToolbar && overlaysToolbar,
+  };
+}
+
+async function measureCursorInteractionState(sourcePage, receiverPage, sourceName) {
+  const sourceBox = await sourcePage.locator(canvasSelector).boundingBox();
+  if (!sourceBox) return { ok: false, reason: "source canvas missing" };
+
+  const hasCursorClass = (state) =>
+    receiverPage.waitForFunction(
+      (args) => {
+        const cursor = [...document.querySelectorAll(".board-cursor")].find(
+          (element) => element.getAttribute("data-cursor-name") === args.name,
+        );
+        return cursor?.classList.contains(`cursor-${args.state}`);
+      },
+      { name: sourceName, state },
+      { timeout: 5000 },
+    );
+
+  await sourcePage.bringToFront();
+  await sourcePage.mouse.move(sourceBox.x + 520, sourceBox.y + 340);
+  await sourcePage.keyboard.down("Shift");
+  try {
+    await sourcePage.mouse.down();
+    await hasCursorClass("pressing");
+    await sourcePage.mouse.move(sourceBox.x + 560, sourceBox.y + 380, { steps: 6 });
+    await hasCursorClass("dragging");
+    await sourcePage.mouse.up();
+  } finally {
+    await sourcePage.keyboard.up("Shift").catch(() => null);
+  }
+  await hasCursorClass("idle");
+
+  const className = await receiverPage.evaluate((name) => {
+    const cursor = [...document.querySelectorAll(".board-cursor")].find(
+      (element) => element.getAttribute("data-cursor-name") === name,
+    );
+    return cursor?.className ?? "";
+  }, sourceName);
+
+  return {
+    className,
+    dragged: true,
+    pressed: true,
+    released: className.includes("cursor-idle"),
+    ok: className.includes("cursor-idle"),
   };
 }
 

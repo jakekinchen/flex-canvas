@@ -14,6 +14,8 @@ import { FlexCanvasLogo } from "@/components/brand/FlexCanvasLogo";
 import { exampleBoardTemplates, type ExampleBoardTemplate } from "@/lib/boards/examples";
 import type { FlexRecentBoard } from "@/lib/boards/presentation";
 
+const LOGIN_HREF = "/login?next=/boards";
+
 type FlexCanvasDashboardProps = {
   activeView?: "home" | "boards";
   account?: {
@@ -41,7 +43,7 @@ export function FlexCanvasDashboard({ activeView = "home", account, boards = [],
   const isBoardsView = currentView === "boards";
   const showStarterTemplates = !isBoardsView && boards.length === 0;
   const visibleBoards = boards.length ? boards.slice(0, isBoardsView ? boards.length : 3) : [];
-  const boardsHref = canCreate ? "/boards" : "/login?next=/boards";
+  const boardsHref = canCreate ? "/boards" : LOGIN_HREF;
   const primaryLabel = canCreate ? (isBoardsView ? "New board" : "Start board") : "Sign in to start";
   const secondaryHref = isBoardsView ? "/" : profile.isAuthenticated ? "/boards" : "#boards";
   const secondaryLabel = isBoardsView ? "Go home" : profile.isAuthenticated ? "Go to boards" : "View starter boards";
@@ -58,7 +60,12 @@ export function FlexCanvasDashboard({ activeView = "home", account, boards = [],
             const Icon = item.icon;
             const href = item.id === "boards" ? boardsHref : item.href;
             const isActive = item.id === currentView;
-            return (
+            return !canCreate && item.id === "boards" ? (
+              <a aria-current={isActive ? "page" : undefined} className={isActive ? "active" : ""} href={LOGIN_HREF} key={item.label}>
+                <Icon size={18} />
+                {item.label}
+              </a>
+            ) : (
               <Link aria-current={isActive ? "page" : undefined} className={isActive ? "active" : ""} href={href} key={item.label}>
                 <Icon size={18} />
                 {item.label}
@@ -77,9 +84,9 @@ export function FlexCanvasDashboard({ activeView = "home", account, boards = [],
           {profile.isAuthenticated ? (
             <SignOutButton />
           ) : (
-            <Link className="profile-sign-in" href="/login?next=/boards">
+            <a className="profile-sign-in" href={LOGIN_HREF}>
               Sign in
-            </Link>
+            </a>
           )}
         </div>
       </aside>
@@ -90,9 +97,9 @@ export function FlexCanvasDashboard({ activeView = "home", account, boards = [],
           {profile.isAuthenticated ? (
             <SignOutButton />
           ) : (
-            <Link className="mobile-topbar-action" href={boardsHref} aria-label="Sign in to open boards">
+            <a className="mobile-topbar-action" href={LOGIN_HREF} aria-label="Sign in to open boards">
               <Menu size={26} />
-            </Link>
+            </a>
           )}
         </header>
 
@@ -117,11 +124,11 @@ export function FlexCanvasDashboard({ activeView = "home", account, boards = [],
                   </button>
                 </form>
               ) : (
-                <Link className="reference-primary-action" href="/login?next=/boards">
+                <a className="reference-primary-action" href={LOGIN_HREF}>
                   <Plus size={19} />
                   {primaryLabel}
                   <ArrowRight size={22} />
-                </Link>
+                </a>
               )}
               <Link className="reference-secondary-action" href={secondaryHref}>
                 {secondaryLabel}
@@ -153,10 +160,10 @@ export function FlexCanvasDashboard({ activeView = "home", account, boards = [],
                   </button>
                 </form>
               ) : (
-                <Link className="new-board-card" href="/login?next=/boards">
+                <a className="new-board-card" href={LOGIN_HREF}>
                   <span aria-hidden="true">+</span>
                   <small>Sign in to create</small>
-                </Link>
+                </a>
               )}
             </div>
           ) : showStarterTemplates ? (
@@ -179,11 +186,11 @@ export function FlexCanvasDashboard({ activeView = "home", account, boards = [],
                   </button>
                 </form>
               ) : (
-                <Link className="reference-primary-action" href="/login?next=/boards">
+                <a className="reference-primary-action" href={LOGIN_HREF}>
                   <Plus size={19} />
                   Sign in to start
                   <ArrowRight size={22} />
-                </Link>
+                </a>
               )}
             </div>
           )}
@@ -193,12 +200,24 @@ export function FlexCanvasDashboard({ activeView = "home", account, boards = [],
           <Link className={currentView === "home" ? "active" : ""} href="/">
             <Home size={24} />
           </Link>
-          <Link className="dock-create" href={canCreate ? "/boards" : "/login?next=/boards"}>
-            <Plus size={22} />
-          </Link>
-          <Link className={currentView === "boards" ? "active" : ""} href={boardsHref}>
-            <Grid2X2 size={24} />
-          </Link>
+          {canCreate ? (
+            <Link className="dock-create" href="/boards">
+              <Plus size={22} />
+            </Link>
+          ) : (
+            <a className="dock-create" href={LOGIN_HREF}>
+              <Plus size={22} />
+            </a>
+          )}
+          {canCreate ? (
+            <Link className={currentView === "boards" ? "active" : ""} href={boardsHref}>
+              <Grid2X2 size={24} />
+            </Link>
+          ) : (
+            <a className={currentView === "boards" ? "active" : ""} href={LOGIN_HREF}>
+              <Grid2X2 size={24} />
+            </a>
+          )}
         </nav>
       </section>
     </main>
@@ -216,9 +235,9 @@ function StarterBoardCard({
 
   if (!canCreate) {
     return (
-      <Link className="starter-board-card" href="/login?next=/boards" title={template.description}>
+      <a className="starter-board-card" href={LOGIN_HREF} title={template.description}>
         {content}
-      </Link>
+      </a>
     );
   }
 

@@ -2,7 +2,7 @@
 
 import { LiveMap } from "@liveblocks/client";
 import type { LiveObject } from "@liveblocks/client";
-import type { BoardObject } from "@/lib/board/types";
+import type { BoardObject, Presence } from "@/lib/board/types";
 
 export function liveblocksAuthEndpoint(room?: string) {
   return fetch("/api/liveblocks-auth", {
@@ -23,9 +23,10 @@ export function initialBoardStorage() {
   };
 }
 
-export function initialBoardPresence() {
+export function initialBoardPresence(): Presence {
   return {
     cursor: null,
+    cursorState: "idle",
     selectedIds: [],
     name: "",
     color: "#2563EB",

@@ -14,6 +14,7 @@ type CursorView = {
   y: number;
   isSelf: boolean;
   cursor: { x: number; y: number } | null;
+  cursorState: "idle" | "pressing" | "dragging";
 };
 
 export function RemoteCursors({ viewport }: { viewport: ViewportTransform }) {
@@ -26,6 +27,7 @@ export function RemoteCursors({ viewport }: { viewport: ViewportTransform }) {
       name: self.presence.name || self.info.name || "Guest",
       color: self.presence.color || self.info.color || "#2563EB",
       cursor: self.presence.cursor,
+      cursorState: self.presence.cursorState || "idle",
       isSelf: true,
     },
     ...others.map((other) => ({
@@ -34,6 +36,7 @@ export function RemoteCursors({ viewport }: { viewport: ViewportTransform }) {
       name: other.presence.name || other.info?.name || "Guest",
       color: other.presence.color || other.info?.color || "#2563EB",
       cursor: other.presence.cursor,
+      cursorState: other.presence.cursorState || "idle",
       isSelf: false,
     })),
   ])
@@ -52,7 +55,7 @@ export function RemoteCursors({ viewport }: { viewport: ViewportTransform }) {
     <div className="board-cursor-layer" aria-hidden="true">
       {cursors.map((cursor) => (
         <div
-          className="board-cursor"
+          className={`board-cursor cursor-${cursor.cursorState}`}
           data-cursor-base-name={cursor.name}
           data-cursor-name={cursor.displayName}
           data-cursor-screen-x={Math.round(cursor.x)}

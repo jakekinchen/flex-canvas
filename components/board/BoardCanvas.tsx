@@ -3,7 +3,7 @@
 import type Konva from "konva";
 import type { KonvaEventObject } from "konva/lib/Node";
 import { useStorage, useUpdateMyPresence } from "@liveblocks/react/suspense";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { Layer, Rect, Stage } from "react-konva";
 import { BoardObjectRenderer } from "@/components/board/BoardObjectRenderer";
 import { BoardToolbar, type ToolbarObjectKind } from "@/components/board/BoardToolbar";
@@ -33,6 +33,8 @@ type SelectionBox = {
   start: BoardPoint;
   end: BoardPoint;
 };
+
+type CursorState = "idle" | "pressing" | "dragging";
 
 function isTextInputTarget(target: EventTarget | null) {
   if (!(target instanceof HTMLElement)) return false;
@@ -95,8 +97,10 @@ export function BoardCanvas({ canEdit, onContextChange, user }: BoardCanvasProps
   const stageRef = useRef<Konva.Stage>(null);
   const selectionStartRef = useRef<BoardPoint | null>(null);
   const didDragSelectRef = useRef(false);
-  const pendingCursorRef = useRef<BoardPoint | null>(null);
+  const pointerDownRef = useRef<BoardPoint | null>(null);
+  const pendingCursorRef = useRef<{ cursor: BoardPoint | null; cursorState: CursorState } | null>(null);
   const cursorPresenceFrameRef = useRef<number | null>(null);
+  const cursorStateRef = useRef<CursorState>("idle");
   const objectsById = (useStorage((root) => root.objects) ?? emptyObjects) as Record<string, BoardObject>;
   const objects = useMemo(() => sortByZIndex(Object.values(objectsById)), [objectsById]);
   const mutations = useBoardMutations(user.id);
@@ -144,14 +148,15 @@ export function BoardCanvas({ canEdit, onContextChange, user }: BoardCanvasProps
   );
 
   const queueCursorPresence = useCallback(
-    (cursor: BoardPoint | null) => {
-      pendingCursorRef.current = cursor;
+    (cursor: BoardPoint | null, cursorState: CursorState = cursorStateRef.current) => {
+      pendingCursorRef.current = { cursor, cursorState };
       if (cursorPresenceFrameRef.current !== null) return;
-      updateMyPresence({ cursor });
+      updateMyPresence({ cursor, cursorState });
       cursorPresenceFrameRef.current = window.requestAnimationFrame(() => {
         cursorPresenceFrameRef.current = null;
-        if (pendingCursorRef.current !== cursor) {
-          updateMyPresence({ cursor: pendingCursorRef.current });
+        const pending = pendingCursorRef.current;
+        if (pending && (pending.cursor !== cursor || pending.cursorState !== cursorState)) {
+          updateMyPresence(pending);
         }
       });
     },
@@ -186,6 +191,63 @@ export function BoardCanvas({ canEdit, onContextChange, user }: BoardCanvasProps
       return nextViewport;
     });
   }, []);
+
+  const worldPointFromPointerEvent = useCallback(
+    (event: ReactPointerEvent<HTMLDivElement>) => {
+      const element = wrapperRef.current;
+      if (!element) return null;
+      const bounds = element.getBoundingClientRect();
+      return screenToWorld(
+        {
+          x: event.clientX - bounds.left,
+          y: event.clientY - bounds.top,
+        },
+        getLiveViewport(),
+      );
+    },
+    [getLiveViewport],
+  );
+
+  const updateCursorFromPointerEvent = useCallback(
+    (event: ReactPointerEvent<HTMLDivElement>, cursorState = cursorStateRef.current) => {
+      const worldPointer = worldPointFromPointerEvent(event);
+      if (!worldPointer) return;
+      cursorStateRef.current = cursorState;
+      queueCursorPresence(worldPointer, cursorState);
+    },
+    [queueCursorPresence, worldPointFromPointerEvent],
+  );
+
+  function handleShellPointerDown(event: ReactPointerEvent<HTMLDivElement>) {
+    if (event.button !== 0) return;
+    const worldPointer = worldPointFromPointerEvent(event);
+    if (!worldPointer) return;
+    pointerDownRef.current = worldPointer;
+    cursorStateRef.current = "pressing";
+    queueCursorPresence(worldPointer, "pressing");
+  }
+
+  function handleShellPointerMove(event: ReactPointerEvent<HTMLDivElement>) {
+    const worldPointer = worldPointFromPointerEvent(event);
+    if (!worldPointer) return;
+    let nextState = cursorStateRef.current;
+    if (pointerDownRef.current) {
+      const dragDistance = Math.hypot(worldPointer.x - pointerDownRef.current.x, worldPointer.y - pointerDownRef.current.y);
+      nextState = dragDistance > 4 ? "dragging" : "pressing";
+    }
+    updateCursorFromPointerEvent(event, nextState);
+  }
+
+  function handleShellPointerUp(event: ReactPointerEvent<HTMLDivElement>) {
+    pointerDownRef.current = null;
+    updateCursorFromPointerEvent(event, "idle");
+  }
+
+  function handleShellPointerLeave() {
+    pointerDownRef.current = null;
+    cursorStateRef.current = "idle";
+    queueCursorPresence(null, "idle");
+  }
 
   const updateObject = useCallback(
     (id: string, patch: BoardObjectPatch) => {
@@ -371,7 +433,6 @@ export function BoardCanvas({ canEdit, onContextChange, user }: BoardCanvasProps
     const pointer = stage?.getPointerPosition();
     if (!pointer) return;
     const worldPointer = screenToWorld(pointer, getLiveViewport());
-    queueCursorPresence(worldPointer);
 
     if (selectionStartRef.current) {
       const start = selectionStartRef.current;
@@ -405,7 +466,14 @@ export function BoardCanvas({ canEdit, onContextChange, user }: BoardCanvasProps
   const editorPosition = editingObject ? worldToScreen({ x: editingObject.x, y: editingObject.y }, viewport) : null;
 
   return (
-    <div className="board-canvas-shell" ref={wrapperRef}>
+    <div
+      className="board-canvas-shell"
+      onPointerDown={handleShellPointerDown}
+      onPointerLeave={handleShellPointerLeave}
+      onPointerMove={handleShellPointerMove}
+      onPointerUp={handleShellPointerUp}
+      ref={wrapperRef}
+    >
       <BoardToolbar
         canEdit={canEdit}
         canPaste={clipboardObjects.length > 0}
@@ -432,7 +500,6 @@ export function BoardCanvas({ canEdit, onContextChange, user }: BoardCanvasProps
             }
           }}
           onMouseDown={handleMouseDown}
-          onMouseLeave={() => queueCursorPresence(null)}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onTap={handleStageClick}

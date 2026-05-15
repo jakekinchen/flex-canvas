@@ -60,6 +60,7 @@ export type Storage = {
 
 export type Presence = {
   cursor: BoardPoint | null;
+  cursorState: "idle" | "pressing" | "dragging";
   selectedIds: string[];
   name: string;
   color: string;
