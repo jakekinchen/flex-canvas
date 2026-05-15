@@ -67,6 +67,9 @@ export function LoginForm() {
 
   async function loginWithEmail(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const submittedEmail = String(formData.get("email") ?? formData.get("username") ?? "").trim();
+    const submittedPassword = String(formData.get("password") ?? "");
     setPending(true);
     setStatus(null);
     try {
@@ -74,20 +77,20 @@ export function LoginForm() {
       const { data, error } =
         mode === "sign-up"
           ? await supabase.auth.signUp({
-              email,
-              password,
+              email: submittedEmail,
+              password: submittedPassword,
               options: {
-                data: { display_name: displayName || email.split("@")[0] || "Guest" },
+                data: { display_name: displayName || submittedEmail.split("@")[0] || "Guest" },
                 emailRedirectTo: `${window.location.origin}${redirectTo}`,
               },
             })
-          : await supabase.auth.signInWithPassword({ email, password });
+          : await supabase.auth.signInWithPassword({ email: submittedEmail, password: submittedPassword });
       if (error) throw error;
       if (!data.session) {
         setStatus("Check your email to confirm the account, then sign in.");
         return;
       }
-      if (data.user) await saveProfile(data.user.id, displayName || email.split("@")[0] || "Guest");
+      if (data.user) await saveProfile(data.user.id, displayName || submittedEmail.split("@")[0] || "Guest");
       router.replace(redirectTo);
       router.refresh();
     } catch (error) {
@@ -99,11 +102,13 @@ export function LoginForm() {
 
   async function requestPasswordReset(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const submittedEmail = String(formData.get("email") ?? "").trim();
     setPending(true);
     setStatus(null);
     try {
       const supabase = createClient();
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      const { error } = await supabase.auth.resetPasswordForEmail(submittedEmail, {
         redirectTo: `${window.location.origin}/login?next=${encodeURIComponent(redirectTo)}`,
       });
       if (error) throw error;
@@ -117,11 +122,13 @@ export function LoginForm() {
 
   async function updateRecoveredPassword(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const submittedPassword = String(formData.get("new-password") ?? "");
     setPending(true);
     setStatus(null);
     try {
       const supabase = createClient();
-      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      const { error } = await supabase.auth.updateUser({ password: submittedPassword });
       if (error) throw error;
       setStatus("Password updated. Redirecting to your boards...");
       router.replace(redirectTo);
@@ -137,7 +144,8 @@ export function LoginForm() {
   const isResetPassword = mode === "reset-password";
   const isSignUp = mode === "sign-up";
   const emailFieldId = isForgotPassword ? "password-reset-email" : isSignUp ? "sign-up-email" : "sign-in-email";
-  const emailAutoComplete = isForgotPassword ? "email" : "username";
+  const emailFieldName = isSignUp || isForgotPassword ? "email" : "username";
+  const emailAutoComplete = isSignUp || isForgotPassword ? "email" : "username";
   const passwordFieldId = isSignUp ? "sign-up-password" : "sign-in-password";
   const passwordAutoComplete = isSignUp ? "new-password" : "current-password";
 
@@ -151,13 +159,13 @@ export function LoginForm() {
                 Display name
                 <input
                   id="auth-display-name"
-                  name="name"
+                  name="display-name"
                   type="text"
                   value={displayName}
                   onChange={(event) => setDisplayName(event.target.value)}
                   placeholder="Your board label"
                   maxLength={80}
-                  autoComplete="name"
+                  autoComplete="nickname"
                 />
               </label>
               <button type="button" onClick={continueAsGuest} disabled={pending}>
@@ -170,7 +178,7 @@ export function LoginForm() {
               Email
               <input
                 id={emailFieldId}
-                name="email"
+                name={emailFieldName}
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 type="email"
@@ -198,7 +206,7 @@ export function LoginForm() {
                 />
               </label>
             ) : null}
-            <button type="submit" disabled={pending || !email || (!isForgotPassword && !password)}>
+            <button type="submit" disabled={pending}>
               {isForgotPassword ? "Send reset email" : isSignUp ? "Create account" : "Sign in"}
             </button>
           </form>
@@ -226,7 +234,7 @@ export function LoginForm() {
               required
             />
           </label>
-          <button type="submit" disabled={pending || newPassword.length < 6}>
+          <button type="submit" disabled={pending}>
             Update password
           </button>
         </form>

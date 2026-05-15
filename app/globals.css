@@ -671,6 +671,99 @@ body {
     transform 180ms var(--ease-press);
 }
 
+.reference-board-card {
+  position: relative;
+}
+
+.reference-board-card-link {
+  display: block;
+  min-height: inherit;
+}
+
+.board-card-menu {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  z-index: 2;
+}
+
+.board-card-menu-trigger,
+.board-title-display button,
+.board-title-form button {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(15, 17, 21, 0.35);
+  color: #111;
+  display: inline-flex;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0;
+  width: 34px;
+}
+
+.board-card-menu-trigger:hover:not(:disabled),
+.board-title-display button:hover:not(:disabled),
+.board-title-form button:hover:not(:disabled) {
+  background: #fff;
+  border-color: #111;
+  box-shadow: 3px 4px 0 rgba(5, 5, 5, 0.18);
+  color: #111;
+}
+
+.board-card-popover {
+  background: #fffdf8;
+  border: 1px solid rgba(15, 17, 21, 0.78);
+  border-radius: 8px;
+  box-shadow: 6px 7px 0 rgba(5, 5, 5, 0.18);
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  position: absolute;
+  right: 8px;
+  top: 42px;
+  width: calc(100% - 16px);
+}
+
+.board-card-popover > button {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  color: #111;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-start;
+  min-height: 36px;
+  padding: 0 8px;
+  text-align: left;
+}
+
+.board-card-popover > button:hover:not(:disabled) {
+  background: rgba(51, 75, 255, 0.1);
+  box-shadow: none;
+  color: #111;
+  transform: none;
+}
+
+.board-card-popover form {
+  display: grid;
+  gap: 8px;
+}
+
+.board-card-popover input {
+  font-size: 14px;
+  min-width: 0;
+}
+
+.board-card-popover-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.board-card-popover-actions button {
+  flex: 1;
+}
+
 .card-art {
   background:
     radial-gradient(rgba(28, 35, 45, 0.22) 1px, transparent 1.4px),
@@ -1727,6 +1820,44 @@ h1 {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.board-title-editor {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.board-title-display {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  min-width: 0;
+}
+
+.board-title-display h1 {
+  min-width: 0;
+}
+
+.board-title-form {
+  align-items: center;
+  display: flex;
+  gap: 6px;
+  min-width: min(420px, 52vw);
+}
+
+.board-title-form input {
+  font-size: 18px;
+  font-weight: 800;
+  height: 38px;
+  min-width: 0;
+  padding: 6px 10px;
+}
+
+.board-rename-error {
+  color: #b42318;
+  font-size: 12px;
+  font-weight: 750;
 }
 
 .board-main {

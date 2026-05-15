@@ -9,6 +9,7 @@ import {
   Users,
 } from "lucide-react";
 import { SignOutButton } from "@/components/auth/SignOutButton";
+import { BoardCardMenu } from "@/components/board/BoardRenameControls";
 import { FlexCanvasLogo } from "@/components/brand/FlexCanvasLogo";
 import { exampleBoardTemplates, type ExampleBoardTemplate } from "@/lib/boards/examples";
 import type { FlexRecentBoard } from "@/lib/boards/presentation";
@@ -291,9 +292,12 @@ function RecentBoardCard({ board, index }: { board: FlexRecentBoard; index: numb
   );
 
   return board.href ? (
-    <Link className="reference-board-card" href={board.href}>
-      {content}
-    </Link>
+    <article className="reference-board-card">
+      <Link className="reference-board-card-link" href={board.href}>
+        {content}
+      </Link>
+      <BoardCardMenu boardId={board.id} initialName={board.name} />
+    </article>
   ) : (
     <article className="reference-board-card">{content}</article>
   );

@@ -159,6 +159,24 @@ export async function createBoard(user: User, name = "Untitled board"): Promise<
   return board as Board;
 }
 
+export async function updateBoardName(boardId: string, name: string): Promise<Board> {
+  const supabase = createServiceSupabaseClient();
+  const trimmedName = name.trim() || "Untitled board";
+
+  const { data, error } = await supabase
+    .from("boards")
+    .update({
+      name: trimmedName,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", boardId)
+    .select("*")
+    .single();
+
+  if (error) throw error;
+  return data as Board;
+}
+
 export async function getBoardById(boardId: string): Promise<Board | null> {
   const supabase = createServiceSupabaseClient();
   const { data, error } = await supabase.from("boards").select("*").eq("id", boardId).maybeSingle();

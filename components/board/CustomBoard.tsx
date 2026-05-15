@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { FlexCanvasLogo } from "@/components/brand/FlexCanvasLogo";
 import { AiCommandPanel } from "@/components/board/AiCommandPanel";
 import { BoardCanvas } from "@/components/board/BoardCanvas";
+import { BoardTitleEditor } from "@/components/board/BoardRenameControls";
 import { PresenceList } from "@/components/board/PresenceList";
 import { ShareBoardButton } from "@/components/board/ShareBoardButton";
 import type { BoardContextInput } from "@/lib/board/types";
@@ -59,7 +60,7 @@ function BoardSurface({ boardId, roomId, boardName, canEdit }: CustomBoardProps)
           <FlexCanvasLogo className="board-brand-logo" />
           <span className="board-title-stack">
             <p>Live board</p>
-            <h1>{boardName}</h1>
+            <BoardTitleEditor boardId={boardId} canEdit={canEdit} initialName={boardName} />
           </span>
         </div>
         <div className="board-topbar-actions">
