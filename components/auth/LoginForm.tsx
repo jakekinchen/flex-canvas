@@ -148,34 +148,55 @@ export function LoginForm() {
   const emailAutoComplete = isSignUp || isForgotPassword ? "email" : "username";
   const passwordFieldId = isSignUp ? "sign-up-password" : "sign-in-password";
   const passwordAutoComplete = isSignUp ? "new-password" : "current-password";
+  const showGuestOption = mode === "sign-in";
+  const authTitle = isResetPassword
+    ? "Set a new password"
+    : isForgotPassword
+      ? "Reset your password"
+      : isSignUp
+        ? "Create your account"
+        : "Sign in to Flex Canvas";
 
   return (
-    <div className="auth-panel">
-      {!isResetPassword ? (
-        <>
-          {!isForgotPassword ? (
-            <>
-              <label>
-                Display name
-                <input
-                  id="auth-display-name"
-                  name="display-name"
-                  type="text"
-                  value={displayName}
-                  onChange={(event) => setDisplayName(event.target.value)}
-                  placeholder="Your board label"
-                  maxLength={80}
-                  autoComplete="nickname"
-                />
+    <>
+      <div className="auth-card-copy">
+        <h1>{authTitle}</h1>
+        <div className="blue-squiggle" aria-hidden="true" />
+      </div>
+      <div className="auth-panel">
+        {!isResetPassword ? (
+          <>
+            {!isForgotPassword ? (
+              <>
+                <label htmlFor="auth-display-name">
+                  Display name
+                  <input
+                    id="auth-display-name"
+                    name="display-name"
+                    type="text"
+                    value={displayName}
+                    onChange={(event) => setDisplayName(event.target.value)}
+                    placeholder="Your board label"
+                    maxLength={80}
+                    autoComplete="nickname"
+                  />
+                </label>
+                {showGuestOption ? (
+                  <>
+                    <button className="auth-secondary-action" type="button" onClick={continueAsGuest} disabled={pending}>
+                      Continue as guest
+                    </button>
+                    <div className="auth-divider">
+                      <span>or sign in with email</span>
+                    </div>
+                  </>
+                ) : null}
+              </>
+            ) : null}
+            <form onSubmit={isForgotPassword ? requestPasswordReset : loginWithEmail} className="email-login" method="post">
+              <label htmlFor={emailFieldId}>
+                Email
               </label>
-              <button type="button" onClick={continueAsGuest} disabled={pending}>
-                Continue as guest
-              </button>
-            </>
-          ) : null}
-          <form onSubmit={isForgotPassword ? requestPasswordReset : loginWithEmail} className="email-login" method="post">
-            <label>
-              Email
               <input
                 id={emailFieldId}
                 name={emailFieldName}
@@ -189,40 +210,68 @@ export function LoginForm() {
                 spellCheck={false}
                 required
               />
+              {!isForgotPassword ? (
+                <div className="auth-field">
+                  <div className="auth-field-header">
+                    <label htmlFor={passwordFieldId}>Password</label>
+                    {!isSignUp ? (
+                      <button
+                        className="auth-link-button"
+                        type="button"
+                        onClick={() => switchMode("forgot-password")}
+                        disabled={pending}
+                      >
+                        Forgot password?
+                      </button>
+                    ) : null}
+                  </div>
+                  <input
+                    key={passwordFieldId}
+                    id={passwordFieldId}
+                    name="password"
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    type="password"
+                    autoComplete={passwordAutoComplete}
+                    minLength={6}
+                    required
+                  />
+                </div>
+              ) : null}
+              <button type="submit" disabled={pending}>
+                {isForgotPassword ? "Send reset email" : isSignUp ? "Create account" : "Sign in"}
+              </button>
+            </form>
+            <div className="auth-mode-row" aria-label="Authentication options">
+              {isForgotPassword ? (
+                <>
+                  Remembered it?
+                  <button className="auth-link-button" type="button" onClick={() => switchMode("sign-in")} disabled={pending}>
+                    Back to sign in
+                  </button>
+                </>
+              ) : isSignUp ? (
+                <>
+                  Already have an account?
+                  <button className="auth-link-button" type="button" onClick={() => switchMode("sign-in")} disabled={pending}>
+                    Sign in
+                  </button>
+                </>
+              ) : (
+                <>
+                  New here?
+                  <button className="auth-link-button" type="button" onClick={() => switchMode("sign-up")} disabled={pending}>
+                    Create account
+                  </button>
+                </>
+              )}
+            </div>
+          </>
+        ) : (
+          <form onSubmit={updateRecoveredPassword} className="email-login" method="post">
+            <label htmlFor="recovered-new-password">
+              New password
             </label>
-            {!isForgotPassword ? (
-              <label>
-                Password
-                <input
-                  key={passwordFieldId}
-                  id={passwordFieldId}
-                  name="password"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                  type="password"
-                  autoComplete={passwordAutoComplete}
-                  minLength={6}
-                  required
-                />
-              </label>
-            ) : null}
-            <button type="submit" disabled={pending}>
-              {isForgotPassword ? "Send reset email" : isSignUp ? "Create account" : "Sign in"}
-            </button>
-          </form>
-          <div className="auth-switcher" aria-label="Authentication options">
-            <button type="button" onClick={() => switchMode(isSignUp ? "sign-in" : "sign-up")} disabled={pending}>
-              {isSignUp ? "Use existing account" : "Create account"}
-            </button>
-            <button type="button" onClick={() => switchMode(isForgotPassword ? "sign-in" : "forgot-password")} disabled={pending}>
-              {isForgotPassword ? "Back to sign in" : "Forgot password?"}
-            </button>
-          </div>
-        </>
-      ) : (
-        <form onSubmit={updateRecoveredPassword} className="email-login" method="post">
-          <label>
-            New password
             <input
               id="recovered-new-password"
               name="new-password"
@@ -233,13 +282,13 @@ export function LoginForm() {
               minLength={6}
               required
             />
-          </label>
-          <button type="submit" disabled={pending}>
-            Update password
-          </button>
-        </form>
-      )}
-      {status ? <p className="form-status">{status}</p> : null}
-    </div>
+            <button type="submit" disabled={pending}>
+              Update password
+            </button>
+          </form>
+        )}
+        {status ? <p className="form-status">{status}</p> : null}
+      </div>
+    </>
   );
 }

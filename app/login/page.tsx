@@ -35,10 +35,6 @@ export default async function LoginPage() {
         <header className="auth-card-header">
           <FlexCanvasLogo />
         </header>
-        <div className="auth-card-copy">
-          <h1>Join Flex Canvas</h1>
-          <div className="blue-squiggle" aria-hidden="true" />
-        </div>
         <LoginForm />
       </section>
     </main>

@@ -1231,7 +1231,6 @@ textarea:focus-visible {
 
   .setup-warning:hover,
   .auth-card:hover,
-  .auth-panel:hover,
   .profile-modal:hover {
     border-color: #c5ccd7;
     box-shadow: 0 16px 38px rgba(16, 24, 40, 0.1);
@@ -1622,28 +1621,94 @@ h1 {
 }
 
 .auth-panel {
-  background: rgba(255, 255, 255, 0.72);
-  box-shadow: 5px 6px 0 rgba(5, 5, 5, 0.12);
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
 }
 
 .email-login {
-  border-top: 1px solid var(--line);
-  margin-top: 6px;
-  padding-top: 18px;
+  gap: 12px;
 }
 
-.auth-switcher {
+.auth-field {
   display: grid;
-  gap: 10px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
 }
 
-.auth-switcher button {
+.auth-field-header {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.auth-field-header label {
+  margin: 0;
+}
+
+.auth-secondary-action {
   background: transparent;
-  border: 1px solid #cfd6e2;
+  border: 1px solid var(--accent);
   box-shadow: none;
-  color: #1f46db;
-  min-height: 42px;
+  color: var(--accent);
+}
+
+.auth-secondary-action:hover:not(:disabled) {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.14);
+  color: #ffffff;
+}
+
+.auth-divider {
+  align-items: center;
+  color: var(--muted);
+  display: grid;
+  font-size: 12px;
+  font-weight: 700;
+  gap: 10px;
+  grid-template-columns: 1fr auto 1fr;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  background: var(--line);
+  content: "";
+  height: 1px;
+}
+
+.auth-mode-row {
+  align-items: center;
+  color: var(--muted);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 13px;
+  gap: 6px;
+  justify-content: center;
+  min-height: 28px;
+}
+
+.auth-link-button {
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  box-shadow: none;
+  color: var(--accent);
+  font-weight: 800;
+  min-height: 0;
+  padding: 2px 4px;
+}
+
+.auth-link-button:hover:not(:disabled) {
+  background: rgba(37, 99, 235, 0.1);
+  box-shadow: none;
+  color: var(--accent-strong);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transform: none;
 }
 
 .form-status {
