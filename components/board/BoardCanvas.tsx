@@ -158,6 +158,35 @@ export function BoardCanvas({ canEdit, onContextChange, user }: BoardCanvasProps
     [updateMyPresence],
   );
 
+  const getLiveViewport = useCallback((): ViewportTransform => {
+    const stage = stageRef.current;
+    if (!stage) return viewport;
+    return {
+      scale: stage.scaleX(),
+      stageX: stage.x(),
+      stageY: stage.y(),
+    };
+  }, [viewport]);
+
+  const syncViewportFromStage = useCallback((stage: Konva.Stage | null) => {
+    if (!stage) return;
+    const nextViewport = {
+      scale: stage.scaleX(),
+      stageX: stage.x(),
+      stageY: stage.y(),
+    };
+    setViewport((current) => {
+      if (
+        current.scale === nextViewport.scale &&
+        current.stageX === nextViewport.stageX &&
+        current.stageY === nextViewport.stageY
+      ) {
+        return current;
+      }
+      return nextViewport;
+    });
+  }, []);
+
   const updateObject = useCallback(
     (id: string, patch: BoardObjectPatch) => {
       if (!canEdit) return;
@@ -329,7 +358,7 @@ export function BoardCanvas({ canEdit, onContextChange, user }: BoardCanvasProps
     const pointer = stage?.getPointerPosition();
     if (!stage || !pointer) return;
 
-    const start = screenToWorld(pointer, viewport);
+    const start = screenToWorld(pointer, getLiveViewport());
     selectionStartRef.current = start;
     didDragSelectRef.current = false;
     stage.draggable(false);
@@ -341,7 +370,7 @@ export function BoardCanvas({ canEdit, onContextChange, user }: BoardCanvasProps
     const stage = stageRef.current;
     const pointer = stage?.getPointerPosition();
     if (!pointer) return;
-    const worldPointer = screenToWorld(pointer, viewport);
+    const worldPointer = screenToWorld(pointer, getLiveViewport());
     queueCursorPresence(worldPointer);
 
     if (selectionStartRef.current) {
@@ -394,7 +423,12 @@ export function BoardCanvas({ canEdit, onContextChange, user }: BoardCanvasProps
           onClick={handleStageClick}
           onDragEnd={(event) => {
             if (event.target === event.target.getStage()) {
-              setViewport((current) => ({ ...current, stageX: event.target.x(), stageY: event.target.y() }));
+              syncViewportFromStage(event.target.getStage());
+            }
+          }}
+          onDragMove={(event) => {
+            if (event.target === event.target.getStage()) {
+              syncViewportFromStage(event.target.getStage());
             }
           }}
           onMouseDown={handleMouseDown}

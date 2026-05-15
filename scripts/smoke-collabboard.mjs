@@ -104,6 +104,8 @@ try {
       targetMs: cursorSyncTargetMs,
     });
   }
+  const cursorTrackingProbe = await measureCursorTracking(owner.page, pages[1].page, smokeUsers[0].name);
+  check("cursor screen position tracks source canvas point", cursorTrackingProbe.aligned, cursorTrackingProbe);
 
   const humanStickyProbe = await createToolbarSticky(owner.page, pages[1].page);
   check("human-created sticky note synced", humanStickyProbe.synced, humanStickyProbe);
@@ -1019,7 +1021,7 @@ async function measureCursorLatency(sourcePage, receiverPage, sourceName) {
   await receiverPage
     .waitForFunction(
       (name) =>
-        [...document.querySelectorAll(".board-cursor-label")].some(
+        [...document.querySelectorAll(".board-cursor")].some(
           (element) => element.getAttribute("data-cursor-name") === name,
         ),
       sourceName,
@@ -1040,7 +1042,7 @@ async function measureCursorLatency(sourcePage, receiverPage, sourceName) {
   });
   await receiverPage.evaluate((name) => {
     const snapshot = () =>
-      [...document.querySelectorAll(".board-cursor-label")]
+      [...document.querySelectorAll(".board-cursor")]
         .filter((element) => element.getAttribute("data-cursor-name") === name)
         .map((element) => `${element.textContent}:${element.getAttribute("style")}`)
         .join("|");
@@ -1064,6 +1066,43 @@ async function measureCursorLatency(sourcePage, receiverPage, sourceName) {
   const changedAt = await receiverPage.evaluate(() => window.__collabSmokeCursorChangedAt);
   const sentAt = await sourcePage.evaluate(() => window.__collabSmokeCursorSentAt);
   return typeof changedAt === "number" && typeof sentAt === "number" ? Math.max(0, changedAt - sentAt) : null;
+}
+
+async function measureCursorTracking(sourcePage, receiverPage, sourceName) {
+  const sourceBox = await sourcePage.locator(canvasSelector).boundingBox();
+  if (!sourceBox) return { aligned: false, reason: "source canvas missing" };
+  const target = { x: 420, y: 300 };
+  await sourcePage.bringToFront();
+  await sourcePage.mouse.move(sourceBox.x + target.x, sourceBox.y + target.y);
+  await receiverPage.waitForFunction(
+    (args) => {
+      const cursor = [...document.querySelectorAll(".board-cursor")].find(
+        (element) => element.getAttribute("data-cursor-name") === args.name,
+      );
+      if (!cursor) return false;
+      const x = Number(cursor.getAttribute("data-cursor-screen-x"));
+      const y = Number(cursor.getAttribute("data-cursor-screen-y"));
+      return Math.abs(x - args.target.x) <= args.tolerance && Math.abs(y - args.target.y) <= args.tolerance;
+    },
+    { name: sourceName, target, tolerance: 6 },
+    { timeout: 5000 },
+  );
+  const measured = await receiverPage.evaluate((name) => {
+    const cursor = [...document.querySelectorAll(".board-cursor")].find(
+      (element) => element.getAttribute("data-cursor-name") === name,
+    );
+    return {
+      screenX: Number(cursor?.getAttribute("data-cursor-screen-x")),
+      screenY: Number(cursor?.getAttribute("data-cursor-screen-y")),
+    };
+  }, sourceName);
+  return {
+    target,
+    ...measured,
+    deltaX: Math.abs(measured.screenX - target.x),
+    deltaY: Math.abs(measured.screenY - target.y),
+    aligned: Math.abs(measured.screenX - target.x) <= 6 && Math.abs(measured.screenY - target.y) <= 6,
+  };
 }
 
 async function reconnectRecovery(sourcePage, receiverContext, receiverPage) {
