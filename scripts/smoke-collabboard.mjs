@@ -93,6 +93,17 @@ try {
     visiblePeople: await owner.page.locator(".presence-pill").count(),
   });
 
+  const duplicateOwner = await newSmokePage(browser, smokeUsers[0]);
+  pages.push(duplicateOwner);
+  const duplicateStartedAt = Date.now();
+  await duplicateOwner.page.goto(boardUrl, { waitUntil: "domcontentloaded" });
+  await waitForBoardReady(duplicateOwner.page, smokeUsers[0].name);
+  const duplicateNameProbe = await measureDuplicateUserLabels(owner.page, duplicateOwner.page, smokeUsers[0].name);
+  check("duplicate same-user tabs are numbered", duplicateNameProbe.ok, {
+    ...duplicateNameProbe,
+    latencyMs: Date.now() - duplicateStartedAt,
+  });
+
   const cursorLatencyMs = await measureCursorLatency(owner.page, pages[1].page, smokeUsers[0].name);
   check("cursor propagation observed", cursorLatencyMs !== null, {
     latencyMs: cursorLatencyMs,
@@ -1102,6 +1113,55 @@ async function measureCursorTracking(sourcePage, receiverPage, sourceName) {
     deltaX: Math.abs(measured.screenX - target.x),
     deltaY: Math.abs(measured.screenY - target.y),
     aligned: Math.abs(measured.screenX - target.x) <= 6 && Math.abs(measured.screenY - target.y) <= 6,
+  };
+}
+
+async function measureDuplicateUserLabels(observerPage, duplicatePage, baseName) {
+  const numberedName = `${baseName} (2)`;
+  await observerPage.waitForFunction(
+    (args) => {
+      const names = [...document.querySelectorAll(".presence-pill")].map((element) =>
+        element.getAttribute("data-presence-name"),
+      );
+      return names.includes(args.baseName) && names.includes(args.numberedName);
+    },
+    { baseName, numberedName },
+    { timeout: 10000 },
+  );
+
+  const duplicateBox = await duplicatePage.locator(canvasSelector).boundingBox();
+  if (duplicateBox) {
+    await duplicatePage.bringToFront();
+    await duplicatePage.mouse.move(duplicateBox.x + 260, duplicateBox.y + 210);
+    await observerPage.waitForFunction(
+      (name) =>
+        [...document.querySelectorAll(".board-cursor")].some(
+          (element) => element.getAttribute("data-cursor-name") === name,
+        ),
+      numberedName,
+      { timeout: 5000 },
+    );
+  }
+
+  const labels = await observerPage.evaluate(() => ({
+    cursorNames: [...document.querySelectorAll(".board-cursor")].map((element) =>
+      element.getAttribute("data-cursor-name"),
+    ),
+    presenceNames: [...document.querySelectorAll(".presence-pill")].map((element) =>
+      element.getAttribute("data-presence-name"),
+    ),
+  }));
+
+  const presenceNumbered = labels.presenceNames.includes(baseName) && labels.presenceNames.includes(numberedName);
+  const cursorNumbered = labels.cursorNames.includes(numberedName);
+
+  return {
+    baseName,
+    numberedName,
+    ...labels,
+    presenceNumbered,
+    cursorNumbered,
+    ok: presenceNumbered && cursorNumbered,
   };
 }
 

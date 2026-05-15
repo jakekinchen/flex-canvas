@@ -1,27 +1,47 @@
 "use client";
 
-import { useOthers } from "@liveblocks/react/suspense";
+import { useOthers, useSelf } from "@liveblocks/react/suspense";
+import { withDuplicatePresenceNames } from "@/lib/board/presenceNames";
 import type { ViewportTransform } from "@/lib/board/viewport";
 import { worldToScreen } from "@/lib/board/viewport";
 
 type CursorView = {
   key: string;
   name: string;
+  displayName: string;
   color: string;
   x: number;
   y: number;
+  isSelf: boolean;
+  cursor: { x: number; y: number } | null;
 };
 
 export function RemoteCursors({ viewport }: { viewport: ViewportTransform }) {
+  const self = useSelf();
   const others = useOthers();
-  const cursors = others
-    .map((other) => {
-      if (!other.presence.cursor) return null;
-      const screen = worldToScreen(other.presence.cursor, viewport);
+  const cursors = withDuplicatePresenceNames([
+    {
+      connectionId: self.connectionId,
+      key: `self:${self.connectionId}`,
+      name: self.presence.name || self.info.name || "Guest",
+      color: self.presence.color || self.info.color || "#2563EB",
+      cursor: self.presence.cursor,
+      isSelf: true,
+    },
+    ...others.map((other) => ({
+      connectionId: other.connectionId,
+      key: `other:${other.connectionId}`,
+      name: other.presence.name || other.info?.name || "Guest",
+      color: other.presence.color || other.info?.color || "#2563EB",
+      cursor: other.presence.cursor,
+      isSelf: false,
+    })),
+  ])
+    .map((entry) => {
+      if (entry.isSelf || !entry.cursor) return null;
+      const screen = worldToScreen(entry.cursor, viewport);
       return {
-        key: `${other.connectionId}:${other.id}`,
-        name: other.presence.name || other.info?.name || "Guest",
-        color: other.presence.color || other.info?.color || "#2563EB",
+        ...entry,
         x: screen.x,
         y: screen.y,
       };
@@ -33,7 +53,8 @@ export function RemoteCursors({ viewport }: { viewport: ViewportTransform }) {
       {cursors.map((cursor) => (
         <div
           className="board-cursor"
-          data-cursor-name={cursor.name}
+          data-cursor-base-name={cursor.name}
+          data-cursor-name={cursor.displayName}
           data-cursor-screen-x={Math.round(cursor.x)}
           data-cursor-screen-y={Math.round(cursor.y)}
           key={cursor.key}
@@ -45,9 +66,9 @@ export function RemoteCursors({ viewport }: { viewport: ViewportTransform }) {
           <svg className="board-cursor-pointer" focusable="false" viewBox="0 0 20 24">
             <path d="M3 2L17 14H10L7 22L3 2Z" fill={cursor.color} stroke="white" strokeWidth="2" />
           </svg>
-          <div className="board-cursor-label" data-cursor-name={cursor.name} style={{ borderColor: cursor.color }}>
+          <div className="board-cursor-label" data-cursor-name={cursor.displayName} style={{ borderColor: cursor.color }}>
             <span style={{ background: cursor.color }} />
-            {cursor.name}
+            {cursor.displayName}
           </div>
         </div>
       ))}
