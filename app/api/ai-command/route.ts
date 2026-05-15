@@ -18,10 +18,14 @@ import {
   logAiCommandStarted,
 } from "@/lib/db/queries";
 import { requireEnv } from "@/lib/env";
-import { applyBoardOperationsServer, getBoardStorage } from "@/lib/liveblocks/server";
+import { applyBoardOperationsServer, ensureBoardStorage, getBoardStorage } from "@/lib/liveblocks/server";
 import { getAuthenticatedUser } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+export const maxDuration = 60;
+
+const openAiTimeoutMs = 55_000;
 
 export async function POST(request: NextRequest) {
   const user = await getAuthenticatedUser();
@@ -46,6 +50,7 @@ export async function POST(request: NextRequest) {
   const commandId = await logAiCommandStarted(board.id, user.id, commandRequest.command);
 
   try {
+    await ensureBoardStorage(commandRequest.roomId);
     const storage = await getBoardStorage(commandRequest.roomId);
     const aiRequest = aiCommandRequestSchema.parse({
       ...commandRequest,
@@ -56,18 +61,25 @@ export async function POST(request: NextRequest) {
     const model = process.env.OPENAI_MODEL || "gpt-5.5";
     const effort = process.env.OPENAI_REASONING_EFFORT || "medium";
 
-    const response = await openai.responses.parse({
-      model,
-      reasoning: { effort: effort as "low" | "medium" | "high" | "xhigh" },
-      max_output_tokens: 4000,
-      input: [
-        { role: "system", content: aiSystemPrompt },
-        { role: "user", content: buildAiUserPrompt(aiRequest) },
-      ],
-      text: {
-        format: zodTextFormat(openAiCommandPlanSchema, "board_operation_plan"),
+    const response = await openai.responses.parse(
+      {
+        model,
+        reasoning: { effort: effort as "low" | "medium" | "high" | "xhigh" },
+        max_output_tokens: 4000,
+        input: [
+          { role: "system", content: aiSystemPrompt },
+          { role: "user", content: buildAiUserPrompt(aiRequest) },
+        ],
+        text: {
+          format: zodTextFormat(openAiCommandPlanSchema, "board_operation_plan"),
+        },
       },
-    });
+      {
+        idempotencyKey: commandId,
+        maxRetries: 1,
+        timeout: openAiTimeoutMs,
+      },
+    );
 
     const parsedPlan = response.output_parsed;
     if (!parsedPlan) {

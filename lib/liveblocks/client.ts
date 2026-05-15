@@ -30,5 +30,6 @@ export function initialBoardPresence(): Presence {
     selectedIds: [],
     name: "",
     color: "#2563EB",
+    activeAiCommand: null,
   };
 }

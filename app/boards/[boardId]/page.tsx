@@ -57,6 +57,7 @@ export default async function BoardPage({ params }: { params: Promise<{ boardId:
         boardId={board.id}
         roomId={board.room_id}
         boardName={board.name}
+        shareMode={board.share_mode}
         canEdit={access.canEdit}
       />
       {!profile?.display_name ? <ProfileNameModal initialName={profile?.display_name} /> : null}

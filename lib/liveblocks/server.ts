@@ -39,6 +39,10 @@ export async function mutateBoardStorage(
   });
 }
 
+export async function ensureBoardStorage(roomId: string) {
+  await mutateBoardStorage(roomId, () => undefined);
+}
+
 function updateObject(
   objects: LiveMap<string, LiveObject<BoardObject>>,
   id: string,

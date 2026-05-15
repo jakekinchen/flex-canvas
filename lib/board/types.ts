@@ -64,6 +64,11 @@ export type Presence = {
   selectedIds: string[];
   name: string;
   color: string;
+  activeAiCommand: {
+    id: string;
+    command: string;
+    startedAt: number;
+  } | null;
 };
 
 export type ViewportBounds = {

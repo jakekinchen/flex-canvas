@@ -8,6 +8,7 @@ import { BoardCanvas } from "@/components/board/BoardCanvas";
 import { BoardTitleEditor } from "@/components/board/BoardRenameControls";
 import { PresenceList } from "@/components/board/PresenceList";
 import { ShareBoardButton } from "@/components/board/ShareBoardButton";
+import type { Board } from "@/lib/db/queries";
 import type { BoardContextInput } from "@/lib/board/types";
 import { initialBoardPresence, initialBoardStorage, liveblocksAuthEndpoint } from "@/lib/liveblocks/client";
 
@@ -15,6 +16,7 @@ type CustomBoardProps = {
   boardId: string;
   roomId: string;
   boardName: string;
+  shareMode: Board["share_mode"];
   canEdit: boolean;
 };
 
@@ -30,7 +32,7 @@ export function CustomBoard(props: CustomBoardProps) {
   );
 }
 
-function BoardSurface({ boardId, roomId, boardName, canEdit }: CustomBoardProps) {
+function BoardSurface({ boardId, roomId, boardName, shareMode, canEdit }: CustomBoardProps) {
   const self = useSelf();
   const updateMyPresence = useUpdateMyPresence();
   const user = useMemo(
@@ -65,7 +67,7 @@ function BoardSurface({ boardId, roomId, boardName, canEdit }: CustomBoardProps)
         </div>
         <div className="board-topbar-actions">
           <PresenceList />
-          <ShareBoardButton />
+          <ShareBoardButton boardName={boardName} shareMode={shareMode} />
         </div>
       </header>
       <main className="board-main">

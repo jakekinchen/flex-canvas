@@ -857,8 +857,12 @@ async function simultaneousAiCommands(pageA, pageB) {
   const beforeB = await shapeCount(pageB);
   const [first, second] = await Promise.all([
     runAiCommand(pageA, "Add a yellow sticky note that says Parallel A", null, "openai"),
-    runAiCommand(pageB, "Create a blue rectangle at position 100, 200", null, "openai"),
+    runAiCommand(pageB, "Add a blue sticky note that says Parallel B", null, "openai"),
   ]);
+  await waitForTextObject(pageA, "Parallel A", beforeA);
+  await waitForTextObject(pageA, "Parallel B", beforeA);
+  await waitForTextObject(pageB, "Parallel A", beforeB);
+  await waitForTextObject(pageB, "Parallel B", beforeB);
   await pageA.waitForFunction(
     (args) => document.querySelectorAll(args.selector).length >= args.target,
     { selector: objectSelector, target: beforeA + 2 },
@@ -876,7 +880,13 @@ async function simultaneousAiCommands(pageA, pageB) {
     afterB: await shapeCount(pageB),
     first,
     second,
-    synced: (await shapeCount(pageA)) >= beforeA + 2 && (await shapeCount(pageB)) >= beforeB + 2,
+    synced:
+      (await shapeCount(pageA)) >= beforeA + 2 &&
+      (await shapeCount(pageB)) >= beforeB + 2 &&
+      Boolean(await objectByText(pageA, "Parallel A")) &&
+      Boolean(await objectByText(pageA, "Parallel B")) &&
+      Boolean(await objectByText(pageB, "Parallel A")) &&
+      Boolean(await objectByText(pageB, "Parallel B")),
   };
 }
 

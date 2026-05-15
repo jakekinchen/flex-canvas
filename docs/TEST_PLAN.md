@@ -88,12 +88,9 @@ Latest full local smoke run:
 
 ## AI Manual Gate
 
-Live AI:
-
-- "Create a purple circle at position 360, 160"
-
 Suggested prompts:
 
+- "Create a purple circle at position 360, 160"
 - "Add a yellow sticky note that says User Research"
 - "Create a blue rectangle at position 100, 200"
 - "Change the selected sticky note color to green"
