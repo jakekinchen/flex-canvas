@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Circle, ClipboardPaste, Copy, Frame, Minus, StickyNote, Type, Square } from "lucide-react";
+import { ArrowRight, Circle, ClipboardPaste, Copy, Frame, Link2, Minus, StickyNote, Type, Square } from "lucide-react";
 import type React from "react";
 
 export type ToolbarObjectKind = "sticky" | "rectangle" | "circle" | "line" | "connector" | "text" | "frame";
@@ -27,8 +27,10 @@ const colors = [
 export function BoardToolbar({
   canPaste,
   canEdit,
+  canConnectSelection,
   onCreate,
   onColorChange,
+  onConnectSelection,
   onCopy,
   onDuplicate,
   onPaste,
@@ -36,8 +38,10 @@ export function BoardToolbar({
 }: {
   canEdit: boolean;
   canPaste: boolean;
+  canConnectSelection: boolean;
   onCreate: (kind: ToolbarObjectKind) => void;
   onColorChange: (color: string) => void;
+  onConnectSelection: () => void;
   onCopy: () => void;
   onDuplicate: () => void;
   onPaste: () => void;
@@ -73,6 +77,15 @@ export function BoardToolbar({
         </button>
         <button aria-label="Paste selection" disabled={!canEdit || !canPaste} onClick={onPaste} title="Paste" type="button">
           <ClipboardPaste size={16} />
+        </button>
+        <button
+          aria-label="Connect selected objects"
+          disabled={!canEdit || !canConnectSelection}
+          onClick={onConnectSelection}
+          title="Connect selected objects"
+          type="button"
+        >
+          <Link2 size={16} />
         </button>
       </div>
       <div className="board-toolbar-group color-swatches" aria-label="Set selected color">

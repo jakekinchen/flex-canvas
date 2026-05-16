@@ -27,6 +27,8 @@ export function buildAiUserPrompt(request: AiCommandRequest) {
   return JSON.stringify(
     {
       command: request.command,
+      totalObjectCount: request.context.totalObjectCount,
+      objectTypeCounts: request.context.objectTypeCounts,
       viewportBounds: request.context.viewportBounds,
       selectedShapes: request.context.selectedShapes,
       viewportShapes: request.context.viewportShapes,

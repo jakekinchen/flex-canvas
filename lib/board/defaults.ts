@@ -153,17 +153,23 @@ export function compactShapeFromObject(object: BoardObject): CompactShape {
 
 export function buildCompactBoardContextFromObjects(objects: BoardObject[], input: BoardContextInput) {
   const selectedIdSet = new Set(input.selectedIds);
+  const typeCounts = objects.reduce<Record<string, number>>((counts, object) => {
+    counts[object.type] = (counts[object.type] ?? 0) + 1;
+    return counts;
+  }, {});
   const selectedShapes = objects.filter((object) => selectedIdSet.has(object.id)).map(compactShapeFromObject);
   const viewportShapes = objects
     .filter((object) => isObjectInBounds(object, input.viewportBounds))
-    .slice(0, 150)
+    .slice(0, 80)
     .map(compactShapeFromObject);
   const candidateShapes = objects
     .filter((object) => selectedIdSet.has(object.id) || object.type === "sticky")
-    .slice(0, 150)
+    .slice(0, 80)
     .map(compactShapeFromObject);
 
   return {
+    objectTypeCounts: typeCounts,
+    totalObjectCount: objects.length,
     viewportBounds: input.viewportBounds,
     selectedShapes,
     viewportShapes,

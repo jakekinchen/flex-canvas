@@ -35,6 +35,7 @@ Useful overrides:
 - `COLLABBOARD_BASE_URL=http://localhost:3000 npm run test:smoke`
 - `COLLABBOARD_SKIP_CAPACITY=1 npm run test:smoke`
 - `COLLABBOARD_SKIP_RECONNECT=1 npm run test:smoke`
+- `COLLABBOARD_SKIP_THROTTLE=1 npm run test:smoke`
 - `COLLABBOARD_DEEP_AI=1 npm run test:smoke`
 - `COLLABBOARD_BROWSER_EXECUTABLE="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" npm run test:smoke`
 
@@ -42,7 +43,8 @@ Latest requirements reassessment:
 
 - Report: `test-results/flex-canvas-requirements-audit-local.json`
 - Follow-up render reports after viewport culling: `test-results/flex-canvas-render-audit-local.json` and `test-results/flex-canvas-render-audit-prodlocal.json`
-- Current open risks: object sync latency remains above the `<100ms` target; AI latency remains above the `<2s` target; one complex user-journey command failed under a larger board. See `docs/REQUIREMENTS_REASSESSMENT.md`.
+- Post-fix reports: `test-results/flex-canvas-postfix-non-ai-local.json` and `test-results/flex-canvas-postfix-ai-local.json`
+- Current open risks: human-created object sync latency remains above the `<100ms` target and single-step AI latency remains above the `<2s` target. Complex AI breadth passed in the latest deep AI run but remains live-model dependent. See `docs/REQUIREMENTS_REASSESSMENT.md`.
 
 Latest production custom-engine run:
 

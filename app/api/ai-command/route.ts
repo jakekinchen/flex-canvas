@@ -25,7 +25,7 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-const openAiTimeoutMs = 55_000;
+const openAiTimeoutMs = 35_000;
 
 export async function POST(request: NextRequest) {
   const requestStartedAt = Date.now();
@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
 
     const openai = new OpenAI({ apiKey: requireEnv("OPENAI_API_KEY") });
     const model = process.env.OPENAI_MODEL || "gpt-5.5";
-    const effort = process.env.OPENAI_REASONING_EFFORT || "medium";
+    const effort = process.env.OPENAI_REASONING_EFFORT || "low";
 
     const openAiStartedAt = Date.now();
     const response = await (async () => {

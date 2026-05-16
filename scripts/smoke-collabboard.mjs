@@ -22,6 +22,7 @@ const fpsTarget = numberFor("fps", "COLLABBOARD_FPS_TARGET", 60);
 const skipCapacity = booleanFor("skip-capacity", "COLLABBOARD_SKIP_CAPACITY", false);
 const skipMobile = booleanFor("skip-mobile", "COLLABBOARD_SKIP_MOBILE", false);
 const skipReconnect = booleanFor("skip-reconnect", "COLLABBOARD_SKIP_RECONNECT", false);
+const skipThrottle = booleanFor("skip-throttle", "COLLABBOARD_SKIP_THROTTLE", false);
 const skipOpenAi = booleanFor("skip-openai", "COLLABBOARD_SKIP_OPENAI", false);
 const deepAi = booleanFor("deep-ai", "COLLABBOARD_DEEP_AI", false);
 const cleanupUsers = booleanFor("cleanup-users", "COLLABBOARD_CLEANUP_USERS", false);
@@ -46,6 +47,7 @@ const results = {
     capacityObjects: skipCapacity ? 0 : capacityObjects,
     deepAi,
     mobileViewport: skipMobile ? null : { width: 390, height: 844 },
+    throttledNetwork: !skipThrottle,
   },
   checks: [],
 };
@@ -161,6 +163,18 @@ try {
 
   const connectorProbe = await createToolbarObject(owner.page, pages[1].page, "Arrow connector");
   check("human-created connector synced", connectorProbe.synced, connectorProbe);
+  const connectorTargets = await seedConnectorTargetObjects(boardId, smokeUsers[0].id ?? smokeUsers[0].name);
+  await waitForObjectText(owner.page, connectorTargets.fromText, 0);
+  await waitForObjectText(owner.page, connectorTargets.toText, 0);
+  await waitForObjectText(pages[1].page, connectorTargets.fromText, 0);
+  await waitForObjectText(pages[1].page, connectorTargets.toText, 0);
+  const boundConnectorProbe = await connectSelectedObjects(
+    owner.page,
+    pages[1].page,
+    connectorTargets.fromId,
+    connectorTargets.toId,
+  );
+  check("object-bound connector workflow synced", boundConnectorProbe.synced, boundConnectorProbe);
 
   const frameProbe = await createToolbarFrame(owner.page, pages[1].page);
   check("human-created frame synced", frameProbe.synced, frameProbe);
@@ -292,6 +306,11 @@ try {
 
   if (!skipReconnect) {
     await reconnectRecovery(owner.page, pages[1].context, pages[1].page);
+  }
+
+  if (!skipThrottle) {
+    const throttleProbe = await throttledNetworkSync(owner.page, pages[1].page);
+    check("throttled network object sync recovers", throttleProbe.synced, throttleProbe);
   }
 
   if (!skipCapacity) {
@@ -818,6 +837,50 @@ async function copyPasteSelectedObject(sourcePage, receiverPage, objectId) {
   };
 }
 
+async function connectSelectedObjects(sourcePage, receiverPage, fromId, toId) {
+  const sourceBefore = await shapeCount(sourcePage);
+  const receiverBefore = await shapeCount(receiverPage);
+  const firstSelection = await selectObjectById(sourcePage, fromId);
+  if (!firstSelection.selected) return { fromId, toId, synced: false, firstSelection };
+  const target = await objectById(sourcePage, toId);
+  const box = await sourcePage.locator(canvasSelector).boundingBox();
+  if (!target || !box) return { fromId, toId, synced: false, reason: "target or canvas missing" };
+  await sourcePage.locator(canvasSelector).first().click({
+    modifiers: ["Shift"],
+    position: { x: target.x + target.width / 2, y: target.y + target.height / 2 },
+  });
+  await waitForSelectedObjectCount(sourcePage, 2, 5000);
+  await sourcePage.getByRole("button", { name: "Connect selected objects", exact: true }).click();
+  await sourcePage.waitForFunction(
+    (args) => document.querySelectorAll(args.selector).length > args.count,
+    { selector: objectSelector, count: sourceBefore },
+    { timeout: 10000 },
+  );
+  await receiverPage.waitForFunction(
+    (args) => {
+      return [...document.querySelectorAll(args.selector)].some(
+        (element) =>
+          element.getAttribute("data-object-type") === "connector" &&
+          element.getAttribute("data-object-from-id") === args.fromId &&
+          element.getAttribute("data-object-to-id") === args.toId,
+      );
+    },
+    { selector: objectSelector, fromId, toId },
+    { timeout: 10000 },
+  );
+  const connector = await connectorByEndpoints(receiverPage, fromId, toId);
+  return {
+    connector,
+    fromId,
+    toId,
+    sourceBefore,
+    sourceAfter: await shapeCount(sourcePage),
+    receiverBefore,
+    receiverAfter: await shapeCount(receiverPage),
+    synced: Boolean(connector?.id) && (await shapeCount(receiverPage)) > receiverBefore,
+  };
+}
+
 async function selectedObjectCount(page) {
   return page.evaluate(
     (selector) =>
@@ -1242,11 +1305,13 @@ async function objectByText(page, text) {
     (args) => {
       const objectFromProbe = (element) => ({
         color: element.getAttribute("data-object-color"),
+        fromId: element.getAttribute("data-object-from-id") || undefined,
         height: Number(element.getAttribute("data-object-height")),
         id: element.getAttribute("data-object-id"),
         rotation: Number(element.getAttribute("data-object-rotation")),
         selected: element.getAttribute("data-object-selected") === "true",
         text: element.getAttribute("data-object-text"),
+        toId: element.getAttribute("data-object-to-id") || undefined,
         type: element.getAttribute("data-object-type"),
         width: Number(element.getAttribute("data-object-width")),
         x: Number(element.getAttribute("data-object-x")),
@@ -1266,11 +1331,13 @@ async function objectById(page, objectId) {
     (args) => {
       const objectFromProbe = (element) => ({
         color: element.getAttribute("data-object-color"),
+        fromId: element.getAttribute("data-object-from-id") || undefined,
         height: Number(element.getAttribute("data-object-height")),
         id: element.getAttribute("data-object-id"),
         rotation: Number(element.getAttribute("data-object-rotation")),
         selected: element.getAttribute("data-object-selected") === "true",
         text: element.getAttribute("data-object-text"),
+        toId: element.getAttribute("data-object-to-id") || undefined,
         type: element.getAttribute("data-object-type"),
         width: Number(element.getAttribute("data-object-width")),
         x: Number(element.getAttribute("data-object-x")),
@@ -1282,6 +1349,27 @@ async function objectById(page, objectId) {
       return element ? objectFromProbe(element) : null;
     },
     { selector: objectSelector, objectId },
+  );
+}
+
+async function connectorByEndpoints(page, fromId, toId) {
+  return page.evaluate(
+    (args) => {
+      const element = [...document.querySelectorAll(args.selector)].find(
+        (node) =>
+          node.getAttribute("data-object-type") === "connector" &&
+          node.getAttribute("data-object-from-id") === args.fromId &&
+          node.getAttribute("data-object-to-id") === args.toId,
+      );
+      if (!element) return null;
+      return {
+        fromId: element.getAttribute("data-object-from-id"),
+        id: element.getAttribute("data-object-id"),
+        toId: element.getAttribute("data-object-to-id"),
+        type: element.getAttribute("data-object-type"),
+      };
+    },
+    { selector: objectSelector, fromId, toId },
   );
 }
 
@@ -1565,6 +1653,51 @@ async function reconnectRecovery(sourcePage, receiverContext, receiverPage) {
   });
 }
 
+async function throttledNetworkSync(sourcePage, receiverPage) {
+  const client = await receiverPage.context().newCDPSession(receiverPage);
+  try {
+    await client.send("Network.enable");
+    await client.send("Network.emulateNetworkConditions", {
+      offline: false,
+      latency: 300,
+      downloadThroughput: 50 * 1024,
+      uploadThroughput: 30 * 1024,
+      connectionType: "cellular3g",
+    });
+
+    const before = await shapeCount(receiverPage);
+    const startedAt = Date.now();
+    const localCreate = await createToolbarStickyLocal(sourcePage, "Throttled network sticky");
+    await receiverPage.waitForFunction(
+      (args) =>
+        [...document.querySelectorAll(args.selector)].some(
+          (element) =>
+            document.querySelectorAll(args.selector).length > args.previousCount &&
+            element.getAttribute("data-object-text") === args.text,
+        ),
+      { selector: objectSelector, previousCount: before, text: "Throttled network sticky" },
+      { timeout: 30000 },
+    );
+    return {
+      before,
+      localCreate,
+      after: await shapeCount(receiverPage),
+      latencyMs: Date.now() - startedAt,
+      synced: (await shapeCount(receiverPage)) > before,
+    };
+  } finally {
+    await client
+      .send("Network.emulateNetworkConditions", {
+        offline: false,
+        latency: 0,
+        downloadThroughput: -1,
+        uploadThroughput: -1,
+      })
+      .catch(() => null);
+    await client.detach().catch(() => null);
+  }
+}
+
 async function measureInteractionFps(page) {
   const fpsPromise = page.evaluate(
     (durationMs) =>
@@ -1651,6 +1784,61 @@ async function seedCapacityObjects(boardId, count, actorUserId) {
   });
 
   return { latencyMs: Date.now() - startedAt };
+}
+
+async function seedConnectorTargetObjects(boardId, actorUserId) {
+  const roomId = await roomIdForBoard(boardId);
+  const liveblocks = new Liveblocks({ secret: requireEnv("LIVEBLOCKS_SECRET_KEY") });
+  const fromId = `connector-target-a-${runId}`;
+  const toId = `connector-target-b-${runId}`;
+  const fromText = "Connector target A";
+  const toText = "Connector target B";
+  const now = Date.now();
+  await liveblocks.mutateStorage(roomId, async ({ root }) => {
+    let objects = root.get("objects");
+    if (!objects) {
+      objects = new LiveMap();
+      root.set("objects", objects);
+    }
+    objects.set(
+      fromId,
+      new LiveObject({
+        id: fromId,
+        type: "sticky",
+        x: 90,
+        y: 90,
+        width: 180,
+        height: 130,
+        rotation: 0,
+        color: "#fde68a",
+        zIndex: 2000,
+        createdAt: now,
+        updatedAt: now,
+        updatedBy: actorUserId,
+        text: fromText,
+      }),
+    );
+    objects.set(
+      toId,
+      new LiveObject({
+        id: toId,
+        type: "sticky",
+        x: 420,
+        y: 90,
+        width: 180,
+        height: 130,
+        rotation: 0,
+        color: "#60a5fa",
+        zIndex: 2001,
+        createdAt: now,
+        updatedAt: now,
+        updatedBy: actorUserId,
+        text: toText,
+      }),
+    );
+  });
+
+  return { fromId, fromText, toId, toText };
 }
 
 async function waitForStoredShapeCount(boardId, minimum, timeoutMs) {

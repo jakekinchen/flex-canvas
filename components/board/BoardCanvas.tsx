@@ -11,7 +11,7 @@ import { RemoteCursors } from "@/components/board/RemoteCursors";
 import { SelectionTransformer } from "@/components/board/SelectionTransformer";
 import type { BoardOperation } from "@/lib/ai/schema";
 import { createObjectId, objectFromOperation, nextZIndex } from "@/lib/board/defaults";
-import { isObjectInBounds, sortByZIndex } from "@/lib/board/geometry";
+import { isObjectInBounds, objectCenter, sortByZIndex } from "@/lib/board/geometry";
 import { useBoardMutations } from "@/lib/board/operations";
 import type { BoardContextInput, BoardObject, BoardObjectPatch, BoardPoint } from "@/lib/board/types";
 import type { ViewportTransform } from "@/lib/board/viewport";
@@ -308,6 +308,37 @@ export function BoardCanvas({ canEdit, onContextChange, user }: BoardCanvasProps
     [canEdit, mutations, selectedIds],
   );
 
+  const canConnectSelection = useMemo(() => {
+    if (selectedIds.length !== 2) return false;
+    return selectedIds.every((id) => {
+      const object = objectsById[id];
+      return object && object.type !== "connector";
+    });
+  }, [objectsById, selectedIds]);
+
+  const connectSelection = useCallback(() => {
+    if (!canEdit || !canConnectSelection) return;
+    const [fromId, toId] = selectedIds;
+    const from = objectsById[fromId];
+    const to = objectsById[toId];
+    if (!from || !to || from.type === "connector" || to.type === "connector") return;
+    const object = objectFromOperation(
+      {
+        type: "createConnector",
+        fromId: from.id,
+        toId: to.id,
+        start: objectCenter(from),
+        end: objectCenter(to),
+        style: "arrow",
+      },
+      user.id,
+      nextZIndex(objects),
+    );
+    if (!object) return;
+    mutations.createObject(object);
+    setSelectedIds([object.id]);
+  }, [canConnectSelection, canEdit, mutations, objects, objectsById, selectedIds, user.id]);
+
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (!canEdit || isTextInputTarget(event.target)) return;
@@ -491,8 +522,10 @@ export function BoardCanvas({ canEdit, onContextChange, user }: BoardCanvasProps
     >
       <BoardToolbar
         canEdit={canEdit}
+        canConnectSelection={canConnectSelection}
         canPaste={clipboardObjects.length > 0}
         onColorChange={changeSelectedColor}
+        onConnectSelection={connectSelection}
         onCopy={copySelection}
         onCreate={createAtCenter}
         onDuplicate={duplicateSelection}
@@ -586,6 +619,7 @@ export function BoardCanvas({ canEdit, onContextChange, user }: BoardCanvasProps
             <span
               className="board-object-probe"
               data-object-color={object.color}
+              data-object-from-id={object.type === "connector" ? (object.fromId ?? "") : ""}
               data-object-height={object.height}
               data-object-id={object.id}
               data-object-rotation={object.rotation}
@@ -598,6 +632,7 @@ export function BoardCanvas({ canEdit, onContextChange, user }: BoardCanvasProps
                     : ""
               }
               data-object-type={object.type}
+              data-object-to-id={object.type === "connector" ? (object.toId ?? "") : ""}
               data-object-width={object.width}
               data-object-x={object.x}
               data-object-y={object.y}

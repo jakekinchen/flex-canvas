@@ -37,7 +37,9 @@ export const aiCommandRequestSchema = z.object({
   roomId: z.string().min(1),
   command: z.string().min(1).max(1000),
   context: z.object({
+    objectTypeCounts: z.record(z.string(), z.number().int().nonnegative()),
     viewportBounds: viewportBoundsSchema,
+    totalObjectCount: z.number().int().nonnegative(),
     selectedShapes: z.array(compactShapeSchema).max(100),
     viewportShapes: z.array(compactShapeSchema).max(150),
     candidateShapes: z.array(compactShapeSchema).max(150),

@@ -10,7 +10,7 @@ Deployed app: `https://collabboard-six-kappa.vercel.app`
 - Supabase Auth, profiles, boards, memberships, AI command logs
 - Liveblocks private room auth, custom `objects` Storage, and presence
 - React Konva for custom rendering, selection, drag, resize, pan, and zoom
-- OpenAI `gpt-5.5` with `reasoning.effort = medium`
+- OpenAI `gpt-5.5` with `reasoning.effort = low`
 
 This custom version removes tldraw to demonstrate more custom engineering. React Konva is responsible for rendering and interaction, while Liveblocks custom Storage is the canonical board state. Supabase remains auth and metadata only, and no custom WebSocket server is used.
 
@@ -25,7 +25,7 @@ SUPABASE_SERVICE_ROLE_KEY=
 LIVEBLOCKS_SECRET_KEY=
 OPENAI_API_KEY=
 OPENAI_MODEL=gpt-5.5
-OPENAI_REASONING_EFFORT=medium
+OPENAI_REASONING_EFFORT=low
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 NEXT_PUBLIC_CUSTOM_CANVAS_ENGINE=true
 ```
